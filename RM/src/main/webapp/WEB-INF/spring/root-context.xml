@@ -10,17 +10,6 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
-	
-	<!-- Root Context: defines shared resources visible to all other web components -->
-		
-		
-	<!-- 
-		root-context : 서버구동과 동시에 web.xml파일을 거쳐서 읽혀지는 문서-서버 구동과 동시에 세팅해두어야하는
-		요소들을 작성해둔다.주로 DB연결,트랜잭션처리,모듈 연결 등등...
-	 -->	
-		
-	<!-- DB 연결 설정 3단계 -->
-	<!-- 1단계 DB연결을 위한 도구 설정 -->	
 	<bean class="org.apache.commons.dbcp2.BasicDataSource" id="dataSource">
 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
 		<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
@@ -28,24 +17,16 @@
 		<property name="password" value="REMERGE"/>
 	</bean>
 	
-	<!-- 2단계 mybatis에서 제공하는 sql명령어 실행을 위한 도구 등록 -->
-	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<!-- configLocation : mybatis config 설정파일 위치 -->
-		<!-- *** classpath : classes폴더 최상단경로 -->
+<!-- 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="configLocation" value="classpath:mybatis-config.xml"/>
-		<!-- mapperLocations : mapper파일들 위치 (여러개 등록시 *(전체) 와일드카드 사용) --> 
 		<property name="mapperLocations" value="classpath:mappers/*-mapper.xml"/>
-		<!-- DB생성 정보 넣기 (dataSource 위에 만들어놓은거 참조시키기) -->
 		<property name="dataSource" ref="dataSource"/>
 	</bean>
 	
-	<!-- 3단계 sqlSessionFactory로 sql구문 실행시켜줄 템플릿 도구 등록 -->
-	<!-- SqlSessionTemplate sqlSession = new SqlSessionTemplate(sqlSessionFactory); -->
 	<bean class="org.mybatis.spring.SqlSessionTemplate" id="sqlSession">
-		<!-- sqlSessionFactory 넣어주기 -->
 		<constructor-arg ref="sqlSessionFactory"/>
 	</bean>
-	
+	 -->
 	
 	<!-- 파일 업로드 관련 빈 등록하기 -->
 	<!-- MultipartResolver 등록하기 -->
@@ -78,7 +59,7 @@
 	 	  @Service,@Repository,@Aspect 세가지 어노테이션은 root-context에서 스캔하겠다.
 	 	  use-default-filters : 기본 스캔 설정 (@Component,@Controller,@Service,@Repository 어노테이션들) 을 할지 여부
 	  -->
-	 <context:component-scan base-package="com.kh.springProject" use-default-filters="false">
+	 <context:component-scan base-package="com.kh.reMerge" use-default-filters="false">
 	 	<context:include-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
 	 	<context:include-filter type="annotation" expression="org.springframework.stereotype.Service"/>
 	 	<context:include-filter type="annotation" expression="org.aspectj.lang.annotation.Aspect"/>

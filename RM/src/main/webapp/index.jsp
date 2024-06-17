@@ -8,5 +8,6 @@
 </head>
 <body>
 <%-- 	<jsp:forward page="WEB-INF/views/message/messageList.jsp"/>	 --%>
+		<jsp:forward page="WEB-INF/views/message/mainLogin.jsp"/>
 </body>
 </html>

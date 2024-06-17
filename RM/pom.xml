@@ -11,8 +11,8 @@
 	
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.kh</groupId>
-	<artifactId>springProject</artifactId>
-	<name>springProject</name>
+	<artifactId>reMerge</artifactId>
+	<name>reMerge</name>
 	<packaging>war</packaging>
 	<version>1.0.0-BUILD-SNAPSHOT</version>
 	<properties>
