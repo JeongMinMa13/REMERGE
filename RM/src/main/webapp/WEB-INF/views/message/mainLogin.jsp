@@ -37,7 +37,7 @@
 	<button>로그인</button>
 	
 	<br><br><br>
-	<h2 align="center">다른 계정으로 로그인!!!</h2>
+	<h2 align="center">다른 계정으로 로그인!!!!</h2>
 	
 	
 	<br><br><br>
