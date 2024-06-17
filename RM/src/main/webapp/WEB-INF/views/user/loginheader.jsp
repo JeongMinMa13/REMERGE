@@ -28,6 +28,14 @@
 </head>
 <body>
 <br><br><br><br><br><br><br>
+
+				<table align="center" id="logo">
+					<tr>
+						<td><img src="resources/Remergelogo.png"></td>
+						
+						<td></td>
+					</tr>
+				</table>
 	<h2 align="center">로그인</h2>
 	<div align="center">
 	<input type="text" placeholder="아이디">

@@ -8,8 +8,7 @@
  	</settings>
  	
  	<typeAliases>
- 		<typeAlias type="com.kh.reMerge.message.model.vo.Message" alias="Message"/>
- 		
+ 		<typeAlias type="com.kh.reMerge.user.model.vo.User" alias="User"/>
  	</typeAliases>
  	
  
