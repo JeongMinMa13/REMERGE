@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="testMapper">
+	
+	<insert id="insertCategory" parameterType="com.kh.springProject.transaction.model.vo.Category">
+		INSERT INTO CATEGORY VALUES (#{categoryNo},#{categoryName}) 
+	</insert>	
+	
+	<insert id="insertProduct" parameterType="com.kh.springProject.transaction.model.vo.Product">
+		INSERT INTO PRODUCT VALUES (#{productNo},#{productName},#{categoryNo})
+	</insert>
+	
+	<insert id="insertAllCategory" parameterType="arraylist">
+		INSERT ALL
+		<foreach collection="list" item="category">
+			INTO CATEGORY VALUES(#{category.categoryNo},#{category.categoryName})
+		</foreach>
+		SELECT * FROM DUAL
+	</insert>
+	
+	
+	<insert id="insertAllProduct" parameterType="arraylist">
+		INSERT ALL
+		<foreach collection="list" item="product">
+			INTO PRODUCT VALUES(#{product.productNo},#{product.productName},#{product.categoryNo})
+		</foreach>
+		SELECT * FROM DUAL
+	</insert>
+	
+	
+	<select id="selectCategoryList" resultType="com.kh.springProject.transaction.model.vo.Category">
+		SELECT * FROM CATEGORY
+	</select>
+	
+	
+	<select id="selectProductList" resultType="com.kh.springProject.transaction.model.vo.Product">
+		SELECT * FROM PRODUCT
+	</select>
+		
+		
+		
+	<insert id="selectKey" parameterType="com.kh.springProject.transaction.model.vo.Category">
+		<selectKey keyProperty="categoryNo" resultType="_int" order="BEFORE">
+			SELECT SEQ_CNO.NEXTVAL
+			FROM DUAL
+		</selectKey>
+		INSERT INTO CATEGORY VALUES(#{categoryNo},#{categoryName})
+	</insert>	
+		
+		
+		
+	<resultMap type="com.kh.springProject.transaction.model.vo.Category" id="categoryResultSet">
+		<result property="categoryNo" column="CATEGORY_NO"/>
+		<result property="categoryName" column="CATEGORY_NAME"/>
+		
+		<collection property="pList" ofType="com.kh.springProject.transaction.model.vo.Product">
+			<result property="productNo" column="PRODUCT_NO"/>
+			<result property="productName" column="PRODUCT_NAME"/>
+		</collection>
+	</resultMap>	
+		
+		
+	<!-- product에 대한 resultMap -->
+	<resultMap type="com.kh.springProject.transaction.model.vo.Product" id="pResultSet">
+		<result property="productNo" column="PRODUCT_NO"/>
+		<result property="productName" column="PRODUCT_NAME"/>
+		<result property="categoryNo" column="CATEGORY_NO"/>
+	</resultMap>
+		
+		
+	<select id="selectCategory" resultMap="categoryResultSet" parameterType="_int">
+		SELECT C.CATEGORY_NO
+		      ,CATEGORY_NAME
+		      ,PRODUCT_NO
+		      ,PRODUCT_NAME
+		      ,P.CATEGORY_NO
+		FROM CATEGORY C
+		JOIN PRODUCT P ON (C.CATEGORY_NO=P.CATEGORY_NO)
+		WHERE C.CATEGORY_NO = #{categoryNo}
+	</select>	
+	
+	
+	<resultMap type="Board" id="boardResultSet">
+		<result column="Board_NO" property="boardNo"/>
+		<result column="BOARD_TITLE" property="boardTitle"/>
+		<result column="BOARD_WRITER" property="boardWriter"/>
+		<result column="BOARD_CONTENT" property="boardContent"/>
+		<result column="ORIGIN_NAME" property="originName"/>
+		<result column="CHANGE_NAME" property="changeName"/>
+		<result column="COUNT" property="count"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="status" property="status"/>
+		
+		<collection property="rList" resultMap="replyResultSet"/>
+		
+	</resultMap>
+	
+	<resultMap type="Reply" id="replyResultSet">
+		<result column="REPLY_NO" property="replyNo"/>
+		<result column="REPLY_CONTENT" property="replyContent"/>
+		<result column="REF_BNO" property="refBno"/>
+		<result column="REPLY_WRITER" property="replyWriter"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="STATUS" property="status"/>
+	</resultMap>
+	
+	
+	<select id="selectBoard" resultMap="boardResultSet" parameterType="_int">
+		SELECT  BOARD_NO
+				,BOARD_TITLE
+				,BOARD_WRITER
+				,BOARD_CONTENT
+				,ORIGIN_NAME
+				,CHANGE_NAME
+				,COUNT
+				,B.CREATE_DATE
+				,B.STATUS
+				,REPLY_NO
+				,REPLY_CONTENT
+				,REF_BNO
+				,REPLY_WRITER
+				,R.CREATE_DATE
+				,R.STATUS
+		FROM BOARD B
+		JOIN REPLY R ON (BOARD_NO=REF_BNO)
+		WHERE BOARD_NO = #{boardNo}
+	</select>
+		
+		
+	
+</mapper>
