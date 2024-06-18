@@ -4,7 +4,7 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="userMapper">
 
-	<resultMap type="User" id="usesrResultSet">
+	<resultMap type="User" id="userResultSet">
 		<result column="USER_ID" property="userId" />
 		<result column="USER_PWD" property="userPwd" />
 		<result column="EMAIL" property="email" />
@@ -35,11 +35,10 @@
 
 
 	<insert id="insertUser" parameterType="User">
-		INSERT INTO
-		USERS(USER_ID,
-		USER_PWD,
-		EMAIL,
-		SHOP_BRANDCHEK)
+		INSERT INTO USERS(USER_ID,
+						USER_PWD,
+						EMAIL,
+						SHOP_BRANDCHEK)
 		VALUES(#{userId},
 		#{userPwd},
 		#{email},
@@ -47,5 +46,10 @@
 	</insert>
 
 
-
+	<select id="checkId" parameterType="string" resultType="_int">
+		SELECT COUNT(*)
+		FROM USERS
+		WHERE USER_ID = #{checkId}
+	</select>
+	
 </mapper>

@@ -4,8 +4,11 @@ import com.kh.reMerge.user.model.vo.User;
 
 public interface UserService {
 
-	User loginMember(User u);
-
 	int insertUser(User u);
+
+	int checkId(String checkId);
+
+	User loginUser(User u);
+
 
 }

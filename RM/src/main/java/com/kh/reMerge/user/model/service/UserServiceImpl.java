@@ -18,16 +18,23 @@ public class UserServiceImpl implements UserService {
 	private SqlSessionTemplate sqlSession;
 
 	@Override
-	public User loginMember(User u) {
-		User loginUser = userDao.loginMember(sqlSession, u);
+	public User loginUser(User u) {
+		User loginUser = userDao.loginUser(sqlSession, u);
 		return loginUser;
 	}
 
 	@Override
 	public int insertUser(User u) {
-		int result = userDao.insertUser(sqlSession, u);
+		
 
-		return result;
+		return userDao.insertUser(sqlSession, u);
+	}
+
+	@Override
+	public int checkId(String checkId) {
+		//System.out.println(checkId);
+		//System.out.println(userDao.checkId(sqlSession, checkId));
+		return userDao.checkId(sqlSession, checkId);
 	}
 
 }
