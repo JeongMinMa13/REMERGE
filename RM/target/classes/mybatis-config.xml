@@ -8,8 +8,8 @@
  	</settings>
  	
  	<typeAliases>
- 		<typeAlias type="com.kh.reMerge.message.model.vo.Message" alias="Message"/>
- 		
+ 		<!-- <typeAlias type="com.kh.reMerge.message.model.vo.Message" alias="Message"/> -->
+ 		<typeAlias type="com.kh.reMerge.calendar.model.vo.Schedule" alias="Schedule"/>
  	</typeAliases>
  	
  
