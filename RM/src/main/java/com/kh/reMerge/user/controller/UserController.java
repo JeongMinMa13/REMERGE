@@ -62,10 +62,10 @@ public class UserController {
 		int result = userService.insertUser(u);
 		
 		if (result > 0) { 
-			session.setAttribute("alertMsg", "회원 가입 성공!");
+			session.setAttribute("alertMsg", "회원 가입 성공!!");
 			return "user/mainLogin";
 		} else {
-			session.setAttribute("alertMsg", "회원 가입 실패!");
+			session.setAttribute("alertMsg", "회원 가입 실패!!");
 
 			return "user/userEnrollForm";
 		}
