@@ -35,6 +35,8 @@
 		<context:exclude-filter type="annotation" expression="org.aspectj.lang.annotation.Aspect"/>
 	</context:component-scan>
 	
+	<!-- NaverLoginBO Class에 대한 Bean설정 추가 -->
+	<beans:bean id="naverLoginBO" class="com.kh.reMerge.NaverLoginBO" />
 	
 	
 </beans:beans>
