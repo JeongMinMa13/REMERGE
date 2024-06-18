@@ -46,7 +46,7 @@ public class UserController {
 
 		session.removeAttribute("loginUser");
 
-		return "redirect:/";
+		return "user/mainLogin";
 	}
 	
 	@RequestMapping("insertEnrollForm.us")

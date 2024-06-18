@@ -23,6 +23,6 @@
 	<h4>${loginUser.status}</h4>
 	<h4>${loginUser.shopBrandChek}</h4>
 	<h4>${loginUser.userMemo}</h4>
-	
+	<a href="logout.us">로그아웃</a>
 </body>
 </html>
