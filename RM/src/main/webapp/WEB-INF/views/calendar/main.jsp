@@ -20,10 +20,18 @@
     	color : black;
     	text-decoration : none;
     }
+    .mb-3 textarea{
+    	width:300px;
+    	height:40px;
+    }
+    #btnDiv{
+    	display:none;
+    }
     </style>
     
 </head>
 <body>
+	<%@include file = "../user/loginHeader.jsp" %>
     <div class="container">
         <div id="calendar"></div>
     </div>
@@ -38,26 +46,27 @@
                 </div>
                 <div class="modal-body">
                     <form id="addScheduleForm">
+                    	<input type="hidden" name="userId" value=${loginUser.userId} >
                         <div class="mb-3">
                             <label for="scheduleTitle" class="form-label">일정 제목</label>
-                            <input type="text" class="form-control" id="scheduleTitle" name="title" required>
+                            <input type="text" class="form-control" id="scheduleTitle" required>
                         </div>
                         <div class="mb-3">
                             <label for="scheduleStart" class="form-label">일정 시작일</label>
-                            <input type="datetime-local" class="form-control" id="scheduleStart" name="start" required>
+                            <input type="datetime-local" class="form-control" id="scheduleStart" required>
                         </div>
                         <div class="mb-3">
                             <label for="scheduleEnd" class="form-label">일정 종료일</label>
-                            <input type="datetime-local" class="form-control" id="scheduleEnd" name="end">
+                            <input type="datetime-local" class="form-control" id="scheduleEnd" >
                         </div>
                         <div class="mb-3">
                         	<label for="scheduleLocation" class="form-label"></label>
-                        	<input type="text" placeholder="위치" id="scheduleLocation" name="location" style="width:300px;">
+                        	<input type="text" placeholder="위치" id="scheduleLocation" style="width:300px;">
                         	<input type="button" onclick="searchAddress();" value="위치 검색">
                         </div>
                       	<div class="mb-3">
                       		<label for="scheduleMemo" class="form-label">메모</label>
-                            <textarea id="scheduleMemo" name="memo"></textarea>
+                            <textarea id="scheduleMemo" ></textarea>
                       	</div>
                         
                         <button type="submit" class="btn btn-primary">일정 추가하기</button>
@@ -76,19 +85,19 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="updateScheduleForm" action="updateSchedule.sc">
-                    	<input type="hidden" id="detailScheduleNo">
+                    <form id="updateScheduleForm" action="updateSchedule.sc" method="post">
+                    	<input type="hidden" id="detailScheduleNo" name="scheduleNo">
                         <div class="mb-3">
                             <label for="detailTitle" class="form-label">일정 제목</label>
                             <input type="text" class="form-control" id="detailTitle" name="title" readonly>
                         </div>
                         <div class="mb-3">
                             <label for="detailStart" class="form-label">일정 시작일</label>
-                            <input type="datetime-local" class="form-control" id="detailStart" name="start" readonly>
+                            <input type="datetime-local" class="form-control" id="detailStart" name="startDate" readonly>
                         </div>
                         <div class="mb-3">
                             <label for="detailEnd" class="form-label">일정 종료일</label>
-                            <input type="datetime-local" class="form-control" id="detailEnd" name="end" readonly>
+                            <input type="datetime-local" class="form-control" id="detailEnd" name="endDate" readonly>
                         </div>
                         <div class="mb-3">
                         	<label for="detailLocation" class="form-label"></label>
@@ -101,10 +110,12 @@
                       	</div>
                       	<div class="mb-3">
                       		<label for="detailUserId" class="form-label">아이디</label>
-                            <input type="text" id="detailUserId" name="memo" readonly>
+                            <input type="text" id="detailUserId" name="userId" readonly>
                       	</div>
-                        <button type="submit" class="btn btn-primary">수정하기</button>
-                        <button type="button" class="btn btn-danger" onclick="deleteSchedule();">일정 삭제</button>
+                      	<div id="btnDiv" class="mb-3">
+                        	<button type="submit" class="btn btn-primary flag">수정하기</button>
+                        	<button type="button" class="btn btn-danger flag" onclick="deleteSchedule();">일정 삭제</button>
+                        </div>	
                     </form>
                 </div>
             </div>
@@ -122,7 +133,7 @@
                     right: 'dayGridMonth,timeGridWeek,timeGridDay'
                 },
                 selectable: true,
-                dateClick: function(info) {
+                dateClick: function(info) { //날짜 클릭시 일정 추가를 위한 모달 열기
                 	document.getElementById('addScheduleForm').reset();
                 	//console.log(info.dateStr); 입력값 확인
                 	var dateStr =info.dateStr+'T00:00';//날짜만 입력 되기에 시간은 초기화
@@ -134,7 +145,7 @@
                     scheduleModal.show();
                     
                 },
-                eventClick:function(info){
+                eventClick:function(info){//일정 클릭했을때 상세 조회
                 
                 	var id = info.event.id;//조회해올때 내 db에서 만들어진 squence id값 뽑기
                 	//console.log(id); //console로 확인
@@ -149,6 +160,7 @@
                 			//모달창 열기
                 			var detailModal = new bootstrap.Modal(document.getElementById('detailModal'));
                 			document.getElementById('detailScheduleNo').value = data.scheduleNo;
+                			console.log(data.scheduleNo);
                 			document.getElementById('detailTitle').value = data.title;
                             document.getElementById('detailStart').value = data.startDate;
                             document.getElementById('detailEnd').value = data.endDate;
@@ -167,9 +179,6 @@
                                 // 지도를 생성합니다    
                                 var map = new kakao.maps.Map(mapContainer, mapOption); 
 								
-                                function relayout(){
-                                	map.relayout();
-                                }
                                 // 주소-좌표 변환 객체를 생성합니다
                                 var geocoder = new kakao.maps.services.Geocoder();
                                
@@ -195,6 +204,15 @@
 	                            document.getElementById('detailMemo').value= data.memo;
                             }
                             document.getElementById('detailUserId').value= data.userId;
+                            if('${loginUser.userId}'==data.userId){//수정 삭제 버튼 사용자라면 보여주기
+                            	
+                            	// 버튼이 있는 div 요소 선택
+                            	var flag = document.getElementById('btnDiv');
+
+                            	//사용자 이름이 같다면 버튼 div 활성화
+                            	flag.style.display='block';
+                            	
+                            } 
                           
                             detailModal.show();
                 		},
@@ -204,12 +222,17 @@
                 	}); 
                 },
                 locale: 'ko',
+              	//이벤트 조회해서 보여주기
                 events: function(fetchInfo, successCallback, failureCallback) {
                     $.ajax({
                         url: "selectSchedule.sc", 
                         method: "GET",
                         dataType: "json",
+                        data:{
+                        	userId:"${loginUser.userId}"
+                        },
                         success: function(data) {
+                        	
                             var events = [];
                             data.forEach(function(event) {
                                 events.push({
@@ -217,15 +240,40 @@
                                     title: event.title,
                                     start: event.startDate,
                                     end: event.endDate,
-                                    description: event.memo
+                                    description: event.memo,
+                                    userId: event.userId
                                 });
                             });
+                            /* console.log(events); */
                             successCallback(events);
+                            
+                            //작성자와 사용자가 같을때 수정 가능하게 속성 변경
+                            data.forEach(function(schedule){
+	                          	if('${loginUser.userId}'==schedule.userId){
+	                            	document.getElementById('detailTitle').removeAttribute('readonly');
+	                            	document.getElementById('detailStart').removeAttribute('readonly');
+	                            	document.getElementById('detailEnd').removeAttribute('readonly');
+	                            	document.getElementById('detailLocation').removeAttribute('readonly');
+	                            	document.getElementById('detailMemo').removeAttribute('readonly');
+	                            }	
+                            	
+                            })
                         },
                         error: function() {
                             failureCallback();
                         }
                     });
+                },
+                eventContent:function(arg){
+                	//일정 보여주는 목록 설정
+                	let userId = arg.event.extendedProps.userId;
+                    let eventTitle = arg.event.title;
+                	/* console.log(eventTitle);
+                	console.log(author); */ // 데이터 확인
+                	
+                    let contentHtml ='<div>';
+                    contentHtml += '<div><strong>'+eventTitle+'</strong> <small>by '+userId+'</small></div>';
+                    return { html: contentHtml };
                 }
             });
             calendar.render();
@@ -241,8 +289,8 @@
                 var end = document.getElementById('scheduleEnd').value;
                 var location = document.getElementById('scheduleLocation').value;
                 var memo = document.getElementById('scheduleMemo').value;
-				
-                $.ajax({
+				console.log(memo);
+                $.ajax({//일정 추가 
                 	url:"insertSchedule.sc",
                 	type:"post",
                 	data:{
@@ -250,7 +298,8 @@
                 		startDate:start,
                 		endDate:end,
                 		location:location,
-                		memo:memo
+                		memo:memo,
+                		userId:"${loginUser.userId}"
                 	},
                 	success:function(result){
                 		if(result>0){
@@ -278,6 +327,7 @@
                 
             });
             
+            //위치 탭에서 주소 검색 하는 함수(postCode api(daum))
             function searchAddress(){
             	var geocoder = new daum.maps.services.Geocoder();
             	new daum.Postcode({
@@ -298,10 +348,12 @@
                 }).open();
             }
     	    
+            //삭제 버튼 클릭시 호출되는 함수
             function deleteSchedule(){
             	var scheduleNo = document.getElementById("detailScheduleNo").value;
             	location.href="deleteSchedule.sc?scheduleNo="+scheduleNo;
             }
+            
 	</script>
 	  
 </body>

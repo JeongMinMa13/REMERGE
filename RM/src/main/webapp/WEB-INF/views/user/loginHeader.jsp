@@ -24,5 +24,6 @@
 	<h4>${loginUser.shopBrandChek}</h4>
 	<h4>${loginUser.userMemo}</h4>
 	
+	<a href="calendar.sc">캘린더 이동</a>
 </body>
 </html>

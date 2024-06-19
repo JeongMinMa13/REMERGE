@@ -14,8 +14,8 @@
 	</resultMap>
 	
 	<insert id="insertSchedule" parameterType="Schedule">
-		INSERT INTO SCHEDULE(SCHEDULE_NO,TITLE,START_DATE,END_DATE,USER_ID,LOCATION)
-		VALUES(SEQ_SNO.NEXTVAL,#{title},#{startDate},#{endDate},#{userId},#{location})
+		INSERT INTO SCHEDULE(SCHEDULE_NO,TITLE,START_DATE,END_DATE,USER_ID,LOCATION,MEMO)
+		VALUES(SEQ_SNO.NEXTVAL,#{title},#{startDate},#{endDate},#{userId},#{location},#{memo})
 	</insert>
 	
 	<select id="selectSchedule" resultMap="scheduleResultSet">
@@ -29,5 +29,14 @@
 		FROM SCHEDULE 
 		WHERE SCHEDULE_NO=#{scheduleNo}
 	</select>
+	
+	<delete id="deleteSchedule" parameterType="_int">
+		DELETE FROM SCHEDULE WHERE SCHEDULE_NO=#{scheduleNo}
+	</delete>
+	
+	<update id="updateSchedule" parameterType="Schedule">
+		UPDATE SCHEDULE SET TITLE=#{title},MEMO=#{memo},START_DATE=#{startDate},END_DATE=#{endDate},LOCATION=#{location}
+		WHERE SCHEDULE_NO=#{scheduleNo}
+	</update>
 	
 </mapper>
