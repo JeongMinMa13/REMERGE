@@ -27,8 +27,6 @@
 	<bean class="org.mybatis.spring.SqlSessionTemplate" id="sqlSession">
 		<constructor-arg ref="sqlSessionFactory"/>
 	</bean>
-
-	
 	<!-- 파일 업로드 관련 빈 등록하기 -->
 	<!-- MultipartResolver 등록하기 -->
 	<bean class="org.springframework.web.multipart.commons.CommonsMultipartResolver" id="multipartResolver">
