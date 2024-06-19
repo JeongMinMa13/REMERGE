@@ -38,4 +38,18 @@ public class CalendarServiceImpl implements CalendarService {
 
 		return calendarDao.detailSchedule(sqlSession,scheduleNo);
 	}
+	
+	//일정 삭제 구문
+	@Override
+	public int deleteSchedule(int scheduleNo) {
+
+		return calendarDao.deleteSchedule(sqlSession,scheduleNo);
+	}
+	
+	//일정 수정 구문
+	@Override
+	public int updateSchedule(Schedule s) {
+
+		return calendarDao.updateSchedule(sqlSession,s);
+	}
 }

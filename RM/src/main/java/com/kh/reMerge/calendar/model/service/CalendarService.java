@@ -11,4 +11,8 @@ public interface CalendarService {
 	ArrayList<Schedule> selectSchedule(String userId);
 	
 	Schedule detailSchedule(int scheduleNo);
+	
+	int deleteSchedule(int scheduleNo);
+	
+	int updateSchedule(Schedule s);
 }
