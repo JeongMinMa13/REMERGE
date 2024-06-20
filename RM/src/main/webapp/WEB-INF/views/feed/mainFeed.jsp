@@ -8,6 +8,7 @@
 <title>main 페이지</title>
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <jsp:include page="/WEB-INF/css/feedCSS.jsp"></jsp:include>
 </head>
 <body>
 	<%@include file="../user/loginHeader.jsp" %>
