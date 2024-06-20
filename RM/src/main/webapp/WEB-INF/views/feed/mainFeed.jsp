@@ -1,36 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>main 페이지</title>
-<jsp:include page="/WEB-INF/css/feedCSS.jsp"></jsp:include>
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <div class="sidebar">
-            <div class="logo">
-                <img src="resources/Remergelogo.png" alt="Remerge logo">
-            </div>
-            <nav class="menu">
-                <ul>
-                    <li><div class="menu-item" id="home"><img src="resources/home.png">홈</div></li>
-                    <li><div class="menu-item" id="search"><img src="resources/search.png">검색</div></li>
-                    <li><div class="menu-item" id="explore"><img src="resources/explore.png">탐색</div></li>
-                    <li><div class="menu-item" id="messages"><img src="resources/messages.png">메시지</div></li>
-                    <li><div class="menu-item" id="notifications"><img src="resources/notifications.png">알림</div></li>
-                    <li><div class="menu-item" id="create"><img src="resources/create.png">만들기</div></li>
-                    <li><div class="menu-item" id="store"><img src="resources/store.png">스토어</div></li>
-                    <li><div class="menu-item" id="profile"><img src="">프로필</div></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+	<%@include file="../user/loginHeader.jsp" %>
     
     <div class="con_wrap">
         <div class="conA">

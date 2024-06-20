@@ -34,7 +34,7 @@ public class UserController {
 		} else {
 			session.setAttribute("loginUser", loginUser);
 			session.setAttribute("alertMsg", "로그인 성공!");
-			return "user/loginHeader";
+			return "redirect:/feed.fe";
 		}
 		
 		
