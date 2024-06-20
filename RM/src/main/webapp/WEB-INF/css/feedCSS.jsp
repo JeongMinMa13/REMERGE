@@ -262,79 +262,55 @@ header {
 	margin-top: 10px;
 }
 
-/*모달창*/
-.modal_overlay {
-	width: 100%;
-	height: 100%;
-	position: absolute;
-	left: 0;
-	top: 0;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	background: rgba(0, 0, 0, 0.8);
-	backdrop-filter: blur(1.5px);
-	-webkit-backdrop-filter: blur(1.5px);
-	display: none;
+<!--모달-->
+
+.modal-content {
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.modal_window {
-	background: white;
-	backdrop-filter: blur(13.5px);
-	-webkit-backdrop-filter: blur(13.5px);
-	border-radius: 10px;
-	border: 1px solid rgba(255, 255, 255, 0.18);
-	width: 800px;
-	height: 600px;
-	position: relative;
-	padding: 10px;
+.modal-header {
+    background-color: #007bff;
+    color: #fff;
+    border-bottom: none;
 }
 
-.modal_title {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	font-weight: bold;
-	font-size: 20px;
-	border-bottom: 1px solid rgba(0, 0, 0, 0.18);
+.modal-title {
+    font-weight: bold;
 }
 
-.modal_title_side {
-	margin: 5px;
-	flex: 0 0 40px;
-	text-align: center;
+.modal-body {
+    padding: 20px;
 }
 
-/*모달 이미지 CSS*/
-.modal_image_upload {
-	outline: 2px dashed black;
-	outline-offset: -10px;
-	transition: all .15s ease-in-out;
-	width: 798px;
-	height: 548px;
-	text-align: center;
-	line-height: 548px;
+.modal-footer {
+    border-top: none;
 }
 
-#thumbnail {
-	outline-offset: -10px;
-	transition: all .15s ease-in-out;
-	width: 780px;
-	height: 540px;
-	text-align: center;
+.modal-footer button {
+    padding: 10px 20px;
+    border-radius: 20px;
+    background-color: #007bff;
+    color: #fff;
 }
 
-/*그냥 버튼*/
-.confirm_button {
-	float: right; /* 오른쪽으로 띄우기 */
+.modal-footer button:hover {
+    background-color: #0056b3;
 }
 
-.confirm_button:hover {
-	background-color: #0056b3; /* 호버 시 배경색 변경 */
+/* 썸네일 스타일 */
+.thumbnail-container {
+    text-align: center;
+    margin-bottom: 20px;
 }
 
-/*두번째 모달*/
+.thumbnail {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-top: 10px;
+}
 
 
 
