@@ -140,6 +140,7 @@
                 © 2024 ReMERGE FROM KH정보교육원 4조
             </div>
         </div>
+
         <!-- 첫 번째 모달: 이미지 업로드 -->
 		<div class="modal fade" id="modal_create" tabindex="-1" role="dialog"
 			aria-labelledby="modal_create_title" aria-hidden="true">
@@ -165,6 +166,7 @@
 				</div>
 			</div>
 		</div>
+
 		<!-- 두 번째 모달: 게시물 작성 -->
 		<div class="modal fade" id="modal_second" tabindex="-1" role="dialog"
 			aria-labelledby="modal_second_title" aria-hidden="true">
@@ -196,13 +198,14 @@
 				</div>
 			</div>
 		</div>
+
 		<!-- 게시물 등록 스크립트 -->
 		<script>
 		 <!--썸네일 만들기-->
 		 const fileInput = document.getElementById('file');
 		 const thumbnail = document.getElementById('thumbnail');
 		 const secondThumbnail = document.querySelector('#modal_second #selectedThumbnail'); // 두 번째 모달 썸네일
-		   
+
 		 fileInput.addEventListener('change', function() {
 		     const file = fileInput.files[0];
 		     if (file) {
@@ -214,34 +217,39 @@
 		         reader.readAsDataURL(file);
 		     }
 		 });
-		
-		
-		   
+
 		// 첫 번째 모달 열기
 		 $('#create').click(function() {
 		   $('#modal_create').modal('show');
 		 });
+
 		 // 첫 번째 모달 확인 버튼 클릭 시 두 번째 모달 열기
 		 $('#confirm_button').click(function() {
 		   $('#modal_create').modal('hide');
 		   $('#modal_second').modal('show');
 		 });
+
 		 // 두 번째 모달 닫기
 		 $('#close_second_modal_button').click(function() {
 		   $('#modal_second').modal('hide');
 		 });
-		
+
 		 document.getElementById('imageUpload').addEventListener('change', function(event) {
 			    var file = event.target.files[0]; // 선택된 파일
 			    var reader = new FileReader(); // 파일 리더 객체 생성
+
+
 			    // 파일 리더 로드 완료 후
 			    reader.onload = function(e) {
 			        document.getElementById('thumbnail').setAttribute('src', e.target.result); // 썸네일 이미지 소스 설정
 			    };
+
 			    // 파일 리더로 파일 읽기
 			    reader.readAsDataURL(file);
 			});
 		
+
+
 		</script>
 		
 		<script>

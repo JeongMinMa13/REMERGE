@@ -27,14 +27,12 @@
     #btnDiv{
     	display:none;
     }
-    header{
-    	
-    }
+
     </style>
     
 </head>
 <body>
-	<%@include file = "../user/loginHeader.jsp" %> 
+	<%@include file = "../user/loginHeader.jsp" %>
     <div class="container">
         <div id="calendar"></div>
     </div>
