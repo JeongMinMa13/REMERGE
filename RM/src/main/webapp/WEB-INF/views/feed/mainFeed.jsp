@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,11 +7,14 @@
 <title>main 페이지</title>
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <jsp:include page="/WEB-INF/css/feedCSS.jsp"></jsp:include>
 </head>
 <body>
 	<%@include file="../user/loginHeader.jsp" %>
-    
     <div class="con_wrap">
         <div class="conA">
             <!-- 하나의 게시물을 만들어줍니다. -->
@@ -30,7 +32,6 @@
                     </div>
                     <div class="logos_right">
                         <img src="images/bookmark.svg" alt="" class="logo_img">
- 
                 </div>
                 </div>
                 <div class="content">
@@ -40,12 +41,13 @@
                 </div>
             </div>
         </div>
-  
-        
-
     <div class="body">
         <!--스토리 목록-->
             <div class="storys">
+            	<div class="story" onclick="addStory()">
+		      		<img class="story_img" src="resources/plusicon.jpeg">
+		      		<span>스토리 추가하기</span>
+		      	</div>
                 <div class="story">
                     <img class="story_img" src="">
                     <span>junhyung_ing</span>
@@ -77,9 +79,8 @@
                 <div class="next_icon">
                     <i class="fas fa-angle-right"></i>
                 </div>
-            </div>  
+            </div>
         </div>
-
         <div class="container">
             <div class="profile-header">
                 <img src="./CSS/img/라쿤.jpg" alt="Your Profile Picture">
@@ -123,7 +124,6 @@
                 <button class="follow-btn">팔로우</button>
             </div>
         </div>
-
         <div class="footer">
             <div>
                 <a href="#">소개</a>
@@ -140,112 +140,122 @@
                 © 2024 ReMERGE FROM KH정보교육원 4조
             </div>
         </div>
-
-        <!--모달-->
-		<div class="modal_overlay" id="modal_create">
-			<div class="modal_window">
-				<div class="modal_title">
-					<div class="modal_title_side"></div>
-					<div>새 게시물</div>
-					<div class="modal_title_side">
-						<span id="close_modal" class="material-icons-outlined">close </span>
+        <!-- 첫 번째 모달: 이미지 업로드 -->
+		<div class="modal fade" id="modal_create" tabindex="-1" role="dialog"
+			aria-labelledby="modal_create_title" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="modal_create_title">이미지 업로드</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
 					</div>
-				</div>
-				 <div class="modal_image_upload">		 		
-				 		<img id="thumbnail" src="#" alt="Thumbnail">
-				 		<input type="file" id="file" class="form-control-file border" name="file">
-						<span style="text-align: center"> 사진을 여기에 끌어다 놓으세요. </span>
-				</div>
-				<div>
-					<button class="confirm_button">확인</button>
+					<div class="modal-body">
+						<div class="form-group">
+							<label for="file">이미지 선택</label> <input type="file"
+								class="form-control-file" id="file">
+						</div>
+						<div class="thumbnail-container">
+							<img id="thumbnail" class="thumbnail" src="#" alt="Thumbnail">
+						</div>
+						<button id="confirm_button" class="btn btn-primary">다음</button>
+					</div>
 				</div>
 			</div>
 		</div>
-		
-		<!-- 사진 후 2번째 모달 -->
-		<div class="modal_overlay" id="modal_second">
-    <div class="modal_window">
-        <div class="modal_title">
-            <div class="modal_title_side"></div>
-            <div>새 게시물 작성</div>
-            <div class="modal_title_side">
-                <span id="close_modal_second" class="material-icons-outlined">close</span>
-            </div>
-        </div>
-        <div class="modal_content">
-            <!-- 좌측: 이미지 썸네일 영역 -->
-            <div class="modal_image_upload">
-                <img id="thumbnail" src="#" alt="Thumbnail">
-            </div>
-            <!-- 우측: 유저 프로필 및 게시물 입력 -->
-            <div class="modal_side_content">
-                <div class="user_profile">
-                    <img src="user_profile.jpg" alt="User Profile">
-                    <div class="username">사용자 아이디</div>
-                </div>
-                <div class="post_content">
-                    <textarea id="post_text" placeholder="글을 작성하세요"></textarea>
-                </div>
-                <div class="location_input">
-                    <label for="location">위치:</label>
-                    <input type="text" id="location" name="location" placeholder="위치를 입력하세요">
-                </div>
-                <button id="submit" type="button">게시</button>
-            </div>
-        </div>
-    </div>
-</div>
-		
-	
+		<!-- 두 번째 모달: 게시물 작성 -->
+		<div class="modal fade" id="modal_second" tabindex="-1" role="dialog"
+			aria-labelledby="modal_second_title" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="modal_second_title">게시물 작성</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="thumbnail-container">
+							<img id="selectedThumbnail" class="thumbnail" src="#"
+								alt="Selected Thumbnail">
+						</div>
+						<div class="form-group">
+							<label for="post_text">게시물 내용</label>
+							<textarea class="form-control" id="post_text" rows="3"
+								placeholder="게시물 내용을 입력하세요..."></textarea>
+						</div>
+						<div class="form-group">
+							<label for="location">위치</label> <input type="text"
+								class="form-control" id="location" placeholder="위치를 입력하세요">
+						</div>
+						<button id="submit_post_button" class="btn btn-primary">게시</button>
+					</div>
+				</div>
+			</div>
+		</div>
 		<!-- 게시물 등록 스크립트 -->
 		<script>
-		 const modal = document.getElementById("modal_create");
-		 const buttonCreate = document.getElementById("create");
-		    buttonCreate.addEventListener("click", e => {
-		    	modal.style.top = window.pageYOffset + 'px';
-		        modal.style.display = "flex";
-		        document.body.style.overflowY = "hidden"; // 스크롤 없애기
-		    });
-		    
-		    const buttonCloseModal = document.getElementById("close_modal");
-		    buttonCloseModal.addEventListener("click", e => {
-		        modal.style.display = "none";
-		        document.body.style.overflowY = "visible";
-		    });
-		    
 		 <!--썸네일 만들기-->
 		 const fileInput = document.getElementById('file');
 		 const thumbnail = document.getElementById('thumbnail');
-		    
-		    fileInput.addEventListener('change', function() {
-		        const file = fileInput.files[0];
-		        if (file) {
-		            const reader = new FileReader();
-		            reader.onload = function(e) {
-		            thumbnail.setAttribute('src', e.target.result);
-		            }
-		            reader.readAsDataURL(file);
-		        }
-		    });
-		    
-		    // 첫 번째 모달 확인 버튼 클릭 이벤트 처리
-		   	document.getElementById('confirm_button').addEventListener('click', function() {
-		    document.getElementById('modal_create').style.display = 'none'; // 첫 번째 모달 숨기기
-		    document.getElementById('modal_second').style.display = 'flex'; // 두 번째 모달 보이기
-		    }); 
-		    
-		    // 두 번째 모달 닫기 버튼 클릭 이벤트 처리
-		    document.getElementById('close_modal_second').addEventListener('click', function() {
-		    document.getElementById('modal_second').style.display = 'none'; // 두 번째 모달 숨기기
-		    });
+		 const secondThumbnail = document.querySelector('#modal_second #selectedThumbnail'); // 두 번째 모달 썸네일
+		   
+		 fileInput.addEventListener('change', function() {
+		     const file = fileInput.files[0];
+		     if (file) {
+		         const reader = new FileReader();
+		         reader.onload = function(e) {
+		             thumbnail.setAttribute('src', e.target.result);
+		             secondThumbnail.setAttribute('src', e.target.result); // 두 번째 모달 썸네일 설정
+		         }
+		         reader.readAsDataURL(file);
+		     }
+		 });
+		
+		
+		   
+		// 첫 번째 모달 열기
+		 $('#create').click(function() {
+		   $('#modal_create').modal('show');
+		 });
+		 // 첫 번째 모달 확인 버튼 클릭 시 두 번째 모달 열기
+		 $('#confirm_button').click(function() {
+		   $('#modal_create').modal('hide');
+		   $('#modal_second').modal('show');
+		 });
+		 // 두 번째 모달 닫기
+		 $('#close_second_modal_button').click(function() {
+		   $('#modal_second').modal('hide');
+		 });
+		
+		 document.getElementById('imageUpload').addEventListener('change', function(event) {
+			    var file = event.target.files[0]; // 선택된 파일
+			    var reader = new FileReader(); // 파일 리더 객체 생성
+			    // 파일 리더 로드 완료 후
+			    reader.onload = function(e) {
+			        document.getElementById('thumbnail').setAttribute('src', e.target.result); // 썸네일 이미지 소스 설정
+			    };
+			    // 파일 리더로 파일 읽기
+			    reader.readAsDataURL(file);
+			});
+		
 		</script>
 		
-		            
+		<script>
+			function addStory(){
+				 const modal = document.getElementById("modal_createStory");
+				 modal.style.display = "flex";
+			}
+		</script>
+		           
     <script src="scripts.js">
         document.querySelectorAll('.menu-item').forEach(item => {
         item.addEventListener('click', () => {
         console.log(`${item.id} 메뉴 클릭됨`);
-        // 페이지 이동 처리 
+        // 페이지 이동 처리
     });
 });
     </script>
