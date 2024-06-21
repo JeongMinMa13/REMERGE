@@ -6,6 +6,7 @@
 <meta charset="UTF-8">
 <title>로그인 헤더 구현하지않음 아직 세션만가져오기 가능</title>
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c" %>
+<jsp:include page="/WEB-INF/css/feedCSS.jsp"></jsp:include>
 </head>
 <body>
 	<c:if test="${not empty alertMsg}">
@@ -14,17 +15,25 @@
 		</script>
 		<c:remove var="alertMsg"/>
 	</c:if>	
-	<h2>로그인헤더(loginUser session으로 값넘김)</h2>
-	<h4>${sessionId}</h4>
-	<%-- <h4>${loginUser.userId}</h4>
-	<h4>${loginUser.userPwd}</h4>
-	<h4>${loginUser.email}</h4>
-	<h4>${loginUser.joinDate}</h4>
-	<h4>${loginUser.profilePath}</h4>
-	<h4>${loginUser.status}</h4>
-	<h4>${loginUser.shopBrandChek}</h4>
-	<h4>${loginUser.userMemo}</h4> --%>
-	
+<header>
+        <div class="sidebar">
+            <div class="logo">
+                <img src="resources/Remergelogo.png" alt="Remerge logo">
+            </div>
+            <nav class="menu">
+                <ul>
+                    <li><div class="menu-item" id="home"><img src="resources/home.png">홈</div></li>
+                    <li><div class="menu-item" id="search"><img src="resources/search.png">검색</div></li>
+                    <li><div class="menu-item" id="explore"><img src="resources/explore.png">탐색</div></li>
+                    <li><div class="menu-item" id="messages"><img src="resources/messages.png">메시지</div></li>
+                    <li><div class="menu-item" id="notifications"><img src="resources/notifications.png">알림</div></li>
+                    <li><div class="menu-item" id="create"><img src="resources/create.png">만들기</div></li>
+                    <li><div class="menu-item" id="store"><img src="resources/store.png">스토어</div></li>
+                    <li><div class="menu-item" id="profile"><img src="">프로필</div></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 	<a href="logout.us">로그아웃</a>
 </body>
 </html>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="calendarMapper">
+	<resultMap type="Schedule" id="scheduleResultSet">
+		<result column="SCHEDULE_NO" property="scheduleNo"/>
+		<result column="TITLE" property="title"/>
+		<result column="MEMO" property="memo"/>
+		<result column="START_DATE" property="startDate"/>
+		<result column="END_DATE" property="endDate"/>
+		<result column="LOCATION" property="location"/>
+		<result column="USER_ID" property="userId"/>
+	</resultMap>
+	
+	<insert id="insertSchedule" parameterType="Schedule">
+		INSERT INTO SCHEDULE(SCHEDULE_NO,TITLE,START_DATE,END_DATE,USER_ID,LOCATION,MEMO)
+		VALUES(SEQ_SNO.NEXTVAL,#{title},#{startDate},#{endDate},#{userId},#{location},#{memo})
+	</insert>
+	
+	<select id="selectSchedule" resultMap="scheduleResultSet">
+		SELECT SCHEDULE_NO,TITLE,MEMO,START_DATE,END_DATE,LOCATION,USER_ID
+		FROM SCHEDULE 
+		WHERE USER_ID=#{userId}
+	</select>
+	
+	<select id="detailSchedule" resultMap="scheduleResultSet" parameterType="_int">
+		SELECT SCHEDULE_NO,TITLE,MEMO,START_DATE,END_DATE,LOCATION,USER_ID
+		FROM SCHEDULE 
+		WHERE SCHEDULE_NO=#{scheduleNo}
+	</select>
+	
+	<delete id="deleteSchedule" parameterType="_int">
+		DELETE FROM SCHEDULE WHERE SCHEDULE_NO=#{scheduleNo}
+	</delete>
+	
+	<update id="updateSchedule" parameterType="Schedule">
+		UPDATE SCHEDULE SET TITLE=#{title},MEMO=#{memo},START_DATE=#{startDate},END_DATE=#{endDate},LOCATION=#{location}
+		WHERE SCHEDULE_NO=#{scheduleNo}
+	</update>
+	
+</mapper>
