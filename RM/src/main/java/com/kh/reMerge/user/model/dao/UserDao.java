@@ -23,6 +23,8 @@ public class UserDao {
 		// TODO Auto-generated method stub
 		return sqlSession.selectOne("userMapper.checkId",checkId);
 	}
+	
+	
 
 
 }
