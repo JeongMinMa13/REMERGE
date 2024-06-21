@@ -59,30 +59,30 @@ public class GoogleLoginController {
 		auth.setId("google_" + id);
 		auth.setAuth("ROLE_SOCIAL");
 
-//		List<UserinfoAuth> authList = new ArrayList<UserinfoAuth>();
-//		authList.add(auth);
-//
-//		Userinfo userinfo = new Userinfo();
-//		userinfo.setId("google_" + id);
-//		userinfo.setPw(UUID.randomUUID().toString());
-//		userinfo.setName(null);
-//		userinfo.setNickname(name);
-//		userinfo.setEmail(email);
-//		userinfo.setAddress(null);
-//		userinfo.setEnabled("0");
-//		userinfo.setSecurityAuthList(authList);
-//		
+		List<UserinfoAuth> authList = new ArrayList<UserinfoAuth>();
+		authList.add(auth);
+
+		Userinfo userinfo = new Userinfo();
+		userinfo.setId("google_" + id);
+		userinfo.setPw(UUID.randomUUID().toString());
+		userinfo.setName(null);
+		//userinfo.setNickname(name);
+		userinfo.setEmail(email);
+		userinfo.setAddress(null);
+		userinfo.setEnabled("0");
+		userinfo.setSecurityAuthList(authList);
+		
 		// 사용자의 정보를 userinfo 테이블과 auth 테이블에 저장
-		//userinfoService.addUserinfo(userinfo, "ROLE_SOCIAL");
-		//userinfoService.addUserinfoAuth(auth);
-		//userinfoService.updateUserLogindate(userinfo.getId());
+		userinfoService.addUserinfo(userinfo, "ROLE_SOCIAL");
+		userinfoService.addUserinfoAuth(auth);
+		userinfoService.updateUserLogindate(userinfo.getId());
 		
 		// 여기부턴 spring-security 적용 관련입니다.
 		// 네이버 로그인 사용자 정보를 사용하여 UserDetails 객체(로그인 사용자)를 생성하여 저장
-		//customUserDetails customUserDetails=new CustomUserDetails(userinfo);
+		customUserDetails customUserDetails=new CustomUserDetails(userinfo);
 		
-		// UsernamePasswordAuthenticationToken 객체를 생성하여 Spring Security가 사용 가능한 인증 사용자로 등록 처리
-		// UsernamePasswordAuthenticationToken 객체 : 인증 성공한 사용자를 Spring Security가 사용 가능한 인증 사용자로 등록 처리하는 객체
+		 UsernamePasswordAuthenticationToken 객체를 생성하여 Spring Security가 사용 가능한 인증 사용자로 등록 처리
+		 UsernamePasswordAuthenticationToken 객체 : 인증 성공한 사용자를 Spring Security가 사용 가능한 인증 사용자로 등록 처리하는 객체
 		Authentication authentication=new UsernamePasswordAuthenticationToken
 				(customUserDetails, null, customUserDetails.getAuthorities());
 		
