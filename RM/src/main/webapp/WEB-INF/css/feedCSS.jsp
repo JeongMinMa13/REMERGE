@@ -333,6 +333,9 @@ header {
 .confirm_button:hover {
 	background-color: #0056b3; /* 호버 시 배경색 변경 */
 }
+#thumbnailContainer{
+	display:none;
+}
 
 /*두번째 모달*/
 
