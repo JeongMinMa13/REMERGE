@@ -52,4 +52,19 @@
 		WHERE USER_ID = #{checkId}
 	</select>
 	
+	<update id="updateUser" parameterType="User">
+		UPDATE USERS
+		SET EMAIL =#{email}
+		,USER_MEMO =#{userMemo}
+		WHERE USER_ID=#{userId} 
+		AND STATUS='Y'
+	</update>
+	
+	<update id="updatePwd" parameterType="User">
+		UPDATE USERS
+		SET USER_PWD=#{userPwd}
+		WHERE USER_ID=#{userId}
+		AND STATUS='Y'
+	</update>
+	
 </mapper>
