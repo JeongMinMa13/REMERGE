@@ -36,7 +36,7 @@
 	</context:component-scan>
 	
 	<!-- NaverLoginBO Class에 대한 Bean설정 추가 -->
-	<beans:bean id="naverLoginBO" class="com.kh.reMerge.NaverLoginBO" />
+	<beans:bean id="naverLoginBO" class="com.kh.reMerge.user.model.vo.NaverLoginBo" />
 	
 	
 </beans:beans>

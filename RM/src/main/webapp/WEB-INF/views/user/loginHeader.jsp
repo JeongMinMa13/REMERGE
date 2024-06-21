@@ -15,14 +15,16 @@
 		<c:remove var="alertMsg"/>
 	</c:if>	
 	<h2>로그인헤더(loginUser session으로 값넘김)</h2>
-	<h4>${loginUser.userId}</h4>
+	<h4>${sessionId}</h4>
+	<%-- <h4>${loginUser.userId}</h4>
 	<h4>${loginUser.userPwd}</h4>
 	<h4>${loginUser.email}</h4>
 	<h4>${loginUser.joinDate}</h4>
 	<h4>${loginUser.profilePath}</h4>
 	<h4>${loginUser.status}</h4>
 	<h4>${loginUser.shopBrandChek}</h4>
-	<h4>${loginUser.userMemo}</h4>
+	<h4>${loginUser.userMemo}</h4> --%>
+	
 	<a href="logout.us">로그아웃</a>
 </body>
 </html>

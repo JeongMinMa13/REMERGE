@@ -9,5 +9,6 @@
 <body>
 <%-- 	<jsp:forward page="WEB-INF/views/message/messageList.jsp"/>	 --%>
 		<jsp:forward page="WEB-INF/views/user/mainLogin.jsp"/>
+	
 </body>
 </html>
