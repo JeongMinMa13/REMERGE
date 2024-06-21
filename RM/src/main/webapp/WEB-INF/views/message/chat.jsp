@@ -4,19 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <title>Direct Message</title>
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/style.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/msgCSS/chatStyle.css">
     <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
 </head>
 <body onload="connect(); loadUserList();">
     <%@include file="/WEB-INF/views/user/loginHeader.jsp" %>
-
-    <div class="container">
-        <div class="menu-bar">
-            <table class="left-menu">
-                <tr> <td>메뉴 아이콘</td> </tr>
-            </table>
-        </div>
+    
+    <div class="outer">
+<!--         <div class="menu-bar"> -->
+<!--             <table class="left-menu"> -->
+<!--                 <tr> <td>메뉴 아이콘</td> </tr> -->
+<!--             </table> -->
+<!--         </div> -->
 
         <div class="table-container">
             <table class="sel">
