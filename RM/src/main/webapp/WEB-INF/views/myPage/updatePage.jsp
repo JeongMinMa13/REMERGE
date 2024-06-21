@@ -84,56 +84,11 @@
 	</div>
 </div>
 <div>
-	<button type="button" class="btn btn-danger" data-bs-toggle="modal"
-		data-bs-target="#deleteForm">회원탈퇴</button>
+	<a href="deletePage.us" class="button-link">회원탈퇴</a>
 
 </div>
 
-<!-- 비밀번호 변경 Modal -->
-<div class="modal" id="updatePwdForm">
-	<div class="modal-dialog">
-		<div class="modal-content">
 
-
-			<div class="modal-header">
-				<h4 class="modal-title">비밀번호 변경</h4>
-				<button type="button" class="close" data-dismiss="modal">&times;</button>
-			</div>
-
-			<div class="modal-body" align="center">
-				<form action="updatePwd.us" method="post">
-					<input type="hidden" name="userId" value="${loginUser.userId }">
-
-					<table>
-						<tr>
-							<td>현재 비밀번호</td>
-							<td><input type="password" name="userPwd" required>
-							</td>
-						</tr>
-						<tr>
-							<td>변경할 비밀번호</td>
-							<td><input type="password" name="updatePwd" required>
-							</td>
-						</tr>
-						<tr>
-							<td>변경할 비밀번호 확인</td>
-							<td><input type="password" id="chkPwd" required></td>
-						</tr>
-					</table>
-					<br>
-					<button type="submit" class="btn btn-secondary"
-						onclick="return checkPwd();">비밀번호 변경</button>
-				</form>
-
-				<input type="hidden" name="userId" value="${loginUser.userId }">
-				<!--  Modal footer -->
-				<div class="modal-footer">
-					<button type="button" class="btn btn-danger" data-dismiss="modal">닫기</button>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
 
 
 
@@ -157,6 +112,12 @@
 		}
 		
 		function 
+</script>
+
+<script>
+	function deleteUser(){
+		
+	}
 </script>
 
 </body>

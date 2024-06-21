@@ -176,10 +176,10 @@ public class UserController {
 			if (result > 0) {
 				session.removeAttribute("loginUser"); // 로그인 정보 삭제
 				session.setAttribute("alertMsg", "회원탈퇴가 완료되었습니다.");
-				return "redirect:/";
+				return "user/mai";
 			} else {
 				// 탈퇴 실패시 - 에러페이지로 이동
-				model.addAttribute("errorMsg", "회원 탈퇴 실패");
+				model.addAttribute("alertMsg", "회원 탈퇴 실패");
 				return "myPage/myPage";
 			}
 
