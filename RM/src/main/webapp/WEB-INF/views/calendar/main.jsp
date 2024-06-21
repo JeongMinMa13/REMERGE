@@ -12,8 +12,10 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=8bbc3ea0a937b0baf9ab04c7ad6b1970&libraries=services,clusterer"></script>
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <style>
+    
     .fc .fc-daygrid-day-number,
     .fc .fc-col-header-cell-cushion{
     	color : black;
@@ -26,15 +28,13 @@
     #btnDiv{
     	display:none;
     }
-    header{
-    	
-    }
+
     </style>
     
 </head>
 <body>
     
-		<%@include file = "../user/loginHeader.jsp" %> 
+	<%@include file = "../user/loginHeader.jsp" %>
     <div class="outer">
         <div id="calendar"></div>
     </div>
@@ -125,7 +125,6 @@
         </div>
     </div>
 
-	<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=8bbc3ea0a937b0baf9ab04c7ad6b1970&libraries=services,clusterer"></script>
     <script>
 	    
     	document.addEventListener('DOMContentLoaded', function() {

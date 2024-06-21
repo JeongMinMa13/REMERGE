@@ -9,7 +9,7 @@
  	
  	<typeAliases>
 
- 		<!-- <typeAlias type="com.kh.reMerge.message.model.vo.Message" alias="Message"/> -->
+ 		<typeAlias type="com.kh.reMerge.message.model.vo.Message" alias="Message"/>
  		<typeAlias type="com.kh.reMerge.calendar.model.vo.Schedule" alias="Schedule"/>
 
  		<typeAlias type="com.kh.reMerge.user.model.vo.User" alias="User"/>

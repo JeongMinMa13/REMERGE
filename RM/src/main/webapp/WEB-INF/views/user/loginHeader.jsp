@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <title>로그인 헤더 구현하지않음 아직 세션만가져오기 가능</title>
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c" %>
-<jsp:include page="/WEB-INF/css/headerCSS.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/css/feedCSS.jsp"></jsp:include>
 </head>
 <body>
 	<c:if test="${not empty alertMsg}">
@@ -18,7 +18,7 @@
 	<header>
         <div class="sidebar">
             <div class="logo">
-                <img src="resources/Remergelogo.png" alt="Remerge logo">
+                <img id="logo" src="resources/Remergelogo.png" alt="Remerge logo">
             </div>
             <nav class="menu">
                 <ul>
@@ -30,10 +30,17 @@
                     <li><div class="menu-item" id="create"><img src="resources/create.png">만들기</div></li>
                     <li><div class="menu-item" id="store"><img src="resources/store.png">스토어</div></li>
                     <li><div class="menu-item" id="profile"><img src="">프로필</div></li>
-                    <li><div class="menu-item" id="profile"><img src="resources/calendaricon.png"><a href="calendar.sc">캘린더</a></div></li>
+                    <li><div class="menu-item" id="calendarSidebar"><img src="resources/calendaricon.png"><a href="calendar.sc">캘린더</a></div></li>
                 </ul>
             </nav>
         </div>
     </header>
+    
+    <script>
+        document.getElementById('logo').onclick = function() {
+            location.href = "/reMerge/message/dm";
+        };
+    </script>
+    
 </body>
 </html>
