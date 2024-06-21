@@ -16,13 +16,13 @@ public interface UserService {
 
 	int updatePwd(User u);
 	
-	
 	int deleteUser(String userPwd);
 
 	// 메시지용 - 중구
 	ArrayList<User> getAllUsers();
-
-
+	
+	//유저 검색
+	ArrayList<User> searchUser(String searchStr);
 
 	
 }
