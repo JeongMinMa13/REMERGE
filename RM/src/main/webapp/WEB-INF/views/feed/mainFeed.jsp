@@ -197,7 +197,6 @@
 				</div>
 			</div>
 		</div>
-<<<<<<< HEAD
 		
 		<!-- 스토리 추가 모달 -->
 		<div class="modal fade" id="modal_create_story" tabindex="-1" role="dialog" aria-labelledby="modal_create_story" aria-hidden="true">
@@ -228,10 +227,7 @@
 				</div>
 			</div>
 		</div>
-		
-=======
 
->>>>>>> refs/remotes/origin/main
 		<!-- 게시물 등록 스크립트 -->
 		<script>
 		 <!--썸네일 만들기-->
@@ -266,8 +262,6 @@
 		 $('#close_second_modal_button').click(function() {
 		   $('#modal_second').modal('hide');
 		 });
-<<<<<<< HEAD
-		
 		
 		</script>
 		
@@ -286,7 +280,6 @@
 				error:function(){
 					console.log("통신 실패");
 				}
-=======
 
 		 document.getElementById('imageUpload').addEventListener('change', function(event) {
 			    var file = event.target.files[0]; // 선택된 파일
@@ -300,7 +293,6 @@
 
 			    // 파일 리더로 파일 읽기
 			    reader.readAsDataURL(file);
->>>>>>> refs/remotes/origin/main
 			});
 		});
 	
@@ -310,15 +302,12 @@
 			 $('#modal_create_story').modal('show');//모달 켜기
 		}
 		
-<<<<<<< HEAD
 		const storyFile = document.getElementById('storyFile');//파일 인풋 요소 잡기
 		const storyThumbnail = document.getElementById('storyThumbnail'); //미리보기요소 잡아주기
-=======
 
 
 		</script>
->>>>>>> refs/remotes/origin/main
-		
+		<script>
 		storyFile.addEventListener('change', function(event) {//인풋요소에 파일이 들어오면
 		     const file = storyFile.files[0];//인풋요소 처음들어온 파일 잡고
 		     if (file) {//들어온 파일이 있다면
@@ -330,7 +319,7 @@
 		         reader.readAsDataURL(file);
 		     }
 		 });
-	</script>
+		</script>
 	
     <script src="scripts.js">
         document.querySelectorAll('.menu-item').forEach(item => {
