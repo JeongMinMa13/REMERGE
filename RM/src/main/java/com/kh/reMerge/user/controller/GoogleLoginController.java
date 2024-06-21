@@ -1,0 +1,94 @@
+package com.kh.reMerge.user.controller;
+
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import javax.servlet.http.HttpSession;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.github.scribejava.core.model.OAuth2AccessToken;
+import com.kh.reMerge.user.model.vo.GoogleLoginBo;
+import com.kh.reMerge.user.model.vo.UserinfoAuthAPI;
+
+import lombok.RequiredArgsConstructor;
+
+@Controller
+@RequestMapping("/google")
+@RequiredArgsConstructor
+public class GoogleLoginController {
+	private final GoogleLoginBo googleLoginBo;
+	//private final UserinfoService userinfoService;
+
+	@RequestMapping("/login")
+	public String googlelogin(HttpSession session) throws UnsupportedEncodingException {
+		String googleAuthUrl = googleLoginBo.getAuthorizationUrl(session);
+		return "redirect:" + googleAuthUrl;
+	}
+
+	@RequestMapping("/callback")
+	public String googlelogin(@RequestParam String code, @RequestParam String state, HttpSession session)
+			throws IOException, ParseException/*, ExistsUserinfoException, UserinfoNotFoundException*/, ParseException {
+		OAuth2AccessToken accessToken = googleLoginBo.getAccessToken(session, code, state);
+
+		String apiResult = googleLoginBo.getUserProfile(accessToken);
+
+		JSONParser parser = new JSONParser();
+		Object object = parser.parse(apiResult);
+		JSONObject responseObject = (JSONObject) object;
+
+		// 사용자 json 데이터를 각각 id, email 등 각각 나눠서 저장
+		String id = (String) responseObject.get("id");
+		String email = (String) responseObject.get("email");
+		String name = (String) responseObject.get("name");
+
+		// (spring-security) 소셜 로그인 계정에 "ROLE_SOCIAL" 권한 부여
+		UserinfoAuthAPI auth = new UserinfoAuthAPI();
+		auth.setId("google_" + id);
+		auth.setAuth("ROLE_SOCIAL");
+
+//		List<UserinfoAuth> authList = new ArrayList<UserinfoAuth>();
+//		authList.add(auth);
+//
+//		Userinfo userinfo = new Userinfo();
+//		userinfo.setId("google_" + id);
+//		userinfo.setPw(UUID.randomUUID().toString());
+//		userinfo.setName(null);
+//		userinfo.setNickname(name);
+//		userinfo.setEmail(email);
+//		userinfo.setAddress(null);
+//		userinfo.setEnabled("0");
+//		userinfo.setSecurityAuthList(authList);
+//		
+		// 사용자의 정보를 userinfo 테이블과 auth 테이블에 저장
+		//userinfoService.addUserinfo(userinfo, "ROLE_SOCIAL");
+		//userinfoService.addUserinfoAuth(auth);
+		//userinfoService.updateUserLogindate(userinfo.getId());
+		
+		// 여기부턴 spring-security 적용 관련입니다.
+		// 네이버 로그인 사용자 정보를 사용하여 UserDetails 객체(로그인 사용자)를 생성하여 저장
+		//customUserDetails customUserDetails=new CustomUserDetails(userinfo);
+		
+		// UsernamePasswordAuthenticationToken 객체를 생성하여 Spring Security가 사용 가능한 인증 사용자로 등록 처리
+		// UsernamePasswordAuthenticationToken 객체 : 인증 성공한 사용자를 Spring Security가 사용 가능한 인증 사용자로 등록 처리하는 객체
+		Authentication authentication=new UsernamePasswordAuthenticationToken
+				(customUserDetails, null, customUserDetails.getAuthorities());
+		
+		// SecurityContextHolder 객체 : 인증 사용자의 권한 관련 정보를 저장하기 위한 객체
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+			
+		return "redirect:/";
+	}
+}

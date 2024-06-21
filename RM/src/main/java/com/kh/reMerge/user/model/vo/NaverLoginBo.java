@@ -24,7 +24,7 @@ public class NaverLoginBo {
 	private final static String CLIENT_ID = "QtBQWMlKTonQr2ENTX3U";
 	private final static String CLIENT_SECRET = "4RQLDD98le";
 	private final static String REDIRECT_URI = "http://remerge.com:8878/reMerge/callback";
-	private final static String SESSION_STATE = "oauth_state";
+	private static final String SESSION_STATE = "neathlo_state";
 	/*
 	 * 프로필 조회 API URL
 	 */ 
@@ -32,11 +32,13 @@ public class NaverLoginBo {
 
 	/* 네이버 아이디로 인증 URL 생성 Method */
 	 	public String getAuthorizationUrl(HttpSession session) { /* 세션 유효성 검증을 위하여 난수를 생성 */
-	 		
-		String state = generateRandomString(); 
+	 	
+	 	String state=UUID.randomUUID().toString();
 		/* 생성한 난수 값을 session에 저장 */
-		setSession(session, state); 
+		session.setAttribute(SESSION_STATE, state); 
+		session.setMaxInactiveInterval(60 * 60); 
 		System.out.println("세션 : "+state);
+		
 		/*
 		 * Scribe에서 제공하는 인증 URL 생성 기능을 이용하여 네아로 인증 URL 생성
 		 */
@@ -49,8 +51,9 @@ public class NaverLoginBo {
 										.build(NaverLoginApi.instance());
 		
 		//앞서 생성한 난수값을인증 URL생성시 사용함
+		String authorizationUrl = oauthService.getAuthorizationUrl();
 		
-		return oauthService.getAuthorizationUrl();
+		return authorizationUrl;
 	
 	}
 
@@ -62,8 +65,7 @@ public class NaverLoginBo {
 	 	/*
 		 * Callback으로 전달받은 세선검증용 난수값과 세션에 저장되어있는 값이 일치하는지 확인
 		 */ 
-	 		
-	 		String sessionState = getSession(session);
+	 		String sessionState=(String)session.getAttribute(SESSION_STATE);
 	 		System.out.println("state : " + state);
 	 		System.out.println("sessionState : " + sessionState);
 	 		System.out.println("비교구문 : "+StringUtils.pathEquals(sessionState, state));
@@ -86,21 +88,6 @@ public class NaverLoginBo {
 			return accessToken;
 		}
 		return null;
-	}
-
-	/* 세션 유효성 검증을 위한 난수 생성기 */
-	 	private String generateRandomString() {
-	 		return UUID.randomUUID().toString();
-	}
-
-	/* http session에 데이터 저장 */ 
-	 	private void setSession(HttpSession session, String state) {
-		session.setAttribute(SESSION_STATE, state);
-	} 
-	 	/* http session에서 데이터 가져오기 */
-
-	private String getSession(HttpSession session) {
-		return (String) session.getAttribute(SESSION_STATE);
 	}
 
 	/*

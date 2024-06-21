@@ -45,8 +45,13 @@
 	<br>
 		
 		<!-- 네이버 로그인 창으로 이동 -->
-		<div id="naver_id_login" style="text-align: center;">
-    		<a id="naverLoginLink" type="button"><img  width="223" src="https://developers.naver.com/doc/review_201802/CK_bEFnWMeEBjXpQ5o8N_20180202_7aot50.png" /></a>
+		<div class="social-login-buttons">
+	<img class="naver-login-img" alt="네이버로그인" src="<c:url value="/assets/images/naver_login.png"/>" 
+		  onclick="location.href='<c:url value="/naver/login"/>';" role="button">
+	<img class="kakao-login-img" alt="카카오로그인" src="<c:url value="/assets/images/kakao_login.png"/>"
+	      onclick="location.href='<c:url value="/kakao/login"/>';" role="button">
+	<img class="google-login-img" alt="구글로그인" src="<c:url value="/assets/images/google_login.png"/>"
+	      onclick="location.href='<c:url value="/google/login"/>';" role="button">
 		</div>
 		<br>
 	</div>
@@ -69,18 +74,18 @@
 	
 
    <script>
-  	 $('#naver_id_login').click(function() {
+  		 $('#naver_id_login').click(function() {
 	        $.ajax({
 	            url: "naverlogin.us",
 	            success: function(data){
-	                location.href="${naverAuthUrl}"
+	                location.href='<c:url value="/Naver/login"/>';"
 	            },
 	            error: function(){
 	                console.log("통신 오류");
 		            }
 		        });
 	    
-    });
+    }); 
 	
   
 	   
