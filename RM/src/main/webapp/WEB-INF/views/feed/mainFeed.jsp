@@ -8,7 +8,6 @@
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <jsp:include page="/WEB-INF/css/feedCSS.jsp"></jsp:include>
@@ -44,7 +43,7 @@
     <div class="body">
         <!--스토리 목록-->
             <div class="storys">
-            	<div class="story" onclick="addStory()">
+            	<div class="story" onclick="addStory();">
 		      		<img class="story_img" src="resources/plusicon.jpeg">
 		      		<span>스토리 추가하기</span>
 		      	</div>
@@ -198,7 +197,41 @@
 				</div>
 			</div>
 		</div>
+<<<<<<< HEAD
+		
+		<!-- 스토리 추가 모달 -->
+		<div class="modal fade" id="modal_create_story" tabindex="-1" role="dialog" aria-labelledby="modal_create_story" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="modal_create_story">스토리 만들기</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<form action="insertStory.fe" method="post" enctype="multipart/form-data">
+							<div class="form-group">
+								<input type="hidden" name="userId" value="${loginUser.userId }">
+								<label for="storyFile">이미지 선택</label> 
+								<input type="file" class="form-control-file" id="storyFile" name="storyFile">
+							</div>
+							<div id="thumbnailContainer">
+								<img id="storyThumbnail" class="thumbnail" src="#" alt="Thumbnail">
+							</div>
+								<br>
+								<label for="storyContent">한줄 내용 : </label>
+								<input type="text" name="storyContent" style="width:300px;">
+								<button type="submit" class="btn btn-primary">등록</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+=======
 
+>>>>>>> refs/remotes/origin/main
 		<!-- 게시물 등록 스크립트 -->
 		<script>
 		 <!--썸네일 만들기-->
@@ -233,6 +266,27 @@
 		 $('#close_second_modal_button').click(function() {
 		   $('#modal_second').modal('hide');
 		 });
+<<<<<<< HEAD
+		
+		
+		</script>
+		
+	<script>
+		<!-- 스토리 조회해오기 --> 
+		$(function(){
+			$.ajax({
+				url:"selectStory.fe",
+				type:"post",
+				data:{
+					userId:"${loginUser.userId}"
+				},
+				success:function(data){
+					console.log(data);
+				},
+				error:function(){
+					console.log("통신 실패");
+				}
+=======
 
 		 document.getElementById('imageUpload').addEventListener('change', function(event) {
 			    var file = event.target.files[0]; // 선택된 파일
@@ -246,26 +300,45 @@
 
 			    // 파일 리더로 파일 읽기
 			    reader.readAsDataURL(file);
+>>>>>>> refs/remotes/origin/main
 			});
+		});
+	
+		<!-- 스토리 추가 스크립트 -->
+		function addStory(){
+			
+			 $('#modal_create_story').modal('show');//모달 켜기
+		}
 		
+<<<<<<< HEAD
+		const storyFile = document.getElementById('storyFile');//파일 인풋 요소 잡기
+		const storyThumbnail = document.getElementById('storyThumbnail'); //미리보기요소 잡아주기
+=======
 
 
 		</script>
+>>>>>>> refs/remotes/origin/main
 		
-		<script>
-			function addStory(){
-				 const modal = document.getElementById("modal_createStory");
-				 modal.style.display = "flex";
-			}
-		</script>
-		           
+		storyFile.addEventListener('change', function(event) {//인풋요소에 파일이 들어오면
+		     const file = storyFile.files[0];//인풋요소 처음들어온 파일 잡고
+		     if (file) {//들어온 파일이 있다면
+		    	 document.getElementById('thumbnailContainer').style.display='block';
+		         const reader = new FileReader();//파일 정보 읽어줄 객체 FileReader() 준비
+		         reader.onload = function(e) {
+		             storyThumbnail.setAttribute('src', e.target.result);//파일 읽어 src속성에 넣어주기
+		         }
+		         reader.readAsDataURL(file);
+		     }
+		 });
+	</script>
+	
     <script src="scripts.js">
         document.querySelectorAll('.menu-item').forEach(item => {
         item.addEventListener('click', () => {
         console.log(`${item.id} 메뉴 클릭됨`);
         // 페이지 이동 처리
-    });
-});
+		    });
+		});
     </script>
 </body>
 </html>
