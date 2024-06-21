@@ -29,13 +29,18 @@
                     <li><div class="menu-item" id="notifications"><img src="resources/notifications.png">알림</div></li>
                     <li><div class="menu-item" id="create"><img src="resources/create.png">만들기</div></li>
                     <li><div class="menu-item" id="store"><img src="resources/store.png">스토어</div></li>
-                    <li><div class="menu-item" id="profile"><img src="">프로필</div></li>
-                    <li><div class="menu-item" id="profile"><img src="resources/calendaricon.png"><a href="calendar.sc">캘린더</a></div></li>
+                    <li><div class="menu-item" id="profile"><img src=""><a href="mypage.us">프로필</a></div></li>
+                    <li><div class="menu-item" id="calendarIcon"><img src="resources/calendaricon.png"><a href="calendar.sc">캘린더</a></div></li>
                 </ul>
             </nav>
         </div>
     </header>
+<<<<<<< HEAD
     <h2>${loginUser.userId}</h2>
 	<a href="logout.us">로그아웃</a>
+=======
+
+    
+>>>>>>> refs/remotes/origin/main
 </body>
 </html>
