@@ -14,4 +14,7 @@ public interface UserService {
 
 	// 메시지용 - 중구
 	ArrayList<User> getAllUsers();
+	
+	//유저 검색
+	ArrayList<User> searchUser(String searchStr);
 }

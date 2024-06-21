@@ -45,4 +45,10 @@ public class UserServiceImpl implements UserService {
 		return userDao.getAllUsers(sqlSession);
 	}
 
+	//유저 검색
+	@Override
+	public ArrayList<User> searchUser(String searchStr) {
+
+		return userDao.searchUser(sqlSession,searchStr);
+	}
 }

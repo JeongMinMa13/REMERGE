@@ -31,4 +31,9 @@ public class UserDao {
 		return (ArrayList)sqlSession.selectList("userMapper.getAllUsers");
 	}
 
+	public ArrayList<User> searchUser(SqlSessionTemplate sqlSession, String searchStr) {
+
+		return (ArrayList)sqlSession.selectList("userMapper.searchUser",searchStr);
+	}
+
 }
