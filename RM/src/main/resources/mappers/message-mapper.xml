@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="message-Mapper">
+	<resultMap type="Message" id="messageResultMap">
+		<result column="MESSAGE_NO" property="messageNo" />
+		<result column="MESSAGEROOM_NO" property="messageRoomNo" />
+		<result column="SEND_ID" property="sendId" />
+		<result column="RECEIVE_ID" property="receiveId" />
+		<result column="SEND_TIME" property="sendTime" />
+		<result column="READ_TIME" property="readTime" />
+		<result column="CONTENT" property="content" />
+		<result column="PHOTO" property="photo" />
+		<result column="READ_CHECK" property="readCheck" />
+	</resultMap>
+
+
+	<select id="getMessagesBetweenUsers" parameterType="map" resultType="Message">
+	    SELECT MESSAGE_NO,
+	    	   MESSAGEROOM_NO,
+	    	   SEND_ID,
+	    	   RECEIVE_ID,
+	    	   SEND_TIME,
+           	   READ_TIME,
+           	   CONTENT,
+           	   PHOTO,
+           	   READ_CHECK
+    FROM MESSAGE
+    WHERE (SEND_ID = #{sendId} AND RECEIVE_ID = #{receiveId})
+    OR (SEND_ID = #{receiveId} AND RECEIVE_ID = #{sendId})
+    ORDER BY SEND_TIME ASC
+	</select>
+    
+    <insert id="insertMessage" parameterType="Message">
+        INSERT INTO MESSAGE (MESSAGE_NO,
+        					 MESSAGEROOM_NO,
+        					 SEND_ID,
+        					 RECEIVE_ID,
+        					 SEND_TIME,
+        					 READ_TIME,
+        					 CONTENT,
+        					 PHOTO,
+        					 READ_CHECK)
+        VALUES (#{messageNo},
+        		#{messageRoomNo},
+        		#{sendId},
+        		#{receiveId},
+        		#{sendTime},
+        		#{readTime},
+        		#{content},
+        		#{photo},
+        		#{readCheck})
+    </insert>
+    
+     <insert id="sendMessage" parameterType="Message">
+        INSERT INTO MESSAGE (SEND_ID, RECEIVE_ID, CONTENT)
+        VALUES (#{sendId}, #{receiveId}, #{content})
+    </insert>
+    
+</mapper>

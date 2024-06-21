@@ -18,7 +18,7 @@
 	<header>
         <div class="sidebar">
             <div class="logo">
-                <img src="resources/Remergelogo.png" alt="Remerge logo">
+                <img id="logo" src="resources/Remergelogo.png" alt="Remerge logo">
             </div>
             <nav class="menu">
                 <ul>
@@ -34,5 +34,12 @@
             </nav>
         </div>
     </header>
+    
+    <script>
+        document.getElementById('logo').onclick = function() {
+            location.href = "/reMerge/message/dm";
+        };
+    </script>
+    
 </body>
 </html>
