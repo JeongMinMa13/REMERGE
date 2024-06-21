@@ -3,7 +3,9 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:beans="http://www.springframework.org/schema/beans"
 	xmlns:context="http://www.springframework.org/schema/context"
-	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+	xmlns:websocket="http://www.springframework.org/schema/websocket"
+	xsi:schemaLocation="http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket-4.3.xsd
+		http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
 		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
 
@@ -21,13 +23,16 @@
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 	
-<!-- 	<websocket:handlers allowed-origins="http://localhost:8888/reMerge,http://192.168.50.30:8888/reMerge"> handler : 서버 정보  / path : 해당 서버에 접속 매핑주소 -->
-<!-- 		<websocket:mapping handler="basicServer" path="/basic"/>	 -->
-<!-- 	 Http 통신으로 요청되어진 HttpSession 정보를 가지고 오기 위한 설정  --> 
-<!-- 		<websocket:handshake-interceptors> -->
-<!-- 			<beans:bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor"/> -->
-<!-- 		</websocket:handshake-interceptors>	 -->
-<!-- 	</websocket:handlers> -->
+	<beans:bean id="messageServer" class="com.kh.reMerge.message.server.MessageServer"/>
+	
+	<websocket:handlers allowed-origins="http://localhost:8888/reMerge,http://192.168.50.30:8888/reMerge">
+		<websocket:mapping handler="messageServer" path="/dm"/>
+		
+		<websocket:handshake-interceptors>
+			<beans:bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor"/>
+		</websocket:handshake-interceptors>
+		<websocket:sockjs/>
+	</websocket:handlers>
 	
 	<context:component-scan base-package="com.kh.reMerge">
 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
