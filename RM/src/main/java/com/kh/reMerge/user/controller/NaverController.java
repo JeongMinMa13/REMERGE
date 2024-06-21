@@ -23,11 +23,7 @@ class NaverController {
 	private NaverLoginBo naverLoginBO;
 	private String apiResult = null;
 
-	@Autowired
-	private void setNaverLoginBO(NaverLoginBo naverLoginBO) {
-		this.naverLoginBO = naverLoginBO;
-		
-	}
+
 	 
 	 //로그인 첫 화면 요청 메소드 
 		
@@ -41,13 +37,12 @@ class NaverController {
 		 //https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=sE***************&
 		 //redirect_uri=http%3A%2F%2F211.63.89.90%3A8090%2Flogin_project%2Fcallback&state=e68c269c-5ba9-4c31-85da-54c16c658125
 		 
-		 System.out.println("네이버:" + naverAuthUrl); //네이버
 		 
 		 
 		 model.addAttribute("url",naverAuthUrl);
 		 session.setAttribute("naverAuthUrl", naverAuthUrl);
-		 
-		 return "user/mainLogin";
+		 System.out.println("네이버:" + naverAuthUrl);
+		 return naverAuthUrl;
 		 
 		 }
 
@@ -56,15 +51,16 @@ class NaverController {
 	@RequestMapping(value = "/callback", method = { RequestMethod.GET, RequestMethod.POST })
 	public String callback(Model model, @RequestParam String code, @RequestParam String state, HttpSession session)
 			throws IOException, ParseException {
-		System.out.println("여기는 callback");
+		//System.out.println("callback ");
 		OAuth2AccessToken oauthToken;
+		System.out.println("callback에서 : "+state);
 		oauthToken = naverLoginBO.getAccessToken(session, code, state);
-		System.out.println(oauthToken);
+		//System.out.println(oauthToken);
 
 		// 1. 로그인 사용자 정보를 읽어온다.
 		apiResult = naverLoginBO.getUserProfile(oauthToken);
 		// String형식의 json데이터
-		System.out.println(apiResult);
+		//System.out.println(apiResult);
 
 		// apiResult json 구조
 		// {"resultcode":"00", "message":"success","response":
@@ -74,14 +70,14 @@ class NaverController {
 		JSONParser parser = new JSONParser();
 		Object obj = parser.parse(apiResult);
 		JSONObject jsonObj = (JSONObject) obj;
-		System.out.println(jsonObj);
+		//System.out.println(jsonObj);
 
 		// 3. 데이터 파싱
 		// Top레벨 단계 _response 파싱
 		JSONObject response_obj = (JSONObject) jsonObj.get("response");
 		// response의 nickname값 파싱
 		String id = (String) response_obj.get("id");
-		System.out.println(id);
+		//System.out.println(id);
 
 		// 4.파싱 닉네임 세션으로 저장
 		session.setAttribute("sessionId", id); // 세션 생성

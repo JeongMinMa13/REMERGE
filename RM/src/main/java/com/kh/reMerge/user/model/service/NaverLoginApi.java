@@ -12,7 +12,8 @@ public class NaverLoginApi extends DefaultApi20 {
 	}
 
 	public static NaverLoginApi instance() {
-		System.out.println("인스턴스 홀더 : "+InstanceHolder.INSTANCE);
+		//System.out.println("인스턴스 홀더 : "+InstanceHolder.INSTANCE);
+		
 		return InstanceHolder.INSTANCE;
 	}
 
