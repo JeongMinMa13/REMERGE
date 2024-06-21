@@ -1,5 +1,7 @@
 package com.kh.reMerge.user.model.service;
 
+import java.util.ArrayList;
+
 import com.kh.reMerge.user.model.vo.User;
 
 public interface UserService {
@@ -10,5 +12,6 @@ public interface UserService {
 
 	User loginUser(User u);
 
-
+	// 메시지용 - 중구
+	ArrayList<User> getAllUsers();
 }

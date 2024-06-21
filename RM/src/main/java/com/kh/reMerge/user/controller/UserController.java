@@ -1,14 +1,16 @@
 package com.kh.reMerge.user.controller;
 
+import java.util.ArrayList;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.reMerge.user.model.service.UserService;
 import com.kh.reMerge.user.model.vo.User;
@@ -102,6 +104,23 @@ public class UserController {
 			}
 			//System.out.println(resultPw);
 			return resultPw;
+		}
+		
+		// 메시지용 - 중구
+		@RequestMapping("userList.us")
+		public String userList(Model model) {
+		    ArrayList<User> userList = userService.getAllUsers();
+		    model.addAttribute("userList", userList);
+		    
+		    for (User user : userList) {
+		        System.out.println(user);
+		    }
+		    return "user/userList";
+		}
+		@ResponseBody
+		@RequestMapping("userListAjax.us")
+		public ArrayList<User> getUserListAjax() {
+		    return userService.getAllUsers();
 		}
 		
 		

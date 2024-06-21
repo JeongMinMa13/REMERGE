@@ -1,5 +1,7 @@
 package com.kh.reMerge.user.model.service;
 
+import java.util.ArrayList;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +37,12 @@ public class UserServiceImpl implements UserService {
 		//System.out.println(checkId);
 		//System.out.println(userDao.checkId(sqlSession, checkId));
 		return userDao.checkId(sqlSession, checkId);
+	}
+	
+	// 메시지용 - 중구
+	@Override
+	public ArrayList<User> getAllUsers() {
+		return userDao.getAllUsers(sqlSession);
 	}
 
 }
