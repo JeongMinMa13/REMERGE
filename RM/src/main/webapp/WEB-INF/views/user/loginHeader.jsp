@@ -47,6 +47,7 @@ html.active section {
                     <li><div class="menu-item" id="create"><img src="resources/create.png">만들기</div></li>
                     <li><div class="menu-item" id="store"><img src="resources/store.png">스토어</div></li>
                     <li><div class="menu-item" id="profile"><img src="">프로필</div></li>
+                    <li><div class="menu-item" id="profile"><img src=""><a href="mypage.us">프로필</a></div></li>
                     <li><div class="menu-item" id="calendarIcon"><img src="resources/calendaricon.png"><a href="calendar.sc">캘린더</a></div></li>
                 </ul>
             </nav>
@@ -88,8 +89,9 @@ html.active section {
     	}
     	
     	function profileUser(data){
-    		console.log(data.userId);
-    	}
+    		//console.log(data.userId);
+    		href.location="/reMerge/myPage.us"
+    	} 
     
     </script>
 </body>

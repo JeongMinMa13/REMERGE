@@ -26,14 +26,25 @@ public class UserDao {
 		return sqlSession.selectOne("userMapper.checkId",checkId);
 	}
 	
+	public int updateUser(SqlSessionTemplate sqlSession, User u) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("userMapper.updateUser",u);
+	}
+
+	public int updatePwd(SqlSessionTemplate sqlSession, User u) {
+		
+		return sqlSession.update("userMapper.updatePwd",u);
+	}
+
 	// 메시지용 - 중구
 	public ArrayList<User> getAllUsers(SqlSessionTemplate sqlSession) {
 		return (ArrayList)sqlSession.selectList("userMapper.getAllUsers");
 	}
 
+	//유저 검색
 	public ArrayList<User> searchUser(SqlSessionTemplate sqlSession, String searchStr) {
 
 		return (ArrayList)sqlSession.selectList("userMapper.searchUser",searchStr);
 	}
-
+	
 }

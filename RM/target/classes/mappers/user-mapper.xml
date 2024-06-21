@@ -15,8 +15,6 @@
 		<result column="USER_MEMO" property="userMemo" />
 	</resultMap>
 
-
-
 	<select id="loginUser" resultMap="userResultSet">
 		SELECT USER_ID,
 		USER_PWD,
@@ -45,7 +43,6 @@
 		#{shopBrandChek})
 	</insert>
 
-
 	<select id="checkId" parameterType="string" resultType="_int">
 		SELECT COUNT(*)
 		FROM USERS
@@ -55,5 +52,20 @@
 	<select id="searchUser" parameterType="string" resultMap="userResultSet">
 		SELECT USER_ID,EMAIL FROM USERS WHERE USER_ID LIKE '%'||#{searchStr}||'%'
 	</select>
+	
+	<update id="updateUser" parameterType="User">
+		UPDATE USERS
+		SET EMAIL =#{email}
+		,USER_MEMO =#{userMemo}
+		WHERE USER_ID=#{userId} 
+		AND STATUS='Y'
+	</update>
+	
+	<update id="updatePwd" parameterType="User">
+		UPDATE USERS
+		SET USER_PWD=#{userPwd}
+		WHERE USER_ID=#{userId}
+		AND STATUS='Y'
+	</update>
 	
 </mapper>

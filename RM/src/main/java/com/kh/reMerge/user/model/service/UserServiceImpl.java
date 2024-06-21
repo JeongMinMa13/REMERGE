@@ -39,6 +39,18 @@ public class UserServiceImpl implements UserService {
 		return userDao.checkId(sqlSession, checkId);
 	}
 	
+	@Override
+	public int updateUser(User u) {
+		// TODO Auto-generated method stub
+		return userDao.updateUser(sqlSession, u);
+	}
+	
+	@Override
+	public int updatePwd(User u) {
+		// TODO Auto-generated method stub
+		return userDao.updatePwd(sqlSession, u);
+	}
+	
 	// 메시지용 - 중구
 	@Override
 	public ArrayList<User> getAllUsers() {
@@ -51,4 +63,10 @@ public class UserServiceImpl implements UserService {
 
 		return userDao.searchUser(sqlSession,searchStr);
 	}
+	@Override
+	public int deleteUser(String userPwd) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }
