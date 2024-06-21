@@ -12,6 +12,17 @@ public interface UserService {
 
 	User loginUser(User u);
 
+	int updateUser(User u);
+
+	int updatePwd(User u);
+	
+	
+	int deleteUser(String userPwd);
+
 	// 메시지용 - 중구
 	ArrayList<User> getAllUsers();
+
+
+
+	
 }
