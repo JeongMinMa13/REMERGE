@@ -13,6 +13,8 @@
  		<typeAlias type="com.kh.reMerge.calendar.model.vo.Schedule" alias="Schedule"/>
 
  		<typeAlias type="com.kh.reMerge.user.model.vo.User" alias="User"/>
+ 		
+ 		<typeAlias type="com.kh.reMerge.feed.model.vo.Feed" alias="Feed"/>
 
  	</typeAliases>
  	

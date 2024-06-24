@@ -86,14 +86,13 @@ header {
 .conA {
 	flex: 2;
 	margin: 10px 50px 30px 200px;
-	display: flex;
 	justify-content: center;
 }
 
 .conA .con {
 	width: 500px;
-	height: 630px;
-	margin-bottom: 50px;
+	height: 600px;
+	margin-bottom: 100px;
 	margin-left: 500px;
 	border: 1px solid #DBDBDB;
 	border-radius: 3px;
@@ -111,7 +110,8 @@ header {
 }
 
 .con_img {
-	width: 500px;
+	width: 497px;
+	height: 350px;
 }
 
 .img {
@@ -145,10 +145,10 @@ header {
 }
 
 .container {
-	position: relative;
-	bottom: 100px;
+	position: fixed;
+	top: 100px;
 	width: 300px;
-	left: 50px;
+	left: 1400px;
 	background-color: white;
 	border: 1px solid #dbdbdb;
 	border-radius: 10px;
@@ -240,9 +240,9 @@ header {
 }
 
 .footer {
-	position: relative;
-	top: 220px;
-	right: 290px;
+	position: fixed;
+	top: 420px;
+	right: 130px;
 	font-size: 12px;
 	color: #8e8e8e;
 	text-align: center;
@@ -311,7 +311,9 @@ header {
     border-radius: 5px;
     margin-top: 10px;
 }
-
+#thumbnailFeed{
+	display:none;
+}
 
 
 
