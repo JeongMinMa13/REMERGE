@@ -19,4 +19,6 @@ public class User {
 	private String status;
 	private String shopBrandChek;
 	private String userMemo;
+	private String profileOriginName;
+	private String profileChangePath;
 }

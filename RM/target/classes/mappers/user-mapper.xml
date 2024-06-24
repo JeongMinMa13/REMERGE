@@ -55,7 +55,8 @@
 	
 	<update id="updateUser" parameterType="User">
 		UPDATE USERS
-		SET EMAIL =#{email}
+		SET PROFILE_PATH =#{profilePath} 
+		,EMAIL =#{email}
 		,USER_MEMO =#{userMemo}
 		WHERE USER_ID=#{userId} 
 		AND STATUS='Y'
@@ -84,5 +85,7 @@
 	<delete id="deleteFollow" parameterType="FollowList">
 		DELETE FROM FOLLOWLIST WHERE TO_USER=#{toUser} AND FROM_USER=#{fromUser}
 	</delete>
+	
+
 	
 </mapper>

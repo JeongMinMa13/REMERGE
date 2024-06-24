@@ -71,4 +71,7 @@ public class UserDao {
 
 		return sqlSession.delete("userMapper.deleteFollow", followList);
 	}
+
+	
+	
 }

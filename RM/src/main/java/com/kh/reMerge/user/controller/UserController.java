@@ -111,19 +111,19 @@ public class UserController {
 	// 마이페이지로 이동
 	@RequestMapping("myPage.us")
 	public String myPage(String userId, HttpSession session) {
-		
-		boolean followFlag=false;//팔로우 되어있는지 확인하기 위한 초기화
-		String myId=((User)session.getAttribute("loginUser")).getUserId();//로그인된 유저 아이디 추출
-		User u = userService.selectUser(userId);//선택된 유저 정보 조회
-		FollowList followList = new FollowList(userId,myId);//팔로우 정보 조회하기 위해 담기
-		int result = userService.selectFollow(followList);//팔로우 되어있는지 확인하기 위한 조회
-		if(result>0) {//팔로우 되어 있다면 true
-			followFlag=true;
+
+		boolean followFlag = false;// 팔로우 되어있는지 확인하기 위한 초기화
+		String myId = ((User) session.getAttribute("loginUser")).getUserId();// 로그인된 유저 아이디 추출
+		User u = userService.selectUser(userId);// 선택된 유저 정보 조회
+		FollowList followList = new FollowList(userId, myId);// 팔로우 정보 조회하기 위해 담기
+		int result = userService.selectFollow(followList);// 팔로우 되어있는지 확인하기 위한 조회
+		if (result > 0) {// 팔로우 되어 있다면 true
+			followFlag = true;
 		}
-		
+
 		session.setAttribute("user", u);
 		session.setAttribute("followFlag", followFlag);
-		
+
 		return "myPage/myPage";
 	}
 
@@ -134,11 +134,9 @@ public class UserController {
 	}
 
 	@RequestMapping("update.us")
-	public String updateUser(User u, Model model, HttpSession session) {
+	public String updateUser(User u, Model model, HttpSession session, MultipartFile reupfile) {
 
-		System.out.println(u);
 		int result = userService.updateUser(u);
-
 		if (result > 0) {
 
 			User updateUs = userService.loginUser(u);
@@ -155,29 +153,29 @@ public class UserController {
 	}
 
 	@PostMapping("updatePwd.us")
-	public String updatePwd(User u, Model model,String updatePwd, HttpSession session) {
+	public String updatePwd(User u, Model model, String updatePwd, HttpSession session) {
 		String bcrPwd = bcryptPasswordEncoder.encode(updatePwd);
 		u.setUserPwd(bcrPwd);
 		int result = userService.updatePwd(u);
-		
-		if(result>0) {
+
+		if (result > 0) {
 			User updateUser = userService.loginUser(u);
 			session.setAttribute("loginUser", updateUser);
 			session.setAttribute("alertMsg", "비밀번호 변경 성공");
-			
-		}else {
-			model.addAttribute("alertMsg","비밀번호 변경 실패");
+
+		} else {
+			model.addAttribute("alertMsg", "비밀번호 변경 실패");
 		}
-		
+
 		return "user/mainLogin";
-		
+
 	}
 
 	private String saveFile(MultipartFile upfile, HttpSession session) {
-		String profilePath=upfile.getOriginalFilename();
-		
+		String profilePath = upfile.getOriginalFilename();
+
 		String savePath = session.getServletContext().getRealPath("/resources/uploadFiles/");
-		
+
 		return profilePath;
 	}
 
@@ -207,8 +205,6 @@ public class UserController {
 
 	}
 
-	
-
 	// 메시지용 - 중구
 	@RequestMapping("userList.us")
 	public String userList(Model model) {
@@ -218,38 +214,38 @@ public class UserController {
 		for (User user : userList) {
 			System.out.println(user);
 		}
-		
+
 		return "user/userList";
-		}
-	
+	}
+
 	@ResponseBody
 	@RequestMapping("userListAjax.us")
 	public ArrayList<User> getUserListAjax() {
-	    return userService.getAllUsers();
+		return userService.getAllUsers();
 	}
-	
-	//유저 검색
+
+	// 유저 검색
 	@ResponseBody
 	@GetMapping("searchUser.us")
-	public ArrayList<User> searchUser(String searchStr){
-		
+	public ArrayList<User> searchUser(String searchStr) {
+
 		return userService.searchUser(searchStr);
 	}
-	
-	//팔로우 신청
+
+	// 팔로우 신청
 	@ResponseBody
-	@PostMapping(value="insertFollow.us")
+	@PostMapping(value = "insertFollow.us")
 	public int insertFollow(FollowList followList) {
-		
+
 		return userService.insertFollow(followList);
 	}
-	
-	//언팔로우
+
+	// 언팔로우
 	@ResponseBody
 	@PostMapping("deleteFollow.us")
 	public int deleteFollow(FollowList followList) {
-		
+
 		return userService.deleteFollow(followList);
 	}
-	
+
 }
