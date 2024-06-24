@@ -68,4 +68,21 @@
 		AND STATUS='Y'
 	</update>
 	
+	<select id="selectUser" parameterType="string" resultMap="userResultSet">
+		SELECT USER_ID,EMAIL,USER_MEMO,PROFILE_PATH FROM USERS WHERE USER_ID=#{userId}
+	</select>
+	
+	<insert id="insertFollow" parameterType="FollowList">
+		INSERT INTO FOLLOWLIST(FROM_USER,TO_USER)
+		VALUES(#{fromUser},#{toUser})
+	</insert>
+	
+	<select id="selectFollow" parameterType="FollowList" resultType="_int">
+		SELECT COUNT(*) FROM FOLLOWLIST WHERE TO_USER=#{toUser} AND FROM_USER=#{fromUser}
+	</select>
+	
+	<delete id="deleteFollow" parameterType="FollowList">
+		DELETE FROM FOLLOWLIST WHERE TO_USER=#{toUser} AND FROM_USER=#{fromUser}
+	</delete>
+	
 </mapper>

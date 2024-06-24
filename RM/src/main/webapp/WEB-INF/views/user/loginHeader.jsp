@@ -9,6 +9,7 @@
 <jsp:include page="/WEB-INF/css/headerCSS.jsp"></jsp:include>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <style type="text/css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"><!-- bootstrapCSS -->
 html.active,
 html.active body {
   overflow: hidden;
@@ -40,14 +41,14 @@ html.active section {
             <nav class="menu">
                 <ul>
                     <li><div class="menu-item" id="home"><img src="resources/home.png">홈</div></li>
-                    <li><div class="menu-item" id="search"><img src="resources/search.png">검색</div></li>
+                    <li><div class="menu-item" id="search"  onclick="searchDisplay();"><img src="resources/search.png">검색</div></li>
                     <li><div class="menu-item" id="explore"><img src="resources/explore.png">탐색</div></li>
                     <li><div class="menu-item" id="messages"><img src="resources/messages.png"><a href="/reMerge/message/dm">메시지</a></div></li>
                     <li><div class="menu-item" id="notifications"><img src="resources/notifications.png">알림</div></li>
                     <li><div class="menu-item" id="create"><img src="resources/create.png">만들기</div></li>
                     <li><div class="menu-item" id="store"><img src="resources/store.png">스토어</div></li>
-                    <li><div class="menu-item" id="profile"><img src=""><a href="mypage.us">프로필</a></div></li>
-                    <li><div class="menu-item" id="calendarIcon"><img src="resources/calendaricon.png"><a href="calendar.sc">캘린더</a></div></li>
+                    <li><div class="menu-item" id="profile"><a href=""myPage.us?userId=${loginUser.userId}"><img src="">프로필</a></div></li>
+                    <li><div class="menu-item" id="calendarIcon"><a href="calendar.sc"><img src="resources/calendaricon.png">캘린더</a></div></li>
                 </ul>
             </nav>
         </div>

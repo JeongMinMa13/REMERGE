@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.kh.reMerge.user.model.vo.FollowList;
 import com.kh.reMerge.user.model.vo.User;
 
 @Repository
@@ -47,4 +48,27 @@ public class UserDao {
 		return (ArrayList)sqlSession.selectList("userMapper.searchUser",searchStr);
 	}
 	
+	//내가 아닌 다른 유저 프로필 보기 위한 조회
+	public User selectUser(SqlSessionTemplate sqlSession,String userId) {
+		
+		return sqlSession.selectOne("userMapper.selectUser",userId);
+	}
+
+	//팔로우 신청
+	public int insertFollow(SqlSessionTemplate sqlSession, FollowList followList) {
+
+		return sqlSession.insert("userMapper.insertFollow", followList);
+	}
+
+	//팔로우 되어있는지 확인하기 위한 조회
+	public int selectFollow(SqlSessionTemplate sqlSession, FollowList followList) {
+
+		return sqlSession.selectOne("userMapper.selectFollow",followList);
+	}
+
+	//언팔로우
+	public int deleteFollow(SqlSessionTemplate sqlSession, FollowList followList) {
+
+		return sqlSession.delete("userMapper.deleteFollow", followList);
+	}
 }
