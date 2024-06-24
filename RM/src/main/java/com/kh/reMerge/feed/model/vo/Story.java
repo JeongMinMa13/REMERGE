@@ -15,6 +15,7 @@ public class Story {
 	private String userId;
 	private String storyContent;
 	private Date createDate;
-	private int fileNo;
+	private String originName;
+	private String changeName;
 	
 }
