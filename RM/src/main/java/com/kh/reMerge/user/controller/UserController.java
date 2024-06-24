@@ -77,7 +77,7 @@ public class UserController {
 	
 		@ResponseBody
 		@RequestMapping("checkId.us")
-		public String checkId(String checkId) {
+		public String checkId(String checkId,HttpSession session) {
 			
 			int count = userService.checkId(checkId);
 			
@@ -85,13 +85,17 @@ public class UserController {
 			String result = "";
 			
 			if(count>0) {
+				session.setAttribute("alertMsg", "중복된 아이디가 있습니다. 실패!!");
 				result = "NNNNN";
+				
 			}else {
 				result = "NNNNY";
+				session.setAttribute("alertMsg", "중복된 아이디가 없습니다.");
 			}
 			//System.out.println(result);
 			return result;
 		}
+		
 		
 		@ResponseBody
 		@RequestMapping("checkPw.us")

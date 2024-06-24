@@ -33,9 +33,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public int checkId(String checkId) {
+	public int checkId(String checkId ) {
 		//System.out.println(checkId);
 		//System.out.println(userDao.checkId(sqlSession, checkId));
+		
+		
 		return userDao.checkId(sqlSession, checkId);
 	}
 	
@@ -68,5 +70,6 @@ public class UserServiceImpl implements UserService {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	
 
 }

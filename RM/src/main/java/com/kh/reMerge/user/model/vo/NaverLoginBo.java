@@ -14,25 +14,16 @@ import com.github.scribejava.core.oauth.OAuth20Service;
 import com.kh.reMerge.user.model.service.NaverLoginApi;
 
 public class NaverLoginBo { 
-	/* 인증 요청문을 구성하는 파라미터 */
-
-//	client_id: 애플리케이션 등록	후 발급받은 클라이언트 아이디 
-//  response_type: 인증 과정에 대한 구분값. code로 값이 고정돼	있습니다.
-//  redirect_uri: 네이버 로그인 인증의 결과를 전달받을 콜백 URL(URL 인코딩). 애플리케이션을 등록할 때	Callback URL에 설정한 정보입니다. 
-//  state: 애플리케이션이 생성한 상태 토큰 private final
 	
-	private final static String CLIENT_ID = "QtBQWMlKTonQr2ENTX3U";
-	private final static String CLIENT_SECRET = "4RQLDD98le";
-	private final static String REDIRECT_URI = "http://remerge.com:8878/reMerge/callback";
+	private static final String NAVER_CLIENT_ID = "QtBQWMlKTonQr2ENTX3U";
+	private static final String NAVER_CLIENT_SECRET = "4RQLDD98le";
+	private static final String NAVER_REDIRECT_URI = "http://remerge.com:8878/reMerge/naver/callback";
 	private static final String SESSION_STATE = "neathlo_state";
-	/*
-	 * 프로필 조회 API URL
-	 */ 
-	private final static String PROFILE_API_URL = "https://openapi.naver.com/v1/nid/me";
+	private static final String PROFILE_API_URL = "https://openapi.naver.com/v1/nid/me";
 
 	/* 네이버 아이디로 인증 URL 생성 Method */
 	 	public String getAuthorizationUrl(HttpSession session) { /* 세션 유효성 검증을 위하여 난수를 생성 */
-	 	
+	 	System.out.println("여기는 BO");
 	 	String state=UUID.randomUUID().toString();
 		/* 생성한 난수 값을 session에 저장 */
 		session.setAttribute(SESSION_STATE, state); 
@@ -44,37 +35,29 @@ public class NaverLoginBo {
 		 */
 		
 		OAuth20Service oauthService = new ServiceBuilder()
-										.apiKey(CLIENT_ID)
-										.apiSecret(CLIENT_SECRET)
-										.callback(REDIRECT_URI)
+										.apiKey(NAVER_CLIENT_ID)
+										.callback(NAVER_REDIRECT_URI)
 										.state(state)
 										.build(NaverLoginApi.instance());
 		
 		//앞서 생성한 난수값을인증 URL생성시 사용함
-		String authorizationUrl = oauthService.getAuthorizationUrl();
+		String naverAuthUrl = oauthService.getAuthorizationUrl();
 		
-		return authorizationUrl;
+		return naverAuthUrl;
 	
 	}
 
-	/*
-	 * 네이버아이디로 Callback 처리 및 AccessToken 획득 Method
-	 */ 
 	 	public OAuth2AccessToken getAccessToken(HttpSession session, String code, String state) throws IOException {
-		
-	 	/*
-		 * Callback으로 전달받은 세선검증용 난수값과 세션에 저장되어있는 값이 일치하는지 확인
-		 */ 
 	 		String sessionState=(String)session.getAttribute(SESSION_STATE);
-	 		System.out.println("state : " + state);
-	 		System.out.println("sessionState : " + sessionState);
-	 		System.out.println("비교구문 : "+StringUtils.pathEquals(sessionState, state));
+	 		//System.out.println("state : " + state);
+	 		//System.out.println("sessionState : " + sessionState);
+	 		//System.out.println("비교구문 : "+StringUtils.pathEquals(sessionState, state));
 		if (StringUtils.pathEquals(sessionState, state)) {
 			
 			OAuth20Service oauthService = new ServiceBuilder()
-											.apiKey(CLIENT_ID)
-											.apiSecret(CLIENT_SECRET)
-											.callback(REDIRECT_URI)
+											.apiKey(NAVER_CLIENT_ID)
+											.apiSecret(NAVER_CLIENT_SECRET)
+											.callback(NAVER_REDIRECT_URI)
 											.state(state)
 											.build(NaverLoginApi.instance());
 			
@@ -83,8 +66,8 @@ public class NaverLoginBo {
 			 */ 
 			
 			OAuth2AccessToken accessToken = oauthService.getAccessToken(code);
-			System.out.println("토큰값 : "+accessToken);
-			System.out.println("oauth : "+oauthService);
+			//System.out.println("토큰값 : "+accessToken);
+			//System.out.println("oauth : "+oauthService);
 			return accessToken;
 		}
 		return null;
@@ -93,17 +76,17 @@ public class NaverLoginBo {
 	/*
 	 * Access Token을 이용하여 네이버 사용자 프로필 API를 호출
 	 */ 
-	public String getUserProfile(OAuth2AccessToken oauthToken) throws IOException {
+	public String getUserProfile(OAuth2AccessToken accessToken) throws IOException {
 		
 		OAuth20Service oauthService = new ServiceBuilder()
-											.apiKey(CLIENT_ID)
-											.apiSecret(CLIENT_SECRET)
-											.callback(REDIRECT_URI)
+											.apiKey(NAVER_CLIENT_ID)
+											.apiSecret(NAVER_CLIENT_SECRET)
+											.callback(NAVER_REDIRECT_URI)
 											.build(NaverLoginApi.instance());
 		
 		OAuthRequest request = new OAuthRequest(Verb.GET, PROFILE_API_URL, oauthService);
 		
-		oauthService.signRequest(oauthToken, request);
+		oauthService.signRequest(accessToken, request);
 		
 		Response response = request.send();
 		

@@ -20,9 +20,9 @@ import com.kh.reMerge.user.model.service.GoogleLoginApi;
 
 @Component
 public class GoogleLoginBo {
-	private final static String GOOGLE_CLIENT_ID = "12047(....).apps.googleusercontent.com";
-    private final static String GOOGLE_CLIENT_SECRET = "GOCSPX-(.....)CvZvy";
-    private final static String GOOGLE_REDIRECT_URI = "(....)/google/callback";
+	private final static String GOOGLE_CLIENT_ID = "363177318285-ssbc38p1uc9ngg94n28op1qqsh1oiumc.apps.googleusercontent.com";
+    private final static String GOOGLE_CLIENT_SECRET = "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";
+    private final static String GOOGLE_REDIRECT_URI = "http://remerge.com:8878/reMerge/google/callback";
     private final static String GOOGLE_SCOPE = "email openid profile";
     private final static String PROFILE_API_URL ="https://www.googleapis.com/oauth2/v2/userinfo";
 	private static final String SESSION_STATE="googleSessionState";
@@ -35,6 +35,7 @@ public class GoogleLoginBo {
 		// 난수값을 세션 속성값으로 저장
 		session.setAttribute(SESSION_STATE, state);
 		session.setMaxInactiveInterval(60 * 60); 
+		//System.out.println("state : "+state);
 		
 		// 로그인 기능을 요청하기 위한 정보가 저장된 OAuth20Service 객체 생성
 		OAuth20Service oauthService=new ServiceBuilder()
@@ -47,7 +48,7 @@ public class GoogleLoginBo {
 		
 		// 인증 URL
 		String authorizationUrl = oauthService.getAuthorizationUrl();
-		
+		//System.out.println("authorizationUrl : "+authorizationUrl);
 		return authorizationUrl;
 	}
 	
@@ -55,6 +56,7 @@ public class GoogleLoginBo {
 	public OAuth2AccessToken getAccessToken(HttpSession session, String code, String state) throws IOException {
 		// 세션의 유효성 검증을 위해 세션에 저장된 속성값을 반환받아 저장
 		String sessionState=(String)session.getAttribute(SESSION_STATE);
+		//System.out.println(StringUtils.pathEquals(sessionState, state));
 		
 		// 매개변수로 받은 값과 세션에 저장된 값이 다른 경우
 		if(!StringUtils.pathEquals(sessionState, state)) {
@@ -72,7 +74,7 @@ public class GoogleLoginBo {
 		
 		// 사용자 접근 토큰을 발급하는 API를 요청하여 토큰을 발급받아 저장
 		OAuth2AccessToken accessToken=oAuth20Service.getAccessToken(code);
-		
+		//System.out.println("accessToken : "+accessToken);
 		return accessToken;
 	}
 	

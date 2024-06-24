@@ -12,15 +12,14 @@ import javax.servlet.http.HttpSession;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.github.scribejava.core.model.OAuth2AccessToken;
+import com.kh.reMerge.user.model.service.UserService;
 import com.kh.reMerge.user.model.vo.GoogleLoginBo;
+import com.kh.reMerge.user.model.vo.User;
 import com.kh.reMerge.user.model.vo.UserinfoAuthAPI;
 
 import lombok.RequiredArgsConstructor;
@@ -30,7 +29,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class GoogleLoginController {
 	private final GoogleLoginBo googleLoginBo;
-	//private final UserinfoService userinfoService;
+	private final UserService UserService;
 
 	@RequestMapping("/login")
 	public String googlelogin(HttpSession session) throws UnsupportedEncodingException {
@@ -41,10 +40,11 @@ public class GoogleLoginController {
 	@RequestMapping("/callback")
 	public String googlelogin(@RequestParam String code, @RequestParam String state, HttpSession session)
 			throws IOException, ParseException/*, ExistsUserinfoException, UserinfoNotFoundException*/, ParseException {
+		//System.out.println("여기는 콜백");
 		OAuth2AccessToken accessToken = googleLoginBo.getAccessToken(session, code, state);
 
 		String apiResult = googleLoginBo.getUserProfile(accessToken);
-
+		//System.out.println("apiResult : "+apiResult);
 		JSONParser parser = new JSONParser();
 		Object object = parser.parse(apiResult);
 		JSONObject responseObject = (JSONObject) object;
@@ -52,43 +52,47 @@ public class GoogleLoginController {
 		// 사용자 json 데이터를 각각 id, email 등 각각 나눠서 저장
 		String id = (String) responseObject.get("id");
 		String email = (String) responseObject.get("email");
-		String name = (String) responseObject.get("name");
-
-		// (spring-security) 소셜 로그인 계정에 "ROLE_SOCIAL" 권한 부여
-		UserinfoAuthAPI auth = new UserinfoAuthAPI();
-		auth.setId("google_" + id);
-		auth.setAuth("ROLE_SOCIAL");
-
-		List<UserinfoAuth> authList = new ArrayList<UserinfoAuth>();
-		authList.add(auth);
-
-		Userinfo userinfo = new Userinfo();
-		userinfo.setId("google_" + id);
-		userinfo.setPw(UUID.randomUUID().toString());
-		userinfo.setName(null);
-		//userinfo.setNickname(name);
-		userinfo.setEmail(email);
-		userinfo.setAddress(null);
-		userinfo.setEnabled("0");
-		userinfo.setSecurityAuthList(authList);
+		String joinDate = (String) responseObject.get("joinDate");
+		String profilePath = (String) responseObject.get("profilePath");
+		String status = (String) responseObject.get("status");
+		String shopBrandChek = (String) responseObject.get("shopBrandChek");
+		String userMemo = (String) responseObject.get("userMemo");
 		
-		// 사용자의 정보를 userinfo 테이블과 auth 테이블에 저장
-		userinfoService.addUserinfo(userinfo, "ROLE_SOCIAL");
-		userinfoService.addUserinfoAuth(auth);
-		userinfoService.updateUserLogindate(userinfo.getId());
+		//String name = (String) responseObject.get("name");
+
+		
+		UserinfoAuthAPI UserAPI = new UserinfoAuthAPI();
+		UserAPI.setId("google_" + id);
+
+
+		List<UserinfoAuthAPI> authList = new ArrayList<UserinfoAuthAPI>();
+		authList.add(UserAPI);
+
+		User u = new User();
+		u.setUserId(email);
+		u.setUserPwd(UUID.randomUUID().toString());
+		//userinfo.setNickname(name);
+		u.setEmail(email);
+		u.getJoinDate();
+		u.setProfilePath(null);
+		u.setStatus(null);
+		u.setShopBrandChek(null);
+		u.setUserMemo(null);
+		//System.out.println("User : "+u);
+		//UserService.addUserinfoAuth();
+		String APIcheckId = u.getUserId();
+		int result = UserService.checkId(APIcheckId);
 		
 		// 여기부턴 spring-security 적용 관련입니다.
 		// 네이버 로그인 사용자 정보를 사용하여 UserDetails 객체(로그인 사용자)를 생성하여 저장
-		customUserDetails customUserDetails=new CustomUserDetails(userinfo);
-		
-		 UsernamePasswordAuthenticationToken 객체를 생성하여 Spring Security가 사용 가능한 인증 사용자로 등록 처리
-		 UsernamePasswordAuthenticationToken 객체 : 인증 성공한 사용자를 Spring Security가 사용 가능한 인증 사용자로 등록 처리하는 객체
-		Authentication authentication=new UsernamePasswordAuthenticationToken
-				(customUserDetails, null, customUserDetails.getAuthorities());
-		
-		// SecurityContextHolder 객체 : 인증 사용자의 권한 관련 정보를 저장하기 위한 객체
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-			
-		return "redirect:/";
+		//System.out.println("result : "+result);
+		if(result>0) { //중복아이디 있음
+			session.setAttribute("alertMsg", "구글에 중복된 아이디가 있습니다!! = 바로 로그인");
+			return "redirect:/feed.fe";
+		}else { //중복아이디 없음
+			UserService.insertUser(u);
+			session.setAttribute("alertMsg", "구글을 이용한 이메일아이디로 회원가입 완료!!");
+		return "redirect:/feed.fe";
+		}
 	}
 }

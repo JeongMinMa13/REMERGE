@@ -44,13 +44,10 @@
 	<!-- <a href="login">네이버로 로그인</a> -->
 	<br>
 		
-		<!-- 네이버 로그인 창으로 이동 -->
 		<div class="social-login-buttons">
-	<img class="naver-login-img" alt="네이버로그인" src="<c:url value="/assets/images/naver_login.png"/>" 
+	<img class="naver-login-img" alt="네이버로그인" src="<c:url value="resources/btnG_naver.png"/>" 
 		  onclick="location.href='<c:url value="/naver/login"/>';" role="button">
-	<img class="kakao-login-img" alt="카카오로그인" src="<c:url value="/assets/images/kakao_login.png"/>"
-	      onclick="location.href='<c:url value="/kakao/login"/>';" role="button">
-	<img class="google-login-img" alt="구글로그인" src="<c:url value="/assets/images/google_login.png"/>"
+	<img class="google-login-img" alt="구글로그인" src="<c:url value="resources/btnG_naver.png"/>"
 	      onclick="location.href='<c:url value="/google/login"/>';" role="button">
 		</div>
 		<br>

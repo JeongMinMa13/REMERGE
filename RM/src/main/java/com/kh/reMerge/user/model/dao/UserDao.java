@@ -23,6 +23,7 @@ public class UserDao {
 
 	public int checkId(SqlSessionTemplate sqlSession, String checkId) {
 		// TODO Auto-generated method stub
+		
 		return sqlSession.selectOne("userMapper.checkId",checkId);
 	}
 	

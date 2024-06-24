@@ -1,100 +1,103 @@
 package com.kh.reMerge.user.controller;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 import javax.servlet.http.HttpSession;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.scribejava.core.model.OAuth2AccessToken;
+import com.kh.reMerge.user.model.service.UserService;
 import com.kh.reMerge.user.model.vo.NaverLoginBo;
+import com.kh.reMerge.user.model.vo.User;
+import com.kh.reMerge.user.model.vo.UserinfoAuthAPI;
 
 import lombok.RequiredArgsConstructor;
 
-/** * Handles requests for the application home page. */
 @Controller
 @RequestMapping("/naver")
 @RequiredArgsConstructor
 class NaverController {
-	/* NaverLoginBO */ 
-	private NaverLoginBo naverLoginBO;
-	private String apiResult = null;
+	private final NaverLoginBo naverLoginBO;
+	private final UserService UserService;
 	
 	@RequestMapping("/login")
-	public String login(Model model, HttpSession session) { 
-			String naverAuthUrl=naverLoginBO.getAuthorizationUrl(session);
-			
-		 /* 네이버아이디로 인증 URL을 생성하기 위하여 naverLoginBO클래스의 getAuthorizationUrl메소드 호출 */
-		 
-		 //https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=sE***************&
-		 //redirect_uri=http%3A%2F%2F211.63.89.90%3A8090%2Flogin_project%2Fcallback&state=e68c269c-5ba9-4c31-85da-54c16c658125
-		 
-		 
+	public String login(HttpSession session) throws UnsupportedEncodingException{
+		System.out.println("여기는 컨트롤러");
+		String naverAuthUrl=naverLoginBO.getAuthorizationUrl(session);
 		 
 		 System.out.println("네이버:" + naverAuthUrl);
 		 return "redirect:" +naverAuthUrl;
 		 
 		 }
 
-	 
-	 //로그인 첫 화면 요청 메소드 
-		
-	
+	@RequestMapping("/callback")
+	public String callback(@RequestParam(required = false) String code
+			, @RequestParam(required = false) String error
+			, @RequestParam String state
+			, HttpSession session) throws IOException, ParseException{
 
-	// 네이버 로그인 성공시 callback호출 메소드
-
-	@RequestMapping(value = "/callback", method = { RequestMethod.GET, RequestMethod.POST })
-	public String callback(Model model, @RequestParam String code, @RequestParam String state, HttpSession session)
-			throws IOException, ParseException {
 		//System.out.println("callback ");
-		OAuth2AccessToken oauthToken;
-		System.out.println("callback에서 : "+state);
-		oauthToken = naverLoginBO.getAccessToken(session, code, state);
+		//System.out.println("callback에서 : "+state);
+		OAuth2AccessToken accessToken = naverLoginBO.getAccessToken(session, code, state);
 		//System.out.println(oauthToken);
 
-		// 1. 로그인 사용자 정보를 읽어온다.
-		apiResult = naverLoginBO.getUserProfile(oauthToken);
-		// String형식의 json데이터
-		//System.out.println(apiResult);
+		String apiResult = naverLoginBO.getUserProfile(accessToken);
 
-		// apiResult json 구조
-		// {"resultcode":"00", "message":"success","response":
-		// {"id":"33666449","nickname":"shinn****","age":"20-29","gender":"M","email":"sh@naver.com","name":"\uc2e0\ubc94\ud638"}}
-
-		// 2. String형식인 apiResult를 json형태로 바꿈
 		JSONParser parser = new JSONParser();
 		Object obj = parser.parse(apiResult);
 		JSONObject jsonObj = (JSONObject) obj;
 		//System.out.println(jsonObj);
 
-		// 3. 데이터 파싱
-		// Top레벨 단계 _response 파싱
-		JSONObject response_obj = (JSONObject) jsonObj.get("response");
-		// response의 nickname값 파싱
-		String id = (String) response_obj.get("id");
-		//System.out.println(id);
+		JSONObject responseobj = (JSONObject) jsonObj.get("response");
+		String id = (String) responseobj.get("id");
+		String email = (String) responseobj.get("email");
+		String joinDate = (String) responseobj.get("joinDate");
+		String profilePath = (String) responseobj.get("profilePath");
+		String status = (String) responseobj.get("status");
+		String shopBrandChek = (String) responseobj.get("shopBrandChek");
+		String userMemo = (String) responseobj.get("userMemo");
+		
+		
+		UserinfoAuthAPI UserAPI = new UserinfoAuthAPI();
+		UserAPI.setId("naver_" + id);
+		
+		List<UserinfoAuthAPI> authList = new ArrayList<UserinfoAuthAPI>();
+		authList.add(UserAPI);
 
-		// 4.파싱 닉네임 세션으로 저장
-		session.setAttribute("sessionId", id); // 세션 생성
-		model.addAttribute("result", apiResult);
+		User u = new User();
+		u.setUserId(email);
+		u.setUserPwd(UUID.randomUUID().toString());
+		//userinfo.setNickname(name);
+		u.setEmail(email);
+		u.getJoinDate();
+		u.setProfilePath(null);
+		u.setStatus(null);
+		u.setShopBrandChek(null);
+		u.setUserMemo(null);
+		System.out.println("User : "+u);
+		//UserService.addUserinfoAuth();
+		String APIcheckId = u.getUserId();
+		int result = UserService.checkId(APIcheckId);
 		
-		
-		
-		return "user/loginHeader";
+		// 여기부턴 spring-security 적용 관련입니다.
+		// 네이버 로그인 사용자 정보를 사용하여 UserDetails 객체(로그인 사용자)를 생성하여 저장
+		//System.out.println("result : "+result);
+		if(result>0) { //중복아이디 있음
+			session.setAttribute("alertMsg", "네이버에 중복된 아이디가 있습니다!! = 바로 로그인");
+			return "redirect:/feed.fe";
+		}else { //중복아이디 없음
+			UserService.insertUser(u);
+			session.setAttribute("alertMsg", "네이버를 이용한 이메일아이디로 회원가입 완료!!");
+		return "redirect:/feed.fe";
+		}
 	} 
-	// 로그아웃
-
-//	@RequestMapping(value = "/logout", method = { RequestMethod.GET, RequestMethod.POST })
-//	public String logout(HttpSession session) throws IOException {
-//		System.out.println("여기는 logout");
-//		session.invalidate();
-//		return "user/mainlogin";
-//	}
 }

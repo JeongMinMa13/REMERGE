@@ -2,7 +2,6 @@ package com.kh.reMerge.user.model.service;
 
 import com.github.scribejava.core.builder.api.DefaultApi20;
 
-//DefaultApi20 클래스 : 로그인 관련 API 정보를 제공
 public class GoogleLoginApi extends DefaultApi20 {
 
 	protected GoogleLoginApi() {
