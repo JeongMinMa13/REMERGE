@@ -112,7 +112,7 @@ header {
 
 .con_img {
 	width: 497px;
-	height: 350px;
+	height: 380px;
 }
 
 .img {
