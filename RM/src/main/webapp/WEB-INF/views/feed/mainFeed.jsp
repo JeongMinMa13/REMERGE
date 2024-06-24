@@ -5,15 +5,15 @@
 <head>
 <meta charset="UTF-8">
 <title>main 페이지</title>
- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <jsp:include page="/WEB-INF/css/feedCSS.jsp"></jsp:include>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 <body>
 	<%@include file="../user/loginHeader.jsp" %>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <div class="con_wrap">
         <div class="conA">
             <!-- 하나의 게시물을 만들어줍니다. -->
@@ -47,34 +47,7 @@
 		      		<img class="story_img" src="resources/plusicon.jpeg">
 		      		<span>스토리 추가하기</span>
 		      	</div>
-                <div class="story">
-                    <img class="story_img" src="">
-                    <span>junhyung_ing</span>
-                </div>
-                <div class="story">
-                    <img class="story_img" src="">
-                    <span>junhyung_ing</span>
-                </div>
-                <div class="story">
-                    <img class="story_img" src="">
-                    <span>junhyung_ing</span>
-                </div>
-                <div class="story">
-                    <img class="story_img" src="">
-                    <span>junhyung_ing</span>
-                </div>
-                <div class="story">
-                    <img class="story_img" src="">
-                    <span>junhyung_ing</span>
-                </div>
-                <div class="story">
-                    <img class="story_img" src="">
-                    <span>junhyung_ing</span>
-                </div>
-                <div class="story">
-                    <img class="story_img" src="">
-                    <span>junhyung_ing</span>
-                </div>
+                <div class="story" id="newStory"></div>
                 <div class="next_icon">
                     <i class="fas fa-angle-right"></i>
                 </div>
@@ -203,7 +176,7 @@
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title" id="modal_create_story">스토리 만들기</h5>
+						<h5 class="modal-title" id="modal_create_story_title">스토리 만들기</h5>
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
@@ -216,13 +189,32 @@
 								<input type="file" class="form-control-file" id="storyFile" name="storyFile">
 							</div>
 							<div id="thumbnailContainer">
-								<img id="storyThumbnail" class="thumbnail" src="#" alt="Thumbnail">
+								<img id="storyThumbnail" class="thumbnail" alt="Thumbnail">
 							</div>
 								<br>
 								<label for="storyContent">한줄 내용 : </label>
 								<input type="text" name="storyContent" style="width:300px;">
 								<button type="submit" class="btn btn-primary">등록</button>
 						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- 스토리 뷰 모달 -->
+		<div class="modal fade" id="modal_view_story" tabindex="-1" role="dialog" aria-labelledby="modal_view_story_title" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="modal_view_story_title">스토리</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div id="story_userId"></div>
+						<img src="" id="story_view_img"><!-- 스토리 사진 영역 -->
+						<div id="story_view_content"></div> <!-- 스토리 내용 영역 -->
 					</div>
 				</div>
 			</div>
@@ -275,50 +267,50 @@
 					userId:"${loginUser.userId}"
 				},
 				success:function(data){
-					console.log(data);
+					//console.log(data); 데이터 확인
+					var html = "";
+					for(var i=0;i<data.length;i++){
+						html +="<div class='story' onclick='storyView("+JSON.stringify(data[i])+");'>";
+						html +="<img class='story_img' src='"+data[i].changeName+"'>";
+						html +="<span>"+data[i].userId+"</span>";
+						html +="</div>";
+					}
+					$("#newStory").html(html);
 				},
 				error:function(){
 					console.log("통신 실패");
 				}
-
-		 document.getElementById('imageUpload').addEventListener('change', function(event) {
-			    var file = event.target.files[0]; // 선택된 파일
-			    var reader = new FileReader(); // 파일 리더 객체 생성
-
-
-			    // 파일 리더 로드 완료 후
-			    reader.onload = function(e) {
-			        document.getElementById('thumbnail').setAttribute('src', e.target.result); // 썸네일 이미지 소스 설정
-			    };
-
-			    // 파일 리더로 파일 읽기
-			    reader.readAsDataURL(file);
+		
 			});
 		});
-	
+		</script>
+		<script>
 		<!-- 스토리 추가 스크립트 -->
 		function addStory(){
 			
 			 $('#modal_create_story').modal('show');//모달 켜기
-		}
 		
-		const storyFile = document.getElementById('storyFile');//파일 인풋 요소 잡기
-		const storyThumbnail = document.getElementById('storyThumbnail'); //미리보기요소 잡아주기
-
-
-	</script>
-	<script>
-		storyFile.addEventListener('change', function(event) {//인풋요소에 파일이 들어오면
-		     var file = storyFile.files[0];//인풋요소 처음들어온 파일 잡고
-		     if (file) {//들어온 파일이 있다면
-		    	 document.getElementById('thumbnailContainer').style.display='block';
-		         var reader = new FileReader();//파일 정보 읽어줄 객체 FileReader() 준비
-		         reader.onload = function(e) {
-		             storyThumbnail.setAttribute('src', e.target.result);//파일 읽어 src속성에 넣어주기
-		         }
-		         reader.readAsDataURL(file);
-		     }
-		 });
+			var storyFile = document.getElementById('storyFile');//파일 인풋 요소 잡기
+			var storyThumbnail = document.getElementById('storyThumbnail'); //미리보기요소 잡아주기
+	
+			//스토리 이미지 파일 선택시 미리보기
+			storyFile.addEventListener('change', function(event) {//인풋요소에 파일이 들어오면
+			     var file = event.target.files[0];//인풋요소 처음들어온 파일 잡고
+			     if (file) {//들어온 파일이 있다면
+			    	 document.getElementById('thumbnailContainer').style.display='block';//미리보기 감싸는 div숨겨놓고 사진 입력되면 보여주기
+			         var storyFileReader = new FileReader();//파일 정보 읽어줄 객체 FileReader() 준비
+			         storyFileReader.onload = function(e) {
+			             storyThumbnail.setAttribute('src', e.target.result);//파일 읽어 src속성에 넣어주기
+			         }
+			         reader.readAsDataURL(file);
+			     }
+			 });
+			
+		}
+		function storyView(data){
+			$('#modal_view_story').modal('show');//스토리 div 누르면 view 보여주기
+			$('#story_userId').val(data.userId);
+		}
 	</script>
 	
     <script src="scripts.js">

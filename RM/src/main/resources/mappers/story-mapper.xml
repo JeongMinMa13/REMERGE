@@ -19,6 +19,10 @@
 	</insert>
 	
 	<select id="selectStory" parameterType="string" resultMap="storyResultSet">
-		SELECT STORY_NO,USER_ID,STORY_CONTENT,CREATE_DATE,ORIGIN_NAME,CHANGE_NAME FROM STORY WHERE USER_ID=#{userId}
+		SELECT STORY_NO,USER_ID,STORY_CONTENT,CREATE_DATE,ORIGIN_NAME,CHANGE_NAME 
+		FROM STORY
+		WHERE USER_ID IN(SELECT TO_USER
+		                 FROM FOLLOWLIST
+		                 WHERE FROM_USER=#{userId})
 	</select>
 </mapper>
