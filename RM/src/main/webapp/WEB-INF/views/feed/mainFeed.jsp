@@ -10,11 +10,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <jsp:include page="/WEB-INF/css/feedCSS.jsp"></jsp:include>
 </head>
 <body>
 	<%@include file="../user/loginHeader.jsp" %>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <div class="con_wrap">
     	<div class="conA">
     	</div>
@@ -214,7 +214,6 @@
 		 <!--썸네일 만들기-->
 		 $(document).ready(function() {
 				feedList();
-
 			    const fileInput = document.getElementById('file');
 			    const thumbnail = document.getElementById('thumbnail');
 			    const secondThumbnail = document.querySelector('#modal_second #selectedThumbnail'); // 두 번째 모달 썸네일
