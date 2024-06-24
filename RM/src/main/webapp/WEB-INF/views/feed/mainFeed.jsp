@@ -307,6 +307,7 @@
 		
 		
 		
+		
 		<script>
 			function addStory(){
 				 const modal = document.getElementById("modal_createStory");
