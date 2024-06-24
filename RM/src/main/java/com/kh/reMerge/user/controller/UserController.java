@@ -10,11 +10,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.reMerge.user.model.service.UserService;
+import com.kh.reMerge.user.model.vo.FollowList;
 import com.kh.reMerge.user.model.vo.User;
 
 @Controller
@@ -85,12 +88,12 @@ public class UserController {
 			String result = "";
 			
 			if(count>0) {
-				session.setAttribute("alertMsg", "중복된 아이디가 있습니다. 실패!!");
+				
 				result = "NNNNN";
 				
 			}else {
 				result = "NNNNY";
-				session.setAttribute("alertMsg", "중복된 아이디가 없습니다.");
+				
 			}
 			//System.out.println(result);
 			return result;
@@ -123,11 +126,30 @@ public class UserController {
 		public String updatePage() {
 			return "myPage/updatePage";
 		}
-
+	
+		// 마이페이지로 이동
+		@RequestMapping("myPage.us")
+		public String myPage(String userId, HttpSession session) {
+			
+			boolean followFlag=false;//팔로우 되어있는지 확인하기 위한 초기화
+			String myId=((User)session.getAttribute("loginUser")).getUserId();//로그인된 유저 아이디 추출
+			User u = userService.selectUser(userId);//선택된 유저 정보 조회
+			FollowList followList = new FollowList(userId,myId);//팔로우 정보 조회하기 위해 담기
+			int result = userService.selectFollow(followList);//팔로우 되어있는지 확인하기 위한 조회
+			if(result>0) {//팔로우 되어 있다면 true
+				followFlag=true;
+			}
+			
+			session.setAttribute("user", u);
+			session.setAttribute("followFlag", followFlag);
+			
+			return "myPage/myPage";
+		}
+		
 		@RequestMapping("update.us")
 		public String updateUser(User u, Model model, HttpSession session) {
 
-			System.out.println(u);
+			//System.out.println(u);
 			int result = userService.updateUser(u);
 
 			if (result > 0) {
@@ -224,7 +246,21 @@ public class UserController {
 			
 			return userService.searchUser(searchStr);
 		}
+		//팔로우 신청
+		@ResponseBody
+		@PostMapping(value="insertFollow.us")
+		public int insertFollow(FollowList followList) {
 			
+			return userService.insertFollow(followList);
+		}
+		
+		//언팔로우
+		@ResponseBody
+		@PostMapping("deleteFollow.us")
+		public int deleteFollow(FollowList followList) {
+			
+			return userService.deleteFollow(followList);
+		}
 		
 
 }

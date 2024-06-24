@@ -11,10 +11,11 @@
 
  		<typeAlias type="com.kh.reMerge.message.model.vo.Message" alias="Message"/>
  		<typeAlias type="com.kh.reMerge.calendar.model.vo.Schedule" alias="Schedule"/>
-
  		<typeAlias type="com.kh.reMerge.user.model.vo.User" alias="User"/>
-
+ 		<typeAlias type="com.kh.reMerge.feed.model.vo.Feed" alias="Feed"/>
 		<typeAlias type="com.kh.reMerge.feed.model.vo.Story" alias="Story"/>
+		<typeAlias type="com.kh.reMerge.user.model.vo.FollowList" alias="FollowList"/>
+
  	</typeAliases>
  	
  
