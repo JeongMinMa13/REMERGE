@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.kh.reMerge.common.model.vo.PageInfo;
 import com.kh.reMerge.feed.model.vo.Feed;
+import com.kh.reMerge.feed.model.vo.Reply;
 
 
 public interface FeedService {
@@ -18,6 +19,9 @@ public interface FeedService {
 	
 	//게시글 목록 
 	ArrayList<Feed> selectList(PageInfo pi);
+	
+	//댓글 목록조회
+	ArrayList<Reply> replyList(int feedNo);
 	
 	
 	

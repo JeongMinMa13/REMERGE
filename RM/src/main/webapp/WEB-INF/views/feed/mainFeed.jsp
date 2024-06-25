@@ -39,7 +39,7 @@
        <!--  </div> -->
         <div class="container">
             <div class="profile-header">
-                <img src="./CSS/img/라쿤.jpg" alt="Your Profile Picture">
+                <img src="" alt="Your Profile Picture">
                 <div class="profile-info">
                     <span class="username">junhyung_ing</span>
                     <span class="subtext">신준형</span>
@@ -51,7 +51,7 @@
             </div>
             <div class="suggestion">
                 <div class="suggestion-info">
-                    <img src="./CSS/img/라쿤.jpg" alt="Profile Picture">
+                    <img src="" alt="Profile Picture">
                     <div>
                         <div class="name">junhyung_ing</div>
                         <div class="subtext">신준형</div>
@@ -61,7 +61,7 @@
             </div>
             <div class="suggestion">
                 <div class="suggestion-info">
-                    <img src="./CSS/img/라쿤.jpg" alt="Profile Picture">
+                    <img src="" alt="Profile Picture">
                     <div>
                         <div class="name">junhyung_ing</div>
                         <div class="subtext">신준형</div>
@@ -71,7 +71,7 @@
             </div>
             <div class="suggestion">
                 <div class="suggestion-info">
-                    <img src="./CSS/img/라쿤.jpg" alt="Profile Picture">
+                    <img src="" alt="Profile Picture">
                     <div>
                         <div class="name">junhyung_ing</div>
                         <div class="subtext">신준형</div>
@@ -210,7 +210,18 @@
 		<!-- 게시물 등록 스크립트 -->
 		 <!--썸네일 만들기-->
 		 $(document).ready(function() {
-				feedList();
+			feedList();
+			
+			$(window).scroll(function() {
+	            if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+	                // 현재 페이지 수를 가져와서 다음 페이지를 로드합니다.
+	                const currentPage = Math.ceil($('.con').length / 6) + 1; // 예시: 현재 보여지는 게시물 갯수로 대체
+	                feedList(currentPage);
+	                console.log('다음 페이지 로드: ' + currentPage);
+	            }
+	        });
+			 
+	
 			    const fileInput = document.getElementById('file');
 			    const thumbnail = document.getElementById('thumbnail');
 			    const secondThumbnail = document.querySelector('#modal_second #selectedThumbnail'); // 두 번째 모달 썸네일
@@ -260,6 +271,8 @@
 			        });
 			    });
 			});
+		 
+		 
 
 	      // 첫 번째 모달 열기
 	      $('#create').click(function() {
@@ -368,14 +381,14 @@
 		</script>
 		<script>	
 		<!-- 게시글 리스트 목록 -->
-		
-		function feedList(){
+		function feedList(currentPage){
+			console.log('피드리스트 불러옴');
 			  $.ajax({
 				  url: 'feedList.fe',
 				  type: 'POST',
 				  dataType: 'json',
+				  data:{currentPage:currentPage},
 				  success : function(response){
-					  console.log(response)
 					 var str = "";
 				for (var i = 0; i < response.list.length; i++){
 					var feed = response.list[i];
@@ -388,12 +401,12 @@
 	                    str += '        <img src="' + feed.changeName + '" alt="" class="con_img">'; // 이미지 예시
 	                    str += '        <div class="logos">';
 	                    str += '            <div class="logos_left">';
-	                    str += '                <img src="./style.css/free-icon-heart-1077035.png" alt="" class="logo_img">';
-	                    str += '                <img src="./style.css/free-icon-chat-552850.png" alt="" class="logo_img">';
-	                    str += '                <img src="./style.css/free-icon-direct-instagram-6165369.png" alt="" class="logo_img">';
+	                    str += '                <img src="resources/love.png" alt="" class="logo_img">';
+	                    str += '                <img src="resources/chat.png" alt="" class="logo_img">';
+	                    str += '                <img src="resources/direct.png" alt="" class="logo_img">';
 	                    str += '            </div>';
 	                    str += '            <div class="logos_right">';
-	                    str += '                <img src="images/bookmark.svg" alt="" class="logo_img">';
+	                    str += '                <img src="" alt="" class="logo_img">';
 	                    str += '            </div>';
 	                    str += '        </div>';
 	                    str += '        <div class="content">';
@@ -406,9 +419,10 @@
 	                    /*str += '</div>';*/
 					
 				}
-					 $(".conA").html(str); // 생성된 게시물 목록을 feed-container에 추가
-					
-						 
+					 $(".conA").append(str); //게시물 밑으로 추가
+					 if (currentPage >= response.pi.maxPage) {
+		                    $(window).unbind('scroll'); // 스크롤 이벤트 해제
+		                }
 		          },
 		          error: function() {
 		          	alert('게시물 로딩에 실패했습니다.');
@@ -424,22 +438,21 @@
 			 $('#modal_create_story').modal('show');//모달 켜기
 		}		
 		
-		var storyFile = document.getElementById('storyFile');//파일 인풋 요소 잡기
-		var storyThumbnail = document.getElementById('storyThumbnail'); //미리보기요소 잡아주기
-
-		//스토리 이미지 파일 선택시 미리보기
-		storyFile.addEventListener('change', function(event) {//인풋요소에 파일이 들어오면
-		     var file = event.target.files[0];//인풋요소 처음들어온 파일 잡고
-		     if (file) {//들어온 파일이 있다면
-		    	 document.getElementById('thumbnailContainer').style.display='block';//미리보기 감싸는 div숨겨놓고 사진 입력되면 보여주기
-		         var storyFileReader = new FileReader();//파일 정보 읽어줄 객체 FileReader() 준비
-		         storyFileReader.onload = function(e) {
-		             storyThumbnail.setAttribute('src', e.target.result);//파일 읽어 src속성에 넣어주기
-		         }
-		         storyFileReader.readAsDataURL(file);
-		     }
-		});
-		
-	</script>
+			var storyFile = document.getElementById('storyFile');//파일 인풋 요소 잡기
+			var storyThumbnail = document.getElementById('storyThumbnail'); //미리보기요소 잡아주기
+	
+			//스토리 이미지 파일 선택시 미리보기
+			storyFile.addEventListener('change', function(event) {//인풋요소에 파일이 들어오면
+			     var file = event.target.files[0];//인풋요소 처음들어온 파일 잡고
+			     if (file) {//들어온 파일이 있다면
+			    	 document.getElementById('thumbnailContainer').style.display='block';//미리보기 감싸는 div숨겨놓고 사진 입력되면 보여주기
+			         var storyFileReader = new FileReader();//파일 정보 읽어줄 객체 FileReader() 준비
+			         storyFileReader.onload = function(e) {
+			             storyThumbnail.setAttribute('src', e.target.result);//파일 읽어 src속성에 넣어주기
+			         }
+			         reader.readAsDataURL(file);
+			     }
+			 });
+		</script>
 </body>
 </html>
