@@ -315,7 +315,10 @@ header {
 #thumbnailFeed{
 	display:none;
 }
-
+/* 스토리 미리 보기 칸  */
+#thumbnailContainer{
+	display:none;
+}
 
 
 </style>

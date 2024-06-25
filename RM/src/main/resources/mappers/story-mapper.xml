@@ -13,9 +13,13 @@
 		<result column="CREATE_DATE" property="createDate"/>
 	</resultMap>
 	
+	<select id="selectSequence" resultType="_int">
+		SELECT SEQ_SNO.NEXTVAL FROM DUAL
+	</select>
+	
 	<insert id="insertStory" parameterType="Story">
 		INSERT INTO STORY(STORY_NO,USER_ID,STORY_CONTENT,ORIGIN_NAME,CHANGE_NAME)
-		VALUES(SEQ_STORY.NEXTVAL,#{userId},#{storyContent},#{originName},#{changeName})
+		VALUES(#{storyNo},#{userId},#{storyContent},#{originName},#{changeName})
 	</insert>
 	
 	<select id="selectStory" parameterType="string" resultMap="storyResultSet">
@@ -24,5 +28,16 @@
 		WHERE USER_ID IN(SELECT TO_USER
 		                 FROM FOLLOWLIST
 		                 WHERE FROM_USER=#{userId})
+		AND STATUS='Y'
+		ORDER BY CREATE_DATE DESC
+
 	</select>
+	
+	<update id="updateStoryStatus" parameterType="Story">
+		UPDATE STORY SET STATUS= 'N' WHERE STORY_NO=#{storyNo}
+	</update>
+	
+	<insert id="insertHistory" parameterType="History">
+		INSERT INTO HISTORY(STORY_NO,USER_ID)VALUES(#{storyNo},#{userId})
+	</insert>
 </mapper>
