@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,6 +10,12 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
   <jsp:include page="/WEB-INF/css/feedCSS.jsp"></jsp:include>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- 스와이퍼 css,cdn -->
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+/>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 </head>
 <body>
 	<%@include file="../user/loginHeader.jsp" %>
@@ -21,17 +26,17 @@
       </div>
     <div class="body">
         <!--스토리 목록-->
+		<!-- <div class="swiper"> -->
             <div class="storys">
             	<div class="story" onclick="addStory();">
 		      		<img class="story_img" src="resources/plusicon.jpeg">
 		      		<span>스토리 추가하기</span>
 		      	</div>
-                <div class="story" id="newStory"></div>
-                <div class="next_icon">
-                    <i class="fas fa-angle-right"></i>
-                </div>
+                <!-- <div class="swiper-button-prev"></div>
+  				<div class="swiper-button-next"></div> -->
             </div>
         </div>
+       <!--  </div> -->
         <div class="container">
             <div class="profile-header">
                 <img src="" alt="Your Profile Picture">
@@ -162,7 +167,7 @@
 							<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
-					<div class="modal-body">
+					<div class="modal-body" id="storyModalBody">
 						<form action="insertStory.fe" method="post" enctype="multipart/form-data">
 							<div class="form-group">
 								<input type="hidden" name="userId" value="${loginUser.userId }">
@@ -193,9 +198,9 @@
 						</button>
 					</div>
 					<div class="modal-body">
-						<div id="story_userId"></div>
 						<img src="" id="story_view_img"><!-- 스토리 사진 영역 -->
 						<div id="story_view_content"></div> <!-- 스토리 내용 영역 -->
+						<button id="nextStory">next</button>
 					</div>
 				</div>
 			</div>
@@ -269,17 +274,17 @@
 		 
 		 
 
-			    // 첫 번째 모달 열기
-			    $('#create').click(function() {
-			        $('#modal_create').modal('show');
-			    });
+	      // 첫 번째 모달 열기
+	      $('#create').click(function() {
+	        $('#modal_create').modal('show');
+	      });
 
-			    // 첫 번째 모달 확인 버튼 클릭 시 두 번째 모달 열기
-			    $('#confirm_button').click(function() {
-			        $('#modal_create').modal('hide');
-			        $('#modal_second').modal('show');
-			        console.log($('#file'));
-			    });
+	      // 첫 번째 모달 확인 버튼 클릭 시 두 번째 모달 열기
+	     $('#confirm_button').click(function() {
+	       $('#modal_create').modal('hide');
+	       $('#modal_second').modal('show');
+	       console.log($('#file'));
+	     });
 
 
 		 // 두 번째 모달 닫기
@@ -289,8 +294,11 @@
 		
 		</script>
 		
+	<!-- 스토리 조회해오기 --> 
 	<script>
-		<!-- 스토리 조회해오기 --> 
+		// 전역 변수 선언
+	    var currentStoryIndex = 0;
+	    var storiesData = [];
 		$(function(){
 			$.ajax({
 				url:"selectStory.fe",
@@ -299,15 +307,29 @@
 					userId:"${loginUser.userId}"
 				},
 				success:function(data){
+					// 스토리 데이터를 전역 변수에 저장
+	                storiesData = data;
 					//console.log(data); 데이터 확인
+					//스토리 기능은 한명이 작성한 글은 하나의 글로 확인 가능하고
+					//상세페이지를 조회한다면 다른 글도 조회할수 있기 때문에 view페이지에서 한 유저의 스토리들은 하나로만 보여야 함
+					//그에 따라 처리된 아이디를 저장하고 저장된 아이디와 비교하며 html 생성
 					var html = "";
+					const processedUserIds = new Set();// 생성된 스토리 html 아이디를 저장할 집합
 					for(var i=0;i<data.length;i++){
-						html +="<div class='story' onclick='storyView("+JSON.stringify(data[i])+");'>";
-						html +="<img class='story_img' src='"+data[i].changeName+"'>";
-						html +="<span>"+data[i].userId+"</span>";
-						html +="</div>";
+						if(!processedUserIds.has(data[i].userId)){//저장된 집합에 이름이 있는지 확인
+							
+							html +="<div class='story' onclick='storyView("+i+");'>";
+							html +="<img class='story_img' src='"+data[i].changeName+"'>";
+							html +="<span>"+data[i].userId+"</span>";
+							html +="</div>";
+							processedUserIds.add(data[i].userId);//처리된 아이디 집합에 넣기
+						}
 					}
-					$("#newStory").html(html);
+					$('#nextStory').click(function(event){
+						
+						
+					});
+					$(".storys").append(html);
 				},
 				error:function(){
 					console.log("통신 실패");
@@ -315,6 +337,47 @@
 		
 			});
 		});
+		
+		function storyView(index){ 
+			currentStoryIndex = index; // 현재 스토리 인덱스 업데이트
+	        var data = storiesData[index]; 
+			$('#modal_view_story_title').html(data.userId);
+			$('#story_view_img').attr('src',data.changeName);
+			$('#story_view_content').html(data.storyContent);
+			$('#modal_view_story').modal('show');//스토리 div 누르면 view 보여주기
+			
+			$.ajax({//시청 기록 넣기
+				url:"insertHistory.fe",
+				type:"post",
+				data:{
+					userId:"${loginUser.userId}",
+					storyNo:data.storyNo
+				},
+				success:function(result){
+					console.log(result);
+				},
+				error:function(){
+					console.log("통신 실패");
+				}
+				
+			});
+			
+		}
+		
+		// 다음 스토리를 보여주는 함수
+	    function showNextStory(){
+	        if(currentStoryIndex < storiesData.length - 1){ //조회해왔던 data 길이 -1 과 비교후 작을때만 
+	            storyView(currentStoryIndex + 1);
+	        } else {
+	            alert("마지막 스토리입니다.");
+	        }
+	    }
+
+	    // nextStory 버튼 클릭 이벤트
+	    $('#nextStory').click(function(){
+	        showNextStory();
+	    });
+	    
 		</script>
 		<script>	
 		<!-- 게시글 리스트 목록 -->
@@ -365,7 +428,7 @@
 		          	alert('게시물 로딩에 실패했습니다.');
 		          }
        		 });
-    	}
+    	};
 		</script>
 		
 		<script>
@@ -390,30 +453,6 @@
 			         reader.readAsDataURL(file);
 			     }
 			 });
-			
-		}
-		function storyView(data){
-			$('#modal_view_story').modal('show');//스토리 div 누르면 view 보여주기
-			$('#story_userId').val(data.userId);
-		}
-		const storyFile = document.getElementById('storyFile');//파일 인풋 요소 잡기
-		const storyThumbnail = document.getElementById('storyThumbnail'); //미리보기요소 잡아주기
-
-		storyFile.addEventListener('change', function(event) {//인풋요소에 파일이 들어오면
-		     var file = storyFile.files[0];//인풋요소 처음들어온 파일 잡고
-		     if (file) {//들어온 파일이 있다면
-		    	 document.getElementById('thumbnailContainer').style.display='block';
-		         var reader = new FileReader();//파일 정보 읽어줄 객체 FileReader() 준비
-		         reader.onload = function(e) {
-		             storyThumbnail.setAttribute('src', e.target.result);//파일 읽어 src속성에 넣어주기
-		         }
-		         reader.readAsDataURL(file);
-		     }
-		 });
 		</script>
-		
-		
-	
-    
 </body>
 </html>
