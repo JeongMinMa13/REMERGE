@@ -49,6 +49,41 @@
  	ORDER BY CREATE_DATE DESC   
 </select>     
 
+<select id="replyList" resultType="Reply" parameterType="_int">
+	SELECT  REPLY_NO replyNo
+		   ,RE_CONTENT reContent
+		   ,USER_ID userId
+		   ,CREATE_DATE createDate
+		FROM REPLY
+		WHERE FEED_NO = #{feedNo} 
+		AND STATUS = 'Y'
+		ORDER BY CREATE_DATE DESC
+</select>
+
+<insert id="insertReply" parameterType="Reply">
+	INSERT INTO REPLY(REPLY_NO
+                     ,RE_CONTENT
+                     ,FEED_NO
+                     ,USER_ID)
+           VALUES(SEQ_RNO.NEXTVAL
+           		  ,#{reContent}
+           		  ,#{feedNo}
+           		  ,#{userId})
+</insert>
+
+<select id="selectFeed" resultMap="feedResultSet" parameterType="_int">
+	SELECT FEED_NO
+		  ,FEED_CONTENT
+		  ,FEED_WRITER
+		  ,CREATE_DATE
+		  ,CHANGE_NAME
+		  ,FEED_LOCATION
+	FROM FEED
+	WHERE FEED_NO = #{feedNo}
+	AND STATUS = 'Y'
+</select>
+
+
 
 
 </mapper>
