@@ -452,7 +452,6 @@
 						var str = "";
 						for(var i in result){
 						var reply =result.list[i];
-						
 							
 						}
 					},
