@@ -129,9 +129,40 @@ public class FeedController {
 		model.addAttribute("feedNo",feedNo);
 		model.addAttribute("rList",rList);
 		
+		
 		return rList;
 		
 	}
+	
+	//댓글 작성 메소드
+	@ResponseBody
+	@RequestMapping("insertReply.fe")
+	public int insertReply(Reply r) {
+		
+		int result = feedService.insertReply(r);
+		
+		return result;
+	}
+	
+	//게시물 디테일
+	@ResponseBody
+	@PostMapping("detail.fe")
+	public Map<String, Object> feedDetail(int feedNo){
+		
+		Feed f = feedService.selectFeed(feedNo);
+		
+		ArrayList<Reply> replyList = feedService.replyList(feedNo);
+		
+		Map<String, Object> result = new HashMap<>();
+	    result.put("f", f);
+	    result.put("replyList", replyList);
+	    
+	    
+	    return result;
+		
+		
+	}
+	
 		
 		
 	

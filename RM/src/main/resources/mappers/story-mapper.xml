@@ -30,6 +30,7 @@
 		                 WHERE FROM_USER=#{userId})
 		AND STATUS='Y'
 		ORDER BY CREATE_DATE DESC
+
 	</select>
 	
 	<update id="updateStoryStatus" parameterType="Story">

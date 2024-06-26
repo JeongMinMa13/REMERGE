@@ -157,6 +157,41 @@
 			</div>
 		</div>
 		
+		<!-- 게시물 디테일 모달 -->
+		<div class="modal fade" id="modal_detail_feed" tabindex="-1" role="dialog" aria-labelledby="modal_detail_feed" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="modal_detail_feed_title">게시물</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
+							<span aria-hidden="true">&times;</span>						
+						</button>
+					</div>
+					<div class="modal-body">
+						<img src="" id="feed_detail_img"> <!-- 게시글 디테일 이미지 -->
+						<div id="feed_userId"></div>
+						<div id="feed_location"></div>
+						<div id="feed_detail_content"></div>
+						<div id="feed_detail_replyList"></div>
+						<div id="like_reply">
+							<div class="mb-3">
+								<button id="like_button">
+									<i class="fas fa-heart mr-1"></i>
+								</button>
+							</div>
+						<!-- 댓글 작성 폼 -->
+							<form id="reply_form">
+								<div class="form-group">
+									 <textarea class="form-control" id="comment_text" rows="2" placeholder="댓글을 입력하세요..."></textarea>
+								</div>
+								<button type="submit" class="btn btn-primary btn-sm">등록</button>						
+							</form>	
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
 		<!-- 스토리 추가 모달 -->
 		<div class="modal fade" id="modal_create_story" tabindex="-1" role="dialog" aria-labelledby="modal_create_story" aria-hidden="true">
 			<div class="modal-dialog" role="document">
@@ -205,8 +240,8 @@
 				</div>
 			</div>
 		</div>
-
 		<script>
+		
 		<!-- 게시물 등록 스크립트 -->
 		 <!--썸네일 만들기-->
 		 $(document).ready(function() {
@@ -252,7 +287,7 @@
 			        formData.append('feedContent', $('#post_text').val());
 			        formData.append('feedLocation', $('#location').val());
 			        
-
+				<!-- 게시글 등록 ajax -->
 			        $.ajax({
 			            url: 'insert.fe',
 			            type: 'POST',
@@ -271,8 +306,6 @@
 			        });
 			    });
 			});
-		 
-		 
 
 	      // 첫 번째 모달 열기
 	      $('#create').click(function() {
@@ -291,6 +324,14 @@
 		 $('#close_second_modal_button').click(function() {
 		   $('#modal_second').modal('hide');
 		 });
+		 
+		 //게시물 모달 열기
+		
+		 
+		 //게시물 모달 닫기
+		 $('#close_createDetail_button').click(function() {
+		   $('#createDetail').modal('hide');
+		 });
 		
 		</script>
 		
@@ -299,6 +340,7 @@
 		// 전역 변수 선언
 	    var currentStoryIndex = 0;
 	    var storiesData = [];
+
 		$(function(){
 			$.ajax({
 				url:"selectStory.fe",
@@ -338,6 +380,36 @@
 			});
 		});
 		
+
+		<!-- 게시글 detail 불러오기 -->
+		function detailView(feedNo){
+			$('#modal_detail_feed').modal('show');
+			$.ajax({
+				url : "detail.fe",
+				type : "post",
+				data :{
+					feedNo : feedNo
+				},
+				success:function(result){
+					console.log(result);
+					 $('#feed_detail_img').attr('src', result.f.changeName);
+			         $('#feed_userId').text(result.f.feedWriter);
+			         $('#feed_location').text(result.f.feedLocation); 
+			         $('#feed_detail_content').text(result.f.feedContent);
+			         
+			         var str = "";
+			         for(var i=0; i<result.length;i++){
+			        	 console.log(result.f.reContent);
+			        	 str += '<div id="feed_detail_replyList"> </div>'
+			         }
+			         
+				},
+				error : function(){
+					console.log("통신실패");
+				}
+			});
+		}
+
 		function storyView(index){ 
 			currentStoryIndex = index; // 현재 스토리 인덱스 업데이트
 	        var data = storiesData[index]; 
@@ -378,11 +450,12 @@
 	        showNextStory();
 	    });
 	    
+
 		</script>
-		<script>	
+		
+		<script>
 		<!-- 게시글 리스트 목록 -->
 		function feedList(currentPage){
-			console.log('피드리스트 불러옴');
 			  $.ajax({
 				  url: 'feedList.fe',
 				  type: 'POST',
@@ -402,7 +475,7 @@
 	                    str += '        <div class="logos">';
 	                    str += '            <div class="logos_left">';
 	                    str += '                <img src="resources/love.png" alt="" class="logo_img">';
-	                    str += '                <img src="resources/chat.png" alt="" class="logo_img">';
+	                    str += '                <img src="resources/chat.png" class="logo_img" onclick="detailView('+feed.feedNo+')" >';
 	                    str += '                <img src="resources/direct.png" alt="" class="logo_img">';
 	                    str += '            </div>';
 	                    str += '            <div class="logos_right">';
@@ -411,9 +484,10 @@
 	                    str += '        </div>';
 	                    str += '        <div class="content">';
 	                    str += '            <p><b>좋아요 32개</b></p>';
-	                    str += '            <p>' + feed.feedContent + '</p>'; // 내용 예시
-	                    str += '            <p><a href="www.naver.com"></a>#하잉 #하잉 #하용</p>'; // 해시태그 예시
-	                    str += '            <input type="text" name="" id="" value="댓글달기">';
+	                    str += '            <p>' + feed.feedContent + '</p>'; 
+	                    str += '            <p><a href="www.naver.com"></a>#하잉 #하잉 #하용</p>';
+	                    str += '            <input type="text" name="reContent" id="content" placeholder="댓글을 입력해주세요..">';
+	                    str += '            <label><button onclick="insertReply()">등록</button></label>                                                                     '
 	                    str += '        </div>';
 	                    str += '    </div>';
 	                    /*str += '</div>';*/
@@ -429,6 +503,53 @@
 		          }
        		 });
     	};
+		</script>
+		
+		<!-- 댓글 리스트 -->
+		<script>
+			function replyList(){
+				$.ajax({
+					url : "replyList.fe",
+					data : {
+						feedNo : ${feed.feedNo}
+					},
+					success : function(result){
+						console.log(result);
+						var str = "";
+						for(var i in result){
+						var reply =result.list[i];
+							
+						}
+					},
+					error : function(){
+						console.log("통신오류");
+					}
+					
+				});
+			};
+		<!-- 댓글 입력 -->
+		function insertReply(){
+			$.ajax({	
+				url : "insertReply.fe",
+				type : "post",
+				data : {
+					feedNo : ${feed.feedNo},
+					userId : "${loginUser.userId}",
+					reContent : $("#content").val()
+				},
+				success : function(result){
+					if(result>0){
+						replyList(); //추가된 댓글 정보까지 다시 조회
+						$("#content").val("");
+					}else{
+						alert("댓글작성실패");
+					}
+				},
+				error : function(){
+					console.log("통신오류");
+				}
+			});
+		};
 		</script>
 		
 		<script>
@@ -453,6 +574,7 @@
 			         reader.readAsDataURL(file);
 			     }
 			 });
+
 		</script>
 </body>
 </html>

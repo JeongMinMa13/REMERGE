@@ -16,5 +16,6 @@ public class Reply {
 	private int feedNo;
 	private String userId;
 	private Date createDate;
+	private int reCount;
 	private String status;
 }

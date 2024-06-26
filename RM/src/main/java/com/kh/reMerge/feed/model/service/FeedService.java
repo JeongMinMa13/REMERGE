@@ -23,6 +23,12 @@ public interface FeedService {
 	//댓글 목록조회
 	ArrayList<Reply> replyList(int feedNo);
 	
+	//댓글 작성
+	int insertReply(Reply r);
+	
+	//게시글 디테일
+	Feed selectFeed(int feedNo);
+	
 	
 	
 	
