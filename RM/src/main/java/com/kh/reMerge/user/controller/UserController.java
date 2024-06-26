@@ -1,6 +1,10 @@
 package com.kh.reMerge.user.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.servlet.http.HttpSession;
 
@@ -10,11 +14,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.reMerge.user.model.service.UserService;
 import com.kh.reMerge.user.model.vo.FollowList;
@@ -108,103 +110,6 @@ public class UserController {
 		return resultPw;
 	}
 
-	// 마이페이지로 이동
-	@RequestMapping("myPage.us")
-	public String myPage(String userId, HttpSession session) {
-
-		boolean followFlag = false;// 팔로우 되어있는지 확인하기 위한 초기화
-		String myId = ((User) session.getAttribute("loginUser")).getUserId();// 로그인된 유저 아이디 추출
-		User u = userService.selectUser(userId);// 선택된 유저 정보 조회
-		FollowList followList = new FollowList(userId, myId);// 팔로우 정보 조회하기 위해 담기
-		int result = userService.selectFollow(followList);// 팔로우 되어있는지 확인하기 위한 조회
-		if (result > 0) {// 팔로우 되어 있다면 true
-			followFlag = true;
-		}
-
-		session.setAttribute("user", u);
-		session.setAttribute("followFlag", followFlag);
-
-		return "myPage/myPage";
-	}
-
-	// 프로필 편집 페이지로 이동
-	@RequestMapping("updatePage.us")
-	public String updatePage() {
-		return "myPage/updatePage";
-	}
-
-	@RequestMapping("update.us")
-	public String updateUser(User u, Model model, HttpSession session, MultipartFile reupfile) {
-
-		int result = userService.updateUser(u);
-		if (result > 0) {
-
-			User updateUs = userService.loginUser(u);
-			session.setAttribute("loginUser", updateUs);
-			session.setAttribute("alertMsg", "정보 수정 성공");
-
-			System.out.println(result);
-			return "myPage/myPage";
-
-		} else {
-			model.addAttribute("alertMsg", "정보 수정 실패");
-			return "myPage/updatePage";
-		}
-	}
-
-	@PostMapping("updatePwd.us")
-	public String updatePwd(User u, Model model, String updatePwd, HttpSession session) {
-		String bcrPwd = bcryptPasswordEncoder.encode(updatePwd);
-		u.setUserPwd(bcrPwd);
-		int result = userService.updatePwd(u);
-
-		if (result > 0) {
-			User updateUser = userService.loginUser(u);
-			session.setAttribute("loginUser", updateUser);
-			session.setAttribute("alertMsg", "비밀번호 변경 성공");
-
-		} else {
-			model.addAttribute("alertMsg", "비밀번호 변경 실패");
-		}
-
-		return "user/mainLogin";
-
-	}
-
-	private String saveFile(MultipartFile upfile, HttpSession session) {
-		String profilePath = upfile.getOriginalFilename();
-
-		String savePath = session.getServletContext().getRealPath("/resources/uploadFiles/");
-
-		return profilePath;
-	}
-
-	@RequestMapping("delete.us")
-	public String deleteUser(String userPwd, HttpSession session, Model model) {
-		User loginUser = ((User) session.getAttribute("loginUser"));
-		String encPwd = loginUser.getUserPwd();
-		String userId = loginUser.getUserId();
-
-		int result = userService.deleteUser(userPwd);
-		if (bcryptPasswordEncoder.matches(userPwd, encPwd)) {
-
-			if (result > 0) {
-				session.removeAttribute("loginUser"); // 로그인 정보 삭제
-				session.setAttribute("alertMsg", "회원탈퇴가 완료되었습니다.");
-				return "user/mai";
-			} else {
-				// 탈퇴 실패시 - 에러페이지로 이동
-				model.addAttribute("alertMsg", "회원 탈퇴 실패");
-				return "myPage/myPage";
-			}
-
-		} else {// 비밀번호를 잘못 입력한 경우
-			session.setAttribute("alertMsg", "비밀번호 입력 오류!");
-			return "user/mainLogin";
-		}
-
-	}
-
 	// 메시지용 - 중구
 	@RequestMapping("userList.us")
 	public String userList(Model model) {
@@ -212,7 +117,7 @@ public class UserController {
 		model.addAttribute("userList", userList);
 
 		for (User user : userList) {
-			System.out.println(user);
+
 		}
 
 		return "user/userList";
@@ -246,6 +151,84 @@ public class UserController {
 	public int deleteFollow(FollowList followList) {
 
 		return userService.deleteFollow(followList);
+	}
+
+	// 마이페이지로 이동
+	@RequestMapping("myPage.us")
+	public String myPage(String userId, HttpSession session) {
+
+		boolean followFlag = false;// 팔로우 되어있는지 확인하기 위한 초기화
+		String myId = ((User) session.getAttribute("loginUser")).getUserId();// 로그인된 유저 아이디 추출
+		User u = userService.selectUser(userId);// 선택된 유저 정보 조회
+		FollowList followList = new FollowList(userId, myId);// 팔로우 정보 조회하기 위해 담기
+		int result = userService.selectFollow(followList);// 팔로우 되어있는지 확인하기 위한 조회
+		if (result > 0) {// 팔로우 되어 있다면 true
+			followFlag = true;
+		}
+		System.out.println(u);
+		session.setAttribute("user", u);
+		session.setAttribute("followFlag", followFlag);
+
+		return "myPage/myPage";
+	}
+
+	// 프로필 편집 페이지로 이동
+	@RequestMapping("updatePage.us")
+	public String updatePage(User u, Model model) {
+		model.addAttribute("User", u);
+
+		return "myPage/updatePage";
+	}
+
+	@RequestMapping("update.us")
+	public String updateUser(User u, Model model, HttpSession session, MultipartFile upfile) {
+		String defaultProfile = u.getProfilePath(); // 파일 저장 경로와 변경파일명 담아놓을 변수 (디폴트값)
+
+		
+
+		int result = userService.updateUser(u);
+		if (result > 0) {
+			System.out.println(result);
+			System.out.println(u);
+//					User Us = userService.loginUser(u);
+//					session.setAttribute("loginUser", updateUs);
+			session.setAttribute("alertMsg", "정보 수정 성공");
+			return "myPage/myPage";
+		} else {
+			model.addAttribute("alertMsg", "정보 수정 실패");
+			return "myPage/updatePage";
+		}
+
+	}
+
+	// 파일 업로드 처리
+	public String saveFile(MultipartFile upfile, HttpSession session) {
+
+		String originName = upfile.getOriginalFilename();
+
+		String ext = originName.substring(originName.lastIndexOf("."));
+
+		String currentTime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+
+		int ranNum = (int) (Math.random() * 90000 + 10000);
+
+		String profileChangePath = currentTime + ranNum + ext;
+
+		System.out.println(profileChangePath);
+
+		String savePath = session.getServletContext().getRealPath("resources/profile/");
+
+		try {
+
+			upfile.transferTo(new File(savePath + profileChangePath));
+
+		} catch (IllegalStateException | IOException e) {
+
+			e.printStackTrace();
+		}
+
+		return profileChangePath;
+
 	}
 
 }

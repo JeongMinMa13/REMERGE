@@ -13,6 +13,8 @@
 		<result column="STATUS" property="status" />
 		<result column="SHOP_BRANDCHEK" property="shopBrandChek" />
 		<result column="USER_MEMO" property="userMemo" />
+		<result column="PROFILE_ORIGINNAME" property="profileOriginName" />
+		<result column="PROFILE_CHANGEPATH" property="profileChangePath" />
 	</resultMap>
 
 	<select id="loginUser" resultMap="userResultSet">
@@ -21,6 +23,8 @@
 		EMAIL,
 		JOINDATE,
 		PROFILE_PATH,
+		PROFILE_ORIGINNAME,
+		PROFILE_CHANGEPATH,
 		STATUS,
 		SHOP_BRANDCHEK,
 		USER_MEMO
@@ -55,8 +59,7 @@
 	
 	<update id="updateUser" parameterType="User">
 		UPDATE USERS
-		SET PROFILE_PATH =#{profilePath} 
-		,EMAIL =#{email}
+		SET EMAIL =#{email}
 		,USER_MEMO =#{userMemo}
 		WHERE USER_ID=#{userId} 
 		AND STATUS='Y'
@@ -70,7 +73,7 @@
 	</update>
 	
 	<select id="selectUser" parameterType="string" resultMap="userResultSet">
-		SELECT USER_ID,EMAIL,USER_MEMO,PROFILE_PATH FROM USERS WHERE USER_ID=#{userId}
+		SELECT USER_ID,EMAIL,USER_MEMO,PROFILE_PATH,PROFILE_ORIGINNAME,PROFILE_CHANGEPATH FROM USERS WHERE USER_ID=#{userId}
 	</select>
 	
 	<insert id="insertFollow" parameterType="FollowList">
@@ -85,6 +88,14 @@
 	<delete id="deleteFollow" parameterType="FollowList">
 		DELETE FROM FOLLOWLIST WHERE TO_USER=#{toUser} AND FROM_USER=#{fromUser}
 	</delete>
+	
+	<update id="deleteUser" parameterType="string">
+		UPDATE USERS
+		SET STATUS = 'N'
+		WHERE USER_ID = #{userId}
+		AND STATUS = 'Y'
+	</update>
+
 	
 
 	

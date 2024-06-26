@@ -66,8 +66,8 @@ public class UserServiceImpl implements UserService {
 	}
 	@Override
 	public int deleteUser(String userPwd) {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		return userDao.deleteUser(sqlSession,userPwd);
 	}
 
 	//내가 아닌 유저 프로필 보기 위한 조회
@@ -97,6 +97,8 @@ public class UserServiceImpl implements UserService {
 
 		return userDao.deleteFollow(sqlSession,followList);
 	}
+
+
 
 	
 }
