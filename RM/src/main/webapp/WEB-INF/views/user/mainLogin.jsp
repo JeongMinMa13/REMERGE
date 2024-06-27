@@ -96,7 +96,7 @@
 	<script>
 	var loginCount = Number("${loginCount}");
 	console.log(loginCount);
-	if (loginCount >= 3) {
+	if (loginCount  >= 3) {
 		$("#recaptcha-area").show();
 	}
 
