@@ -14,7 +14,9 @@
  		<typeAlias type="com.kh.reMerge.user.model.vo.User" alias="User"/>
  		<typeAlias type="com.kh.reMerge.feed.model.vo.Feed" alias="Feed"/>
 		<typeAlias type="com.kh.reMerge.feed.model.vo.Story" alias="Story"/>
+		<typeAlias type="com.kh.reMerge.feed.model.vo.Reply" alias="Reply"/>
 		<typeAlias type="com.kh.reMerge.user.model.vo.FollowList" alias="FollowList"/>
+		<typeAlias type="com.kh.reMerge.feed.model.vo.History" alias="History"/>
 
  	</typeAliases>
  	

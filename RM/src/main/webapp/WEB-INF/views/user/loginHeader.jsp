@@ -89,6 +89,10 @@
     		console.log(data.userId);
     		location.href="/reMerge/myPage.us?userId="+data.userId;
     	}  
+    	
+    	$('#home').click(function(){
+    		location.href="/reMerge/feed.fe";
+    	});
     
     </script>
 

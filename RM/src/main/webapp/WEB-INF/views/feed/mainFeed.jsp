@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,6 +10,12 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
   <jsp:include page="/WEB-INF/css/feedCSS.jsp"></jsp:include>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- 스와이퍼 css,cdn -->
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+/>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 </head>
 <body>
 	<%@include file="../user/loginHeader.jsp" %>
@@ -21,20 +26,20 @@
       </div>
     <div class="body">
         <!--스토리 목록-->
+		<!-- <div class="swiper"> -->
             <div class="storys">
             	<div class="story" onclick="addStory();">
 		      		<img class="story_img" src="resources/plusicon.jpeg">
 		      		<span>스토리 추가하기</span>
 		      	</div>
-                <div class="story" id="newStory"></div>
-                <div class="next_icon">
-                    <i class="fas fa-angle-right"></i>
-                </div>
+                <!-- <div class="swiper-button-prev"></div>
+  				<div class="swiper-button-next"></div> -->
             </div>
         </div>
+       <!--  </div> -->
         <div class="container">
             <div class="profile-header">
-                <img src="./CSS/img/라쿤.jpg" alt="Your Profile Picture">
+                <img src="" alt="Your Profile Picture">
                 <div class="profile-info">
                     <span class="username">junhyung_ing</span>
                     <span class="subtext">신준형</span>
@@ -46,7 +51,7 @@
             </div>
             <div class="suggestion">
                 <div class="suggestion-info">
-                    <img src="./CSS/img/라쿤.jpg" alt="Profile Picture">
+                    <img src="" alt="Profile Picture">
                     <div>
                         <div class="name">junhyung_ing</div>
                         <div class="subtext">신준형</div>
@@ -56,7 +61,7 @@
             </div>
             <div class="suggestion">
                 <div class="suggestion-info">
-                    <img src="./CSS/img/라쿤.jpg" alt="Profile Picture">
+                    <img src="" alt="Profile Picture">
                     <div>
                         <div class="name">junhyung_ing</div>
                         <div class="subtext">신준형</div>
@@ -66,7 +71,7 @@
             </div>
             <div class="suggestion">
                 <div class="suggestion-info">
-                    <img src="./CSS/img/라쿤.jpg" alt="Profile Picture">
+                    <img src="" alt="Profile Picture">
                     <div>
                         <div class="name">junhyung_ing</div>
                         <div class="subtext">신준형</div>
@@ -152,6 +157,41 @@
 			</div>
 		</div>
 		
+		<!-- 게시물 디테일 모달 -->
+		<div class="modal fade" id="modal_detail_feed" tabindex="-1" role="dialog" aria-labelledby="modal_detail_feed" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="modal_detail_feed_title">게시물</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
+							<span aria-hidden="true">&times;</span>						
+						</button>
+					</div>
+					<div class="modal-body">
+						<img src="" id="feed_detail_img"> <!-- 게시글 디테일 이미지 -->
+						<div id="feed_userId"></div>
+						<div id="feed_location"></div>
+						<div id="feed_detail_content"></div>
+						<div id="feed_detail_replyList"></div>
+						<div id="like_reply">
+							<div class="mb-3">
+								<button id="like_button">
+									<i class="fas fa-heart mr-1"></i>
+								</button>
+							</div>
+						<!-- 댓글 작성 폼 -->
+							<form id="reply_form">
+								<div class="form-group">
+									 <textarea class="form-control" id="comment_text" rows="2" placeholder="댓글을 입력하세요..."></textarea>
+								</div>
+								<button type="submit" class="btn btn-primary btn-sm">등록</button>						
+							</form>	
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
 		<!-- 스토리 추가 모달 -->
 		<div class="modal fade" id="modal_create_story" tabindex="-1" role="dialog" aria-labelledby="modal_create_story" aria-hidden="true">
 			<div class="modal-dialog" role="document">
@@ -162,7 +202,7 @@
 							<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
-					<div class="modal-body">
+					<div class="modal-body" id="storyModalBody">
 						<form action="insertStory.fe" method="post" enctype="multipart/form-data">
 							<div class="form-group">
 								<input type="hidden" name="userId" value="${loginUser.userId }">
@@ -193,19 +233,30 @@
 						</button>
 					</div>
 					<div class="modal-body">
-						<div id="story_userId"></div>
 						<img src="" id="story_view_img"><!-- 스토리 사진 영역 -->
 						<div id="story_view_content"></div> <!-- 스토리 내용 영역 -->
+						<button id="nextStory">next</button>
 					</div>
 				</div>
 			</div>
 		</div>
-
 		<script>
+		
 		<!-- 게시물 등록 스크립트 -->
 		 <!--썸네일 만들기-->
 		 $(document).ready(function() {
-				feedList();
+			feedList();
+			
+			$(window).scroll(function() {
+	            if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+	                // 현재 페이지 수를 가져와서 다음 페이지를 로드합니다.
+	                const currentPage = Math.ceil($('.con').length / 6) + 1; // 예시: 현재 보여지는 게시물 갯수로 대체
+	                feedList(currentPage);
+	                console.log('다음 페이지 로드: ' + currentPage);
+	            }
+	        });
+			 
+	
 			    const fileInput = document.getElementById('file');
 			    const thumbnail = document.getElementById('thumbnail');
 			    const secondThumbnail = document.querySelector('#modal_second #selectedThumbnail'); // 두 번째 모달 썸네일
@@ -236,7 +287,7 @@
 			        formData.append('feedContent', $('#post_text').val());
 			        formData.append('feedLocation', $('#location').val());
 			        
-
+				<!-- 게시글 등록 ajax -->
 			        $.ajax({
 			            url: 'insert.fe',
 			            type: 'POST',
@@ -256,28 +307,40 @@
 			    });
 			});
 
-			    // 첫 번째 모달 열기
-			    $('#create').click(function() {
-			        $('#modal_create').modal('show');
-			    });
+	      // 첫 번째 모달 열기
+	      $('#create').click(function() {
+	        $('#modal_create').modal('show');
+	      });
 
-			    // 첫 번째 모달 확인 버튼 클릭 시 두 번째 모달 열기
-			    $('#confirm_button').click(function() {
-			        $('#modal_create').modal('hide');
-			        $('#modal_second').modal('show');
-			        console.log($('#file'));
-			    });
+	      // 첫 번째 모달 확인 버튼 클릭 시 두 번째 모달 열기
+	     $('#confirm_button').click(function() {
+	       $('#modal_create').modal('hide');
+	       $('#modal_second').modal('show');
+	       console.log($('#file'));
+	     });
 
 
 		 // 두 번째 모달 닫기
 		 $('#close_second_modal_button').click(function() {
 		   $('#modal_second').modal('hide');
 		 });
+		 
+		 //게시물 모달 열기
+		
+		 
+		 //게시물 모달 닫기
+		 $('#close_createDetail_button').click(function() {
+		   $('#createDetail').modal('hide');
+		 });
 		
 		</script>
 		
+	<!-- 스토리 조회해오기 --> 
 	<script>
-		<!-- 스토리 조회해오기 --> 
+		// 전역 변수 선언
+	    var currentStoryIndex = 0;
+	    var storiesData = [];
+
 		$(function(){
 			$.ajax({
 				url:"selectStory.fe",
@@ -286,15 +349,29 @@
 					userId:"${loginUser.userId}"
 				},
 				success:function(data){
+					// 스토리 데이터를 전역 변수에 저장
+	                storiesData = data;
 					//console.log(data); 데이터 확인
+					//스토리 기능은 한명이 작성한 글은 하나의 글로 확인 가능하고
+					//상세페이지를 조회한다면 다른 글도 조회할수 있기 때문에 view페이지에서 한 유저의 스토리들은 하나로만 보여야 함
+					//그에 따라 처리된 아이디를 저장하고 저장된 아이디와 비교하며 html 생성
 					var html = "";
+					const processedUserIds = new Set();// 생성된 스토리 html 아이디를 저장할 집합
 					for(var i=0;i<data.length;i++){
-						html +="<div class='story' onclick='storyView("+JSON.stringify(data[i])+");'>";
-						html +="<img class='story_img' src='"+data[i].changeName+"'>";
-						html +="<span>"+data[i].userId+"</span>";
-						html +="</div>";
+						if(!processedUserIds.has(data[i].userId)){//저장된 집합에 이름이 있는지 확인
+							
+							html +="<div class='story' onclick='storyView("+i+");'>";
+							html +="<img class='story_img' src='"+data[i].changeName+"'>";
+							html +="<span>"+data[i].userId+"</span>";
+							html +="</div>";
+							processedUserIds.add(data[i].userId);//처리된 아이디 집합에 넣기
+						}
 					}
-					$("#newStory").html(html);
+					$('#nextStory').click(function(event){
+						
+						
+					});
+					$(".storys").append(html);
 				},
 				error:function(){
 					console.log("통신 실패");
@@ -302,17 +379,89 @@
 		
 			});
 		});
-		</script>
-		<script>	
-		<!-- 게시글 리스트 목록 -->
 		
-		function feedList(){
+
+		<!-- 게시글 detail 불러오기 -->
+		function detailView(feedNo){
+			$('#modal_detail_feed').modal('show');
+			$.ajax({
+				url : "detail.fe",
+				type : "post",
+				data :{
+					feedNo : feedNo
+				},
+				success:function(result){
+					console.log(result);
+					 $('#feed_detail_img').attr('src', result.f.changeName);
+			         $('#feed_userId').text(result.f.feedWriter);
+			         $('#feed_location').text(result.f.feedLocation); 
+			         $('#feed_detail_content').text(result.f.feedContent);
+			         
+			         var str = "";
+			         for(var i=0; i<result.length;i++){
+			        	 console.log(result.f.reContent);
+			        	 str += '<div id="feed_detail_replyList"> </div>'
+			         }
+			         
+				},
+				error : function(){
+					console.log("통신실패");
+				}
+			});
+		}
+
+		function storyView(index){ 
+			currentStoryIndex = index; // 현재 스토리 인덱스 업데이트
+	        var data = storiesData[index]; 
+			$('#modal_view_story_title').html(data.userId);
+			$('#story_view_img').attr('src',data.changeName);
+			$('#story_view_content').html(data.storyContent);
+			$('#modal_view_story').modal('show');//스토리 div 누르면 view 보여주기
+			
+			$.ajax({//시청 기록 넣기
+				url:"insertHistory.fe",
+				type:"post",
+				data:{
+					userId:"${loginUser.userId}",
+					storyNo:data.storyNo
+				},
+				success:function(result){
+					console.log(result);
+				},
+				error:function(){
+					console.log("통신 실패");
+				}
+				
+			});
+			
+		}
+		
+		// 다음 스토리를 보여주는 함수
+	    function showNextStory(){
+	        if(currentStoryIndex < storiesData.length - 1){ //조회해왔던 data 길이 -1 과 비교후 작을때만 
+	            storyView(currentStoryIndex + 1);
+	        } else {
+	            alert("마지막 스토리입니다.");
+	        }
+	    }
+
+	    // nextStory 버튼 클릭 이벤트
+	    $('#nextStory').click(function(){
+	        showNextStory();
+	    });
+	    
+
+		</script>
+		
+		<script>
+		<!-- 게시글 리스트 목록 -->
+		function feedList(currentPage){
 			  $.ajax({
 				  url: 'feedList.fe',
 				  type: 'POST',
 				  dataType: 'json',
+				  data:{currentPage:currentPage},
 				  success : function(response){
-					  console.log(response)
 					 var str = "";
 				for (var i = 0; i < response.list.length; i++){
 					var feed = response.list[i];
@@ -325,33 +474,82 @@
 	                    str += '        <img src="' + feed.changeName + '" alt="" class="con_img">'; // 이미지 예시
 	                    str += '        <div class="logos">';
 	                    str += '            <div class="logos_left">';
-	                    str += '                <img src="./style.css/free-icon-heart-1077035.png" alt="" class="logo_img">';
-	                    str += '                <img src="./style.css/free-icon-chat-552850.png" alt="" class="logo_img">';
-	                    str += '                <img src="./style.css/free-icon-direct-instagram-6165369.png" alt="" class="logo_img">';
+	                    str += '                <img src="resources/love.png" alt="" class="logo_img">';
+	                    str += '                <img src="resources/chat.png" class="logo_img" onclick="detailView('+feed.feedNo+')" >';
+	                    str += '                <img src="resources/direct.png" alt="" class="logo_img">';
 	                    str += '            </div>';
 	                    str += '            <div class="logos_right">';
-	                    str += '                <img src="images/bookmark.svg" alt="" class="logo_img">';
+	                    str += '                <img src="" alt="" class="logo_img">';
 	                    str += '            </div>';
 	                    str += '        </div>';
 	                    str += '        <div class="content">';
 	                    str += '            <p><b>좋아요 32개</b></p>';
-	                    str += '            <p>' + feed.feedContent + '</p>'; // 내용 예시
-	                    str += '            <p><a href="www.naver.com"></a>#하잉 #하잉 #하용</p>'; // 해시태그 예시
-	                    str += '            <input type="text" name="" id="" value="댓글달기">';
+	                    str += '            <p>' + feed.feedContent + '</p>'; 
+	                    str += '            <p><a href="www.naver.com"></a>#하잉 #하잉 #하용</p>';
+	                    str += '            <input type="text" name="reContent" id="content" placeholder="댓글을 입력해주세요..">';
+	                    str += '            <label><button onclick="insertReply()">등록</button></label>                                                                     '
 	                    str += '        </div>';
 	                    str += '    </div>';
 	                    /*str += '</div>';*/
 					
 				}
-					 $(".conA").html(str); // 생성된 게시물 목록을 feed-container에 추가
-					
-						 
+					 $(".conA").append(str); //게시물 밑으로 추가
+					 if (currentPage >= response.pi.maxPage) {
+		                    $(window).unbind('scroll'); // 스크롤 이벤트 해제
+		                }
 		          },
 		          error: function() {
 		          	alert('게시물 로딩에 실패했습니다.');
 		          }
        		 });
-    	}
+    	};
+		</script>
+		
+		<!-- 댓글 리스트 -->
+		<script>
+			function replyList(){
+				$.ajax({
+					url : "replyList.fe",
+					data : {
+						feedNo : ${feed.feedNo}
+					},
+					success : function(result){
+						console.log(result);
+						var str = "";
+						for(var i in result){
+						var reply =result.list[i];
+							
+						}
+					},
+					error : function(){
+						console.log("통신오류");
+					}
+					
+				});
+			};
+		<!-- 댓글 입력 -->
+		function insertReply(){
+			$.ajax({	
+				url : "insertReply.fe",
+				type : "post",
+				data : {
+					feedNo : ${feed.feedNo},
+					userId : "${loginUser.userId}",
+					reContent : $("#content").val()
+				},
+				success : function(result){
+					if(result>0){
+						replyList(); //추가된 댓글 정보까지 다시 조회
+						$("#content").val("");
+					}else{
+						alert("댓글작성실패");
+					}
+				},
+				error : function(){
+					console.log("통신오류");
+				}
+			});
+		};
 		</script>
 		
 		<script>
@@ -376,35 +574,7 @@
 			         reader.readAsDataURL(file);
 			     }
 			 });
-			
-		}
-		function storyView(data){
-			$('#modal_view_story').modal('show');//스토리 div 누르면 view 보여주기
-			$('#story_userId').val(data.userId);
-		}
-		const storyFile = document.getElementById('storyFile');//파일 인풋 요소 잡기
-		const storyThumbnail = document.getElementById('storyThumbnail'); //미리보기요소 잡아주기
-	
-		storyFile.addEventListener('change', function(event) {//인풋요소에 파일이 들어오면
-		     var file = storyFile.files[0];//인풋요소 처음들어온 파일 잡고
-		     if (file) {//들어온 파일이 있다면
-		    	 document.getElementById('thumbnailContainer').style.display='block';
-		         var reader = new FileReader();//파일 정보 읽어줄 객체 FileReader() 준비
-		         reader.onload = function(e) {
-		             storyThumbnail.setAttribute('src', e.target.result);//파일 읽어 src속성에 넣어주기
-		         }
-		         reader.readAsDataURL(file);
-		     }
-		 });
-	</script>
-	
-    <script src="scripts.js">
-        document.querySelectorAll('.menu-item').forEach(item => {
-        item.addEventListener('click', () => {
-        console.log(`${item.id} 메뉴 클릭됨`);
-        // 페이지 이동 처리
-		    });
-		});
-    </script>
+
+		</script>
 </body>
 </html>

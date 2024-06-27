@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.reMerge.common.model.vo.PageInfo;
 import com.kh.reMerge.feed.model.vo.Feed;
+import com.kh.reMerge.feed.model.vo.Reply;
 
 @Repository
 public class FeedDao {
@@ -16,12 +17,14 @@ public class FeedDao {
 		
 		return sqlSession.selectOne("feedMapper.listCount");
 	}
-
+	
+	//게시글 작성
 	public int insertFeed(SqlSessionTemplate sqlSession,Feed f) {
 		
 		return sqlSession.insert("feedMapper.insertFeed",f);
 	}
-
+	
+	//게시글 목록
 	public ArrayList<Feed> selectList(SqlSessionTemplate sqlSession, PageInfo pi) {
 		
 		int limit = pi.getFeedLimit();
@@ -31,6 +34,23 @@ public class FeedDao {
 		RowBounds rowBounds = new RowBounds(offset,limit);
 		
 		return (ArrayList)sqlSession.selectList("feedMapper.selectList", null, rowBounds);
+	}
+	
+	//댓글 목록
+	public ArrayList<Reply> replyList(SqlSessionTemplate sqlSession, int feedNo) {
+		
+		return (ArrayList)sqlSession.selectList("feedMapper.replyList",feedNo);
+	}
+	
+	//댓글 작성
+	public int insertReply(SqlSessionTemplate sqlSession, Reply r) {
+		
+		return sqlSession.insert("feedMapper.insertReply",r);
+	}
+
+	public Feed selectFeed(SqlSessionTemplate sqlSession, int feedNo) {
+		
+		return sqlSession.selectOne("feedMapper.selectFeed",feedNo);
 	}
 
 }

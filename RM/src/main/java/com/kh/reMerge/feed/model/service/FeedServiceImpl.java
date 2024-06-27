@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.kh.reMerge.common.model.vo.PageInfo;
 import com.kh.reMerge.feed.model.dao.FeedDao;
 import com.kh.reMerge.feed.model.vo.Feed;
+import com.kh.reMerge.feed.model.vo.Reply;
 
 @Service
 public class FeedServiceImpl implements FeedService {
@@ -33,6 +34,24 @@ public class FeedServiceImpl implements FeedService {
 	public ArrayList<Feed> selectList(PageInfo pi) {
 		
 		return feedDao.selectList(sqlSession,pi);
+	}
+
+	@Override
+	public ArrayList<Reply> replyList(int feedNo) {
+	
+		return feedDao.replyList(sqlSession,feedNo);
+	}
+
+	@Override
+	public int insertReply(Reply r) {
+		
+		return feedDao.insertReply(sqlSession,r);
+	}
+
+	@Override
+	public Feed selectFeed(int feedNo) {
+		
+		return feedDao.selectFeed(sqlSession,feedNo);
 	}
 
 
