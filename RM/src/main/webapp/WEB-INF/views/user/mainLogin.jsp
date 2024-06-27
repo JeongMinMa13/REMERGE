@@ -78,7 +78,7 @@
 	<br>
 	<div class="find-area" align="center">
 		<a href="forFindUser.us">아이디 및 비밀 번호 찾기</a>  &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; | &nbsp;&nbsp; &nbsp;&nbsp;
-		<a href="insertEnrollForm.us">회원 가입</a>
+		<a href="insertEnrollForm.us">회원 가입!</a>
 		<br><br><br><br><br><br>
 	</div>
 
