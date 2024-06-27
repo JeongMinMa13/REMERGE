@@ -84,7 +84,7 @@
 
 	<c:if test="${not empty alertMsg}">
 		<script>
-			alert("${alertMsg}");
+			alert("${alertMsg}" );
 		</script>
 		<c:remove var="alertMsg" />
 	</c:if>
