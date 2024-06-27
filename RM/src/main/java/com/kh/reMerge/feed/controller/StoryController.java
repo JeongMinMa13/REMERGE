@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.reMerge.feed.model.service.StoryService;
+import com.kh.reMerge.feed.model.vo.History;
 import com.kh.reMerge.feed.model.vo.Story;
 
 @Controller
@@ -25,25 +26,42 @@ public class StoryController {
 
 	//스토리 추가하기
 	@PostMapping("insertStory.fe")
-	public String insertStory(Story s,MultipartFile storyFile,HttpSession session) {
+	public String insertStory(Story story,MultipartFile storyFile,HttpSession session) {
 		
 		//스토리 기능은 사진이 필수 이기에 사진 유무는 처리 하지 않음	
 		//만들어둔 파일 업로드 처리 메소드 사용
 		String changeName = saveFile(storyFile,session);
 		
-		s.setOriginName(storyFile.getOriginalFilename());
-		s.setChangeName("resources/uploadFiles/"+changeName);
+		story.setOriginName(storyFile.getOriginalFilename());
+		story.setChangeName("resources/uploadFiles/"+changeName);
+		//타이머 작동을 위해 storyNo 미리 뽑아오기
+		int sequence = storyService.selectSequnece();
+		story.setStoryNo(sequence);//조회 해온 시퀀스 넣어주기
 		
-		int result = storyService.insertStory(s);
+		int result = storyService.insertStory(story);//필요한 정보 넣어주었으니 실행 시켜 결과값 받기
 		
-		if(result>0) {
+		if(result>0) {//입력 됬다면 
+//			Thread updateThread = new Thread() {
+//				public void run() {
+//					try {
+//						Thread.sleep(10*1000);//10초 동안 동작 안하기
+////						Thread.sleep(24*60*60*1000);//24시간 동안 동작 안하기
+//					} catch (InterruptedException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//					int result = storyService.updateStoryStatus(story);
+//					System.out.println("Thread 실행 하여 N으로 수정 결과 "+result);
+//				}
+//			};
+//			updateThread.setDaemon(true);//메인쓰레드가 종료되면 종료될수있도록 종속 시키기
+//			updateThread.start();
 			session.setAttribute("alertMsg", "성공적으로 등록되었습니다.");
-			return "feed/mainFeed";
+			return "redirect:feed.fe";
 		}else {
 			session.setAttribute("alertMsg", "등록되지 않았습니다. 관리자에게 문의하세요.");
-			return "feed/mainFeed";
+			return "redirect:feed.fe";
 		}
-		
 	}
 	
 	//피드페이지에서 스토리 조회하기
@@ -52,6 +70,14 @@ public class StoryController {
 	public ArrayList<Story> selectStory(String userId){
 		
 		return storyService.selectStory(userId);
+	}
+	
+	//스토리 시청 기록 넣기
+	@ResponseBody
+	@PostMapping(value="insertHistory.fe",produces="application/json;charset=UTF-8")
+	public int insertHistory(History history) {
+		
+		return storyService.insertHistory(history);
 	}
 	
 	//파일 업로드 처리 메소드 (파일 이름 바꿔주기 모듈화)

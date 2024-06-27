@@ -25,6 +25,7 @@ import com.kh.reMerge.common.model.vo.PageInfo;
 import com.kh.reMerge.common.template.Pagination;
 import com.kh.reMerge.feed.model.service.FeedService;
 import com.kh.reMerge.feed.model.vo.Feed;
+import com.kh.reMerge.feed.model.vo.Reply;
 
 
 @Controller
@@ -33,12 +34,14 @@ public class FeedController {
 	@Autowired
 	private FeedService feedService;
 	
+	//메인페이지
 	@GetMapping("feed.fe")
 	public String feed() {
 		
 	return "feed/mainFeed";
 	}
 	
+	//리스트 조회
 	@ResponseBody
 	@PostMapping("feedList.fe")
 	public Map<String, Object> feedlist(@RequestParam(value="currentPage",defaultValue = "1")int currentPage) {
@@ -58,13 +61,7 @@ public class FeedController {
 		return result;
 	}
 	
-	
-		
-	
-	
-	
-	
-
+	//게시글 넣기
 	@PostMapping("insert.fe")
 	public String insertFeed(Feed f, @RequestPart MultipartFile upfile, HttpSession session) {
 		
@@ -121,6 +118,51 @@ public class FeedController {
 			}
 			return changeName;
 		}
+	
+	//댓글 목록 조회
+	@ResponseBody
+	@RequestMapping(value="replyList.fe",produces = "application/json;charset=UTF-8")
+	public ArrayList<Reply> replyList(int feedNo,Model model){
+		
+		ArrayList<Reply> rList = feedService.replyList(feedNo);
+		
+		model.addAttribute("feedNo",feedNo);
+		model.addAttribute("rList",rList);
+		
+		
+		return rList;
+		
+	}
+	
+	//댓글 작성 메소드
+	@ResponseBody
+	@RequestMapping("insertReply.fe")
+	public int insertReply(Reply r) {
+		
+		int result = feedService.insertReply(r);
+		
+		return result;
+	}
+	
+	//게시물 디테일
+	@ResponseBody
+	@PostMapping("detail.fe")
+	public Map<String, Object> feedDetail(int feedNo){
+		
+		Feed f = feedService.selectFeed(feedNo);
+		
+		ArrayList<Reply> replyList = feedService.replyList(feedNo);
+		
+		Map<String, Object> result = new HashMap<>();
+	    result.put("f", f);
+	    result.put("replyList", replyList);
+	    
+	    
+	    return result;
+		
+		
+	}
+	
 		
 		
 	

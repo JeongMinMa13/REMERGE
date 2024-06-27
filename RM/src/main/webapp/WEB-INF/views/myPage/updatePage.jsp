@@ -19,6 +19,15 @@
             background-color: #f5e4f3;
             border-color: #f5e4f3;
         }
+        
+        .profileImg{
+        
+            border: 1px solid black;
+            padding: 20px;
+             display: inline-block;
+        
+        
+        }
     </style>
 </head>
 <body>
@@ -30,13 +39,15 @@
             <br>
             <h3>프로필 편집</h3>
             <!-- 프로필 사진 업로드 -->
-               <div>
-                    <input type="hidden" value="${loginUser.userId}" name="loginUserId">
-                    ${user.userId} <br><br>
+               <div class="profileImg">
+                  <form action="updateProfile.us" method="post" enctype="multipart/form-data">
+                   <input type="hidden" value="${loginUser.userId}" name="userId">
+                    ${loginUser.userId} <br><br>
                     <!-- 프로필에 표시되는 이미지 -->
+                    
 	                 <c:choose> 
-	                  	<c:when test="${loginUser.profileOriginName ne null }">  
-						 	 <img id="profile" src="${loginUser.profileChangePath}" width="100" height="100"> &nbsp;
+	                  	<c:when test="${loginUser.profileChangePath ne null }">  
+						 	 <img id="profile" src="${loginUser.profileChangePath}" width="100" height="100" style="border-radius:70%"> &nbsp;
 						 </c:when>
 						 <c:otherwise>
 							 <img id="profile" src="resources/unknown.jpg" width="100" height="100" > &nbsp;
@@ -44,13 +55,15 @@
 	                </c:choose>
                     <br><br>
                     <label for="upfile" class="upfilebtn" >사진 변경</label>
-                    <input type="file" id="upfile" class="form-control-file border" name="upfile" style="display: none;">
-                    <button type="reset" onclick="deleteProfile();">사진 삭제</button>
-                   
+                    <input type="file" id="upfile" class="form-control-file border" name="upfile" style="display: none;"><Br>
+                    <button type="submit">완료</button>
+                    <button type="reset">삭제</button>
+                   </form>
                 </div> 
 					
             <form id="update-form" action="update.us" method="post"
                 enctype="multipart/form-data">
+                 <input type="hidden" value="${loginUser.userId}" name="userId">
                 <div>
                     <h4>소개</h4>
                     <textarea id="userMemo" name="userMemo" class="form-control" style="resize: none;" cols="40" rows="2"

@@ -36,16 +36,16 @@
 		<div class="innerOuter">
 
 			<br>
-			<!-- <form action="mypage.us" method="post"> -->
+			
 				<div class="form-group"> 
 				<!-- null일때 -->
 				<c:choose>
-				<c:when test="${loginUser.profilePath eq 'resources/unknown.jpg' }">  
+					<c:when test="${loginUser.profileChangePath eq null }">  
 					 <img id="profile" src="resources/unknown.jpg" width="100" height="100" > &nbsp; ${user.userId } &nbsp; &nbsp; &nbsp; 게시물
 					&nbsp; 팔로잉 &nbsp; 팔로워 &nbsp; &nbsp;
 				</c:when>
 				<c:otherwise> 
-				<img id="profile" src="${user.profileChangePath }" width="100" height="100" > &nbsp; ${user.userId } &nbsp; &nbsp; &nbsp; 게시물
+				<img style="border-radius:70%" id="profile" src="${user.profileChangePath }" width="100" height="100" > &nbsp; ${user.userId } &nbsp; &nbsp; &nbsp; 게시물
 					&nbsp; 팔로잉 &nbsp; 팔로워 &nbsp; &nbsp;
 					
 				</c:otherwise>	
@@ -72,7 +72,7 @@
 				<div>
 					${user.userMemo }
 				</div>
-			<!-- </form> -->
+			
 		</div>
 		<br> <br>
 		<div class="container">

@@ -77,7 +77,12 @@ public class UserDao {
 
 	public int deleteUser(SqlSessionTemplate sqlSession, String userPwd) {
 		
-		return sqlSession.update("userMapper.delteUser",userPwd);
+		return sqlSession.update("userMapper.deleteUser",userPwd);
+	}
+
+	public int updateProfile(SqlSessionTemplate sqlSession, User u) {
+		
+		return sqlSession.update("userMapper.updateProfile",u);
 	}
 
 	

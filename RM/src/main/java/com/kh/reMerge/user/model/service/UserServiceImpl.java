@@ -98,6 +98,12 @@ public class UserServiceImpl implements UserService {
 		return userDao.deleteFollow(sqlSession,followList);
 	}
 
+	@Override
+	public int updateProfile(User u) {
+				
+		return userDao.updateProfile(sqlSession,u);
+	}
+
 
 
 	

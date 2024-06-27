@@ -37,6 +37,8 @@ public interface UserService {
 	//언팔로우
 	int deleteFollow(FollowList followList);
 
+	int updateProfile(User u);
+
 	
 	
 	

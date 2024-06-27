@@ -61,6 +61,8 @@
 		UPDATE USERS
 		SET EMAIL =#{email}
 		,USER_MEMO =#{userMemo}
+		,PROFILE_ORIGINNAME=#{profileOriginName}
+		,PROFILE_CHANGEPATH =#{profileChangePath}
 		WHERE USER_ID=#{userId} 
 		AND STATUS='Y'
 	</update>
@@ -95,8 +97,15 @@
 		WHERE USER_ID = #{userId}
 		AND STATUS = 'Y'
 	</update>
-
 	
+	
+	<update id="updateProfile" parameterType="User">
+		UPDATE USERS
+		SET PROFILE_ORIGINNAME=#{profileOriginName}
+		,PROFILE_CHANGEPATH =#{profileChangePath}
+		WHERE USER_ID = #{userId}
+		AND STATUS = 'Y'
+	</update>
 
 	
 </mapper>
