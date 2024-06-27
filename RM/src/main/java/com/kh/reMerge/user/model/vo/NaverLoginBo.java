@@ -17,7 +17,7 @@ public class NaverLoginBo {
 	
 	private static final String NAVER_CLIENT_ID = "QtBQWMlKTonQr2ENTX3U";
 	private static final String NAVER_CLIENT_SECRET = "4RQLDD98le";
-	private static final String NAVER_REDIRECT_URI = "http://remerge.com:8878/reMerge/naver/callback";
+	private static final String NAVER_REDIRECT_URI = "http://localhost:8888/reMerge/naver/callback";
 	private static final String SESSION_STATE = "neathlo_state";
 	private static final String PROFILE_API_URL = "https://openapi.naver.com/v1/nid/me";
 

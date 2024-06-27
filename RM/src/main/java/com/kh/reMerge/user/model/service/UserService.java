@@ -37,4 +37,20 @@ public interface UserService {
 	//언팔로우
 	int deleteFollow(FollowList followList);
 	
+	//이메일 중복체크
+	int checkEmail(String email);
+	
+	//아이디 찾기
+	String findId(String idForFindEmail);
+	
+	//이메일인증을 위한 아이디 및 이메일 일치하는지판별
+	int accEmail(User u);
+	
+	//이메일인증을 마친 비밀번호 변경
+	int updateChangePwd(User u);
+
+	
+	
+
+	
 }

@@ -73,29 +73,31 @@ class NaverController {
 		List<UserinfoAuthAPI> authList = new ArrayList<UserinfoAuthAPI>();
 		authList.add(UserAPI);
 
-		User u = new User();
-		u.setUserId(email);
-		u.setUserPwd(UUID.randomUUID().toString());
+		User loginUser = new User();
+		loginUser.setUserId(email);
+		loginUser.setUserPwd(UUID.randomUUID().toString());
 		//userinfo.setNickname(name);
-		u.setEmail(email);
-		u.getJoinDate();
-		u.setProfilePath(null);
-		u.setStatus(null);
-		u.setShopBrandChek(null);
-		u.setUserMemo(null);
-		System.out.println("User : "+u);
+		loginUser.setEmail(email);
+		loginUser.getJoinDate();
+		loginUser.setProfilePath(null);
+		loginUser.setStatus(null);
+		loginUser.setShopBrandChek(null);
+		loginUser.setUserMemo(null);
+		System.out.println("User : "+loginUser);
 		//UserService.addUserinfoAuth();
-		String APIcheckId = u.getUserId();
+		String APIcheckId = loginUser.getUserId();
 		int result = UserService.checkId(APIcheckId);
 		
 		// 여기부턴 spring-security 적용 관련입니다.
 		// 네이버 로그인 사용자 정보를 사용하여 UserDetails 객체(로그인 사용자)를 생성하여 저장
 		//System.out.println("result : "+result);
 		if(result>0) { //중복아이디 있음
+			session.setAttribute("loginUser", loginUser);
 			session.setAttribute("alertMsg", "네이버에 중복된 아이디가 있습니다!! = 바로 로그인");
 			return "redirect:/feed.fe";
 		}else { //중복아이디 없음
-			UserService.insertUser(u);
+			UserService.insertUser(loginUser);
+			session.setAttribute("loginUser", loginUser);
 			session.setAttribute("alertMsg", "네이버를 이용한 이메일아이디로 회원가입 완료!!");
 		return "redirect:/feed.fe";
 		}

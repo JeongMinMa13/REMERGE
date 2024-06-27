@@ -22,7 +22,7 @@ import com.kh.reMerge.user.model.service.GoogleLoginApi;
 public class GoogleLoginBo {
 	private final static String GOOGLE_CLIENT_ID = "363177318285-ssbc38p1uc9ngg94n28op1qqsh1oiumc.apps.googleusercontent.com";
     private final static String GOOGLE_CLIENT_SECRET = "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";
-    private final static String GOOGLE_REDIRECT_URI = "http://remerge.com:8878/reMerge/google/callback";
+    private final static String GOOGLE_REDIRECT_URI = "http://localhost:8888/reMerge/google/callback";
     private final static String GOOGLE_SCOPE = "email openid profile";
     private final static String PROFILE_API_URL ="https://www.googleapis.com/oauth2/v2/userinfo";
 	private static final String SESSION_STATE="googleSessionState";

@@ -72,4 +72,21 @@ public class UserDao {
 
 		return sqlSession.delete("userMapper.deleteFollow", followList);
 	}
+
+	public int emailCheck(SqlSessionTemplate sqlSession, String email) {
+		return sqlSession.selectOne("userMapper.emailCheck",email);
+	}
+
+	public String findId(SqlSessionTemplate sqlSession, String forFindEmail) {
+		return sqlSession.selectOne("userMapper.findId",forFindEmail);
+	}
+
+	public int updateChangePwd(SqlSessionTemplate sqlSession, User u) {
+		//System.out.println("유저 정보 : "+u);
+		return sqlSession.update("userMapper.updateChangePwd",u);
+	}
+
+	public int accEmail(SqlSessionTemplate sqlSession, User u) {
+		return sqlSession.selectOne("userMapper.accEmail",u);
+	}
 }
