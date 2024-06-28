@@ -76,9 +76,44 @@ public class StoryController {
 	@ResponseBody
 	@PostMapping(value="insertHistory.fe",produces="application/json;charset=UTF-8")
 	public int insertHistory(History history) {
-		
-		return storyService.insertHistory(history);
+		boolean duplCheck = false;
+		ArrayList<History> list = storyService.selectHistory(history.getUserId());//아이디로 시청기록 조회해와서
+		for(History h : list) {
+			if(h.getStoryNo()==history.getStoryNo()) {//시청 기록 중복 제거
+				System.out.println("중복 됨");
+				duplCheck=true;
+			}
+		}
+		if(!duplCheck) {//중복되지 않았다면 
+//			Thread historyThread = new Thread() {
+//				public void run() {
+//					try {
+//						Thread.sleep(10*1000);//10초 동안 동작 안하기
+//					    //Thread.sleep(24*60*60*1000);//24시간 동안 동작 안하기
+//					} catch (InterruptedException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//					int result = storyService.deleteHistory(history);
+//					System.out.println("Thread 실행 하여 history 삭제 결과 "+result);
+//				}
+//			};
+//			historyThread.setDaemon(true);//메인쓰레드가 종료되면 종료될수있도록 종속 시키기
+//			historyThread.start();
+			
+			return storyService.insertHistory(history);
+		}
+		return 0;//중복됬어도 사용자에게 알려줄 정보가 없음
 	}
+	
+	//시청 기록 조회해오기
+	@ResponseBody
+	@PostMapping(value="selectHistory.fe",produces="application/json;charset=UTF-8")
+	public ArrayList<History> selectHistory(String userId){
+		
+		return storyService.selectHistory(userId);
+	}
+	
 	
 	//파일 업로드 처리 메소드 (파일 이름 바꿔주기 모듈화)
 	public String saveFile(MultipartFile upfile,HttpSession session) {

@@ -22,4 +22,10 @@ public interface StoryService {
 	//스토리 시청 기록 넣기
 	int insertHistory(History history);
 
+	//스토리 시청 기록 조회
+	ArrayList<History> selectHistory(String userId);
+
+	//스토리 시청 기록 삭제
+	int deleteHistory(History history);
+
 }

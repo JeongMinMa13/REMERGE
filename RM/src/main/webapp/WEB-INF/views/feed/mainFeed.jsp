@@ -340,8 +340,24 @@
 		// 전역 변수 선언
 	    var currentStoryIndex = 0;
 	    var storiesData = [];
+	    var history = []; //스토리 시청 기록을 사용하기 위한 전역 변수
 
 		$(function(){
+			$.ajax({
+				url:"selectHistory.fe",
+				type:"post",
+				data:{
+					userId:"${loginUser.userId}"
+				},
+				success:function(history){
+					history=history;
+					console.log(history);
+				},
+				error:function(){
+					console.log("통신 실패");
+				}
+			});
+			
 			$.ajax({
 				url:"selectStory.fe",
 				type:"post",
@@ -355,30 +371,27 @@
 					//스토리 기능은 한명이 작성한 글은 하나의 글로 확인 가능하고
 					//상세페이지를 조회한다면 다른 글도 조회할수 있기 때문에 view페이지에서 한 유저의 스토리들은 하나로만 보여야 함
 					//그에 따라 처리된 아이디를 저장하고 저장된 아이디와 비교하며 html 생성
+					var seenStory = false;
 					var html = "";
 					const processedUserIds = new Set();// 생성된 스토리 html 아이디를 저장할 집합
 					for(var i=0;i<data.length;i++){
 						if(!processedUserIds.has(data[i].userId)){//저장된 집합에 이름이 있는지 확인
 							
 							html +="<div class='story' onclick='storyView("+i+");'>";
+							html +="<input type='hidden' class='storyNoCheck' value='"+data[i].storyNo+"'>";
 							html +="<img class='story_img' src='"+data[i].changeName+"'>";
 							html +="<span>"+data[i].userId+"</span>";
 							html +="</div>";
 							processedUserIds.add(data[i].userId);//처리된 아이디 집합에 넣기
 						}
 					}
-					$('#nextStory').click(function(event){
-						
-						
-					});
-					$(".storys").append(html);
+					$(".storys").append(html);//작성된 html 넣어주기
 				},
 				error:function(){
 					console.log("통신 실패");
 				}
-		
 			});
-		});
+		});	
 		
 
 		<!-- 게시글 detail 불러오기 -->
@@ -426,7 +439,7 @@
 					storyNo:data.storyNo
 				},
 				success:function(result){
-					console.log(result);
+					//console.log(result);//시청 기록 추가 확인
 				},
 				error:function(){
 					console.log("통신 실패");

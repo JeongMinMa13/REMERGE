@@ -40,4 +40,16 @@ public class StoryDao {
 		return sqlSession.insert("storyMapper.insertHistory", history);
 	}
 
+	//스토리 시청 기록 조회
+	public ArrayList<History> selectHistory(SqlSessionTemplate sqlSession, String userId) {
+
+		return (ArrayList)sqlSession.selectList("storyMapper.selectHistory",userId);
+	}
+
+	//스토리 시청 기록 삭제
+	public int deleteHistory(SqlSessionTemplate sqlSession, History history) {
+
+		return sqlSession.delete("storyMapper.deleteHistory", history);
+	}
+
 }

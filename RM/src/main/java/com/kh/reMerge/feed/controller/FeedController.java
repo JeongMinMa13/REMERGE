@@ -26,6 +26,7 @@ import com.kh.reMerge.common.template.Pagination;
 import com.kh.reMerge.feed.model.service.FeedService;
 import com.kh.reMerge.feed.model.vo.Feed;
 import com.kh.reMerge.feed.model.vo.Reply;
+import com.kh.reMerge.feed.model.vo.Tag;
 
 
 @Controller
@@ -168,5 +169,189 @@ public class FeedController {
 	
 	
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	//태그 검색
+	@ResponseBody
+	@GetMapping("searchTag.fe")
+	public ArrayList<Tag> searchTag(Tag tag){
+		tag.setTagContent(tag.getTagContent().replace("#",""));//#제거 하기 
+		if(tag.getTagContent().length()>0) {
+			return feedService.searchTag(tag);
+		}else {
+			return null;
+		}
+	}
+	
+	//태그 검색창에서 클릭 또는 게시글에서 태그 클릭시 해당하는 태그 리스트 보여주는 뷰로 이동
+	@GetMapping("selectTag.fe")
+	public String selectTag(Tag tag, HttpSession session) {
+		ArrayList<Feed> tagList = feedService.selectTag(tag);
+		
+		session.setAttribute("tagList", tagList);
+		session.setAttribute("tag", tag);
+		
+		return "/feed/tagDetail";
+	}
+	
+	
+	
 	
 }
