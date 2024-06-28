@@ -50,7 +50,9 @@
 </select>     
 
 <select id="replyList" resultType="Reply" parameterType="_int">
-	SELECT  REPLY_NO replyNo
+	SELECT	
+		   	REPLY_NO replyNo
+		   ,FEED_NO feedNo	
 		   ,RE_CONTENT reContent
 		   ,USER_ID userId
 		   ,CREATE_DATE createDate

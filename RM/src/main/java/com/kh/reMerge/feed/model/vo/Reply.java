@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 public class Reply {
 	
 	private int replyNo;
-	private String reContent;
 	private int feedNo;
+	private String reContent;
 	private String userId;
 	private Date createDate;
 	private int reCount;

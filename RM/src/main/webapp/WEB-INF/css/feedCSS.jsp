@@ -320,6 +320,24 @@ header {
 	display:none;
 }
 
+/* 임시 좋아요 버튼*/
+.like-button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+}
+
+.like-button:focus {
+    outline: none;
+}
+
+.heart-icon {
+    font-size: 30px;
+    color: #ff5a5f;
+}
+
 
 </style>
 </head>

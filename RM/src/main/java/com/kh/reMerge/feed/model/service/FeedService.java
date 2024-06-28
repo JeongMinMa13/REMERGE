@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.kh.reMerge.common.model.vo.PageInfo;
 import com.kh.reMerge.feed.model.vo.Feed;
+import com.kh.reMerge.feed.model.vo.FeedLike;
 import com.kh.reMerge.feed.model.vo.Reply;
 
 
@@ -28,6 +29,24 @@ public interface FeedService {
 	
 	//게시글 디테일
 	Feed selectFeed(int feedNo);
+	
+	//게시글 좋아요
+	int insertLike(FeedLike fl);
+	
+	//좋아요 취소
+	int deleteLike(FeedLike fl);
+	
+	//좋아요 수 증가
+	int addCount(int feedNo);
+	
+	//좋아요 감소
+	int removeCount(int feedNo);
+	
+	//좋아요 여부
+	int likeCheck(int feedNo,String userId);
+	
+	//좋아요 수 조회
+	int likeCount(int feedNo);
 	
 	
 	
