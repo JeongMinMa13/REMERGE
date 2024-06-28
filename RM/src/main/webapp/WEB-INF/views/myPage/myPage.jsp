@@ -40,7 +40,7 @@
 				<div class="form-group"> 
 				<!-- null일때 -->
 				<c:choose>
-					<c:when test="${loginUser.profileChangePath eq null }">  
+					<c:when test="${user.profileChangePath eq null }">  
 					 <img id="profile" src="resources/unknown.jpg" width="100" height="100" > &nbsp; ${user.userId } &nbsp; &nbsp; &nbsp; 게시물
 					&nbsp; 팔로잉 &nbsp; 팔로워 &nbsp; &nbsp;
 				</c:when>

@@ -3,28 +3,32 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="userMapper">
-
 	<resultMap type="User" id="userResultSet">
 		<result column="USER_ID" property="userId" />
 		<result column="USER_PWD" property="userPwd" />
 		<result column="EMAIL" property="email" />
 		<result column="JOINDATE" property="joinDate" />
 		<result column="PROFILE_PATH" property="profilePath" />
+		<result column="PROFILE_ORIGINNAME" property="profileOriginName"/>
+		<result column="PROFILE_CHANGEPATH" property="profileChangePath"/>
 		<result column="STATUS" property="status" />
 		<result column="SHOP_BRANDCHEK" property="shopBrandChek" />
 		<result column="USER_MEMO" property="userMemo" />
-		<result column="PROFILE_ORIGINNAME" property="profileOriginName" />
-		<result column="PROFILE_CHANGEPATH" property="profileChangePath" />
 	</resultMap>
-
 	<select id="loginUser" resultMap="userResultSet">
+		SELECT *
+		FROM USERS
+		WHERE USER_ID = #{userId}
+		AND
+		STATUS = 'Y'
+	</select>
+	
+	<!-- <select id="loginUser" resultMap="userResultSet">
 		SELECT USER_ID,
 		USER_PWD,
 		EMAIL,
 		JOINDATE,
 		PROFILE_PATH,
-		PROFILE_ORIGINNAME,
-		PROFILE_CHANGEPATH,
 		STATUS,
 		SHOP_BRANDCHEK,
 		USER_MEMO
@@ -32,10 +36,7 @@
 		WHERE USER_ID = #{userId}
 		AND
 		STATUS = 'Y'
-
-	</select>
-
-
+	</select> -->
 	<insert id="insertUser" parameterType="User">
 		INSERT INTO USERS(USER_ID,
 						USER_PWD,
@@ -46,11 +47,15 @@
 		#{email},
 		#{shopBrandChek})
 	</insert>
-
 	<select id="checkId" parameterType="string" resultType="_int">
 		SELECT COUNT(*)
 		FROM USERS
 		WHERE USER_ID = #{checkId}
+	</select>
+	<select id="emailCheck" parameterType="string" resultType="_int">
+		SELECT COUNT(*)
+		FROM USERS
+		WHERE email = #{email}
 	</select>
 	
 	<select id="searchUser" parameterType="string" resultMap="userResultSet">
@@ -61,9 +66,7 @@
 		UPDATE USERS
 		SET EMAIL =#{email}
 		,USER_MEMO =#{userMemo}
-		,PROFILE_ORIGINNAME=#{profileOriginName}
-		,PROFILE_CHANGEPATH =#{profileChangePath}
-		WHERE USER_ID=#{userId} 
+		WHERE USER_ID=#{userId}
 		AND STATUS='Y'
 	</update>
 	
@@ -75,7 +78,7 @@
 	</update>
 	
 	<select id="selectUser" parameterType="string" resultMap="userResultSet">
-		SELECT USER_ID,EMAIL,USER_MEMO,PROFILE_PATH,PROFILE_ORIGINNAME,PROFILE_CHANGEPATH FROM USERS WHERE USER_ID=#{userId}
+		SELECT USER_ID,EMAIL,USER_MEMO,PROFILE_PATH,PROFILE_CHANGEPATH, PROFILE_ORIGINNAME FROM USERS WHERE USER_ID=#{userId}
 	</select>
 	
 	<insert id="insertFollow" parameterType="FollowList">
@@ -91,21 +94,24 @@
 		DELETE FROM FOLLOWLIST WHERE TO_USER=#{toUser} AND FROM_USER=#{fromUser}
 	</delete>
 	
-	<update id="deleteUser" parameterType="string">
+	<select id="findId" parameterType="string" resultType="string">
+		SELECT USER_ID
+		FROM USERS
+		WHERE EMAIL = #{idForFindEmail}
+	</select>
+	
+	<update id="updateChangePwd" parameterType="User">
 		UPDATE USERS
-		SET STATUS = 'N'
-		WHERE USER_ID = #{userId}
-		AND STATUS = 'Y'
+		SET USER_PWD=#{userPwd}
+		WHERE USER_ID=#{userId}
+		AND STATUS='Y'
 	</update>
 	
-	
-	<update id="updateProfile" parameterType="User">
-		UPDATE USERS
-		SET PROFILE_ORIGINNAME=#{profileOriginName}
-		,PROFILE_CHANGEPATH =#{profileChangePath}
-		WHERE USER_ID = #{userId}
-		AND STATUS = 'Y'
-	</update>
-
+	<select id="accEmail" parameterType="User" resultType="_int">
+		SELECT COUNT(*)
+		FROM USERS
+		WHERE email = #{email}
+		AND USER_ID = #{userId}
+	</select>
 	
 </mapper>

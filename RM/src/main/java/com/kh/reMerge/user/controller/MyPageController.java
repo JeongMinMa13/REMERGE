@@ -15,11 +15,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.kh.reMerge.user.model.service.MyPageService;
 import com.kh.reMerge.user.model.service.UserService;
 import com.kh.reMerge.user.model.vo.FollowList;
 import com.kh.reMerge.user.model.vo.User;
+
 @Controller
 public class MyPageController {
+	
+	@Autowired
+	private MyPageService mypageService;
 	
 	@Autowired
 	private UserService userService;
@@ -40,8 +45,9 @@ public class MyPageController {
 		int result = userService.selectFollow(followList);// 팔로우 되어있는지 확인하기 위한 조회
 		if (result > 0) {// 팔로우 되어 있다면 true
 			followFlag = true;
+			
 		}
-		
+		System.out.println("마이페이지에서 찍힌 유저:"+u);
 		session.setAttribute("user", u);
 		session.setAttribute("followFlag", followFlag);
 
@@ -50,8 +56,8 @@ public class MyPageController {
 
 	// 프로필 편집 페이지로 이동
 	@RequestMapping("updatePage.us")
-	public String updatePage(User u, Model model) {
-		model.addAttribute("User", u);
+	public String updatePage() {
+		
 
 		return "myPage/updatePage";
 	}
@@ -61,7 +67,7 @@ public class MyPageController {
 	public String updatePwd(User u, Model model,String updatePwd, HttpSession session) {
 		String bcrPwd = bcryptPasswordEncoder.encode(updatePwd);
 		u.setUserPwd(bcrPwd);
-		int result = userService.updatePwd(u);
+		int result = mypageService.updatePwd(u);
 		
 		if(result>0) {
 			User updateUser = userService.loginUser(u);
@@ -87,7 +93,7 @@ public class MyPageController {
 		    }
 
 
-		int result = userService.updateUser(u);
+		int result = mypageService.updateUser(u);
 		if (result > 0) {
 			
 			User updateUs = userService.loginUser(u);
@@ -111,23 +117,23 @@ public class MyPageController {
 					defaultProfile = u.getProfileChangePath(); // 프로필 경로로 설정
 				} else {
 					String profileChangePath = saveFile(upfile, session);
-					System.out.println(profileChangePath);
+					System.out.println("profileChangePath : "+profileChangePath);
 					// 새 사진 등록
 					u.setProfileOriginName(upfile.getOriginalFilename());
 					u.setProfileChangePath("resources/profile/" + profileChangePath);
 	
 				}
 			}
-			System.out.println(u);
+			System.out.println("프로필 변경에서 찍은 유저 :"+u);
 	
-				int result = userService.updateProfile(u);
+				int result = mypageService.updateProfile(u);
 				System.out.println(result);
 				if (result > 0) {
 					User updateProfile = userService.loginUser(u);
 					session.setAttribute("loginUser", updateProfile);
 					session.setAttribute("alertMsg", "사진 수정 성공");
 					
-					return "myPage/myPage";
+					return "redirect:myPage.us?userId="+updateProfile.getUserId();
 				} else {
 					session.setAttribute("alertMsg", "사진 수정 실패");
 					return "myPage/updatePage";
@@ -166,12 +172,52 @@ public class MyPageController {
 				System.out.println(savePath);
 				
 			} catch (IllegalStateException | IOException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 			
 			return profileChangePath;
 			
 			
+		}
+		
+		//회원탈퇴 메소드
+		@RequestMapping("delete.us")
+		public String deleteMember(String userPwd
+								  ,HttpSession session
+								  ,Model model) {
+			//사용자의 아이디를 가지고 데이터베이스에서 해당 정보를 조회해온다(암호문인 비밀번호)
+			//넘어온 평문과 조회한 암호문(비밀번호)를 비교한뒤 일치하면 회원탈퇴 시키기 
+			
+//			System.out.println("평문 : "+userPwd);
+//			System.out.println("로그인 비밀번호 : "+((Member)session.getAttribute("loginUser")).getUserPwd());
+			//로그인했을때 데이터베이스에 있는 암호문을 가지고 왔으니 
+			//해당 암호문과 넘겨진 평문 matches() 메소드로 비교하여 처리하기 
+			
+			//로그인 정보의 비밀번호 변수처리
+			User loginUser = ((User)session.getAttribute("loginUser"));
+			String encPwd = loginUser.getUserPwd();
+			String userId = loginUser.getUserId();
+			
+			//암호문을 복호화 하였을때 평문과 일치하다면(제대로 입력한 경우) 
+			if(bcryptPasswordEncoder.matches(userPwd, encPwd)) {
+				//탈퇴처리 
+				int result = mypageService.deleteUser(userId);
+				
+				//탈퇴 성공시 - session에 있는 로그인정보 삭제 후 메인페이지로 이동 
+				if(result>0) {
+					session.removeAttribute("loginUser"); //로그인 정보 삭제
+					session.setAttribute("alertMsg", "회원탈퇴가 완료되었습니다.");
+					return "redirect:/";
+				}else {
+					//탈퇴 실패시 - 에러페이지로 이동 
+					model.addAttribute("errorMsg","회원 탈퇴 실패");
+					return "myPage/myPage";
+				}
+				
+			}else {//비밀번호를 잘못 입력한 경우
+				session.setAttribute("alertMsg", "비밀번호 입력 오류!");
+				return "myPage/myPage";
+			}
 		}
 }

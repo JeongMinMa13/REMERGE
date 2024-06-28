@@ -62,35 +62,9 @@ public class UserDao {
 
 		return sqlSession.delete("userMapper.deleteFollow", followList);
 	}
-
 	
 
-	public int updateUser(SqlSessionTemplate sqlSession, User u) {
-		// TODO Auto-generated method stub
-		return sqlSession.update("userMapper.updateUser",u);
-	}
 
-	public int updatePwd(SqlSessionTemplate sqlSession, User u) {
-		// TODO Auto-generated method stub
-		return sqlSession.update("userMapper.updatePwd",u);
-	}
 
-	public int deleteUser(SqlSessionTemplate sqlSession, String userPwd) {
-		
-		return sqlSession.update("userMapper.deleteUser",userPwd);
-	}
-
-	public int updateProfile(SqlSessionTemplate sqlSession, User u) {
-		
-		return sqlSession.update("userMapper.updateProfile",u);
-	}
-
-	
-	
-	
-
-	
-
-	
 	
 }
