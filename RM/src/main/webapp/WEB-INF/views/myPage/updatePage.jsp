@@ -46,8 +46,8 @@
                     <!-- 프로필에 표시되는 이미지 -->
                     
 	                 <c:choose> 
-	                  	<c:when test="${loginUser.profileChangePath ne null }">  
-						 	 <img id="profile" src="${loginUser.profileChangePath}" width="100" height="100" style="border-radius:70%"> &nbsp;
+	                  	<c:when test="${loginUser.profileChangeName ne null }">  
+						 	 <img id="profile" src="${loginUser.profileChangeName}" width="100" height="100" style="border-radius:70%"> &nbsp;
 						 </c:when>
 						 <c:otherwise>
 							 <img id="profile" src="resources/unknown.jpg" width="100" height="100" > &nbsp;

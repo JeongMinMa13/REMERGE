@@ -17,7 +17,7 @@
 		<result column="SHOP_BRANDCHEK" property="shopBrandChek" />
 		<result column="USER_MEMO" property="userMemo" />
 		<result column="PROFILE_ORIGINNAME"	property="profileOriginName" />
-		<result column="PROFILE_CHANGEPATH"	property="profileChangePath" />
+		<result column="PROFILE_CHANGENAME"	property="profileChangeName" />
 	</resultMap>
 	
 	<select id="loginUser" resultMap="userResultSet">
@@ -35,7 +35,7 @@
 		SET EMAIL=#{email}
 		,USER_MEMO =#{userMemo}
 		,PROFILE_ORIGINNAME=#{profileOriginName}
-		,PROFILE_CHANGEPATH=#{profileChangePath}
+		,PROFILE_CHANGENAME=#{profileChangeName}
 		WHERE USER_ID=#{userId}
 		AND STATUS='Y'
 	</update>
@@ -60,7 +60,7 @@
 	<update id="updateProfile" parameterType="User">
 		UPDATE USERS
 		SET PROFILE_ORIGINNAME=#{profileOriginName}
-		,PROFILE_CHANGEPATH	=#{profileChangePath}
+		,PROFILE_CHANGENAME	=#{profileChangeName}
 		WHERE USER_ID = #{userId}
 		AND STATUS = 'Y'
 	</update>

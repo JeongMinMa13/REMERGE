@@ -27,17 +27,13 @@ public interface UserService {
 	
 	//언팔로우
 	int deleteFollow(FollowList followList);
+	
 	//내가 아닌 유저 정보 조회해오기
 	User selectUser(String userId);
+	
 	//팔로우 목록
 	int selectFollow(FollowList followList);
 
-
-
-
-
-	
-	
 	
 	//이메일 중복체크
 	int checkEmail(String email);

@@ -40,12 +40,12 @@
 				<div class="form-group"> 
 				<!-- null일때 -->
 				<c:choose>
-					<c:when test="${user.profileChangePath eq null }">  
+					<c:when test="${user.profileChangeName eq null }">  
 					 <img id="profile" src="resources/unknown.jpg" width="100" height="100" > &nbsp; ${user.userId } &nbsp; &nbsp; &nbsp; 게시물
 					&nbsp; 팔로잉 &nbsp; 팔로워 &nbsp; &nbsp;
 				</c:when>
 				<c:otherwise> 
-				<img style="border-radius:70%" id="profile" src="${user.profileChangePath }" width="100" height="100" > &nbsp; ${user.userId } &nbsp; &nbsp; &nbsp; 게시물
+				<img style="border-radius:70%" id="profile" src="${user.profileChangeName }" width="100" height="100" > &nbsp; ${user.userId } &nbsp; &nbsp; &nbsp; 게시물
 					&nbsp; 팔로잉 &nbsp; 팔로워 &nbsp; &nbsp;
 					
 				</c:otherwise>	
@@ -79,6 +79,7 @@
 			<form action="feed">
 				<div align="center">
 					<img src="resources/apps.png" width="20" id="apps">
+					
 				</div>
 			</form>
 			<form action="">
@@ -96,6 +97,9 @@
 		<hr>
 </body>
 
+
+
+	  
 
 
 <script>

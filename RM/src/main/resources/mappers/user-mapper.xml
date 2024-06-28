@@ -10,7 +10,7 @@
 		<result column="JOINDATE" property="joinDate" />
 		<result column="PROFILE_PATH" property="profilePath" />
 		<result column="PROFILE_ORIGINNAME" property="profileOriginName"/>
-		<result column="PROFILE_CHANGEPATH" property="profileChangePath"/>
+		<result column="PROFILE_CHANGENAME" property="profileChangeName"/>
 		<result column="STATUS" property="status" />
 		<result column="SHOP_BRANDCHEK" property="shopBrandChek" />
 		<result column="USER_MEMO" property="userMemo" />
@@ -78,7 +78,7 @@
 	</update>
 	
 	<select id="selectUser" parameterType="string" resultMap="userResultSet">
-		SELECT USER_ID,EMAIL,USER_MEMO,PROFILE_PATH,PROFILE_CHANGEPATH, PROFILE_ORIGINNAME FROM USERS WHERE USER_ID=#{userId}
+		SELECT USER_ID,EMAIL,USER_MEMO,PROFILE_PATH,PROFILE_CHANGENAME, PROFILE_ORIGINNAME FROM USERS WHERE USER_ID=#{userId}
 	</select>
 	
 	<insert id="insertFollow" parameterType="FollowList">

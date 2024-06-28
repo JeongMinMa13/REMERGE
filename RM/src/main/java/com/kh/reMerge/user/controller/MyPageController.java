@@ -89,7 +89,7 @@ public class MyPageController {
 		
 		 if (loginUser != null) {
 		        u.setProfileOriginName(loginUser.getProfileOriginName());
-		        u.setProfileChangePath(loginUser.getProfileChangePath());
+		        u.setProfileChangeName(loginUser.getProfileChangeName());
 		    }
 
 
@@ -114,13 +114,13 @@ public class MyPageController {
 			if (!upfile.getOriginalFilename().equals("")) {
 				if (u.getProfileOriginName() != null) { // 원래 파일이 비어있지 않은 경우
 	
-					defaultProfile = u.getProfileChangePath(); // 프로필 경로로 설정
+					defaultProfile = u.getProfileChangeName(); // 프로필 경로로 설정
 				} else {
 					String profileChangePath = saveFile(upfile, session);
 					System.out.println("profileChangePath : "+profileChangePath);
 					// 새 사진 등록
 					u.setProfileOriginName(upfile.getOriginalFilename());
-					u.setProfileChangePath("resources/profile/" + profileChangePath);
+					u.setProfileChangeName("resources/profile/" + profileChangePath);
 	
 				}
 			}
