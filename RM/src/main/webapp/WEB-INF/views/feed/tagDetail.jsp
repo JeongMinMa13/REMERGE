@@ -19,7 +19,18 @@
 		</div>
 		<hr>
 		<div class="tagListContent">
-			
+			<c:choose>
+				<c:when test="${tagList eq null}">
+					<div>조회된 게시글이 없습니다.</div>						
+				</c:when>
+				<c:otherwise>
+					<c:forEach var="f" items="${tagList }">
+						<div class="feedBlock">
+							<img src="${tagList.changeName}">
+						</div>
+					</c:forEach>		
+				</c:otherwise>
+			</c:choose>
 		</div>
 	</div>
 </body>
