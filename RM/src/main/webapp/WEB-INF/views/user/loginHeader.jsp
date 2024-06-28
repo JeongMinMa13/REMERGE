@@ -30,7 +30,7 @@
                     <li><div class="menu-item" id="messages"><img src="resources/messages.png"><a href="/reMerge/message/dm">메시지</a></div></li>
                     <li><div class="menu-item" id="notifications"><img src="resources/notifications.png">알림</div></li>
                     <li><div class="menu-item" id="create"><img src="resources/create.png">만들기</div></li>
-                    <li><div class="menu-item" id="store"><img src="resources/store.png">스토어</div></li>
+                    <li><div class="menu-item" id="shop"><img src="resources/store.png">스토어 </div></li>
                     <li><div class="menu-item" id="profile"><a href="myPage.us?userId=${loginUser.userId}"><img src="">프로필</a></div></li>
                     <li><div class="menu-item" id="calendarIcon"><a href="calendar.sc"><img src="resources/calendaricon.png">캘린더</a></div></li>
                 </ul>
@@ -125,6 +125,10 @@
     	
     	$('#home').click(function(){
     		location.href="/reMerge/feed.fe";
+    	});
+    	
+    	$('#shop').click(function(){
+    		location.href="/reMerge/shopPage.sh";
     	});
     
     	function selectTag(data){

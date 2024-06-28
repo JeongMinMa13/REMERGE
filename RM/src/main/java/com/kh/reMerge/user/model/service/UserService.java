@@ -18,6 +18,14 @@ public interface UserService {
 	int updatePwd(User u);
 	
 	int deleteUser(String userPwd);
+	
+//       __ __  ____   ______ ___     __  ___                  
+//      / //_/ / __ \ / ____//   |   /  |/  /                 
+//     / ,<   / /_/ // __/  / /| |  / /|_/ /                 
+//    / /| | / _, _// /___ / ___ | / /  / /                 
+//   /_/ |_|/_/ |_|/_____//_/  |_|/_/  /_/                                                                           
+//    Unlock Your Potential With KREAM                        
+//    https://recruit.kreamcorp.com/                                                                     
 
 	// 메시지용 - 중구
 	ArrayList<User> getAllUsers();
