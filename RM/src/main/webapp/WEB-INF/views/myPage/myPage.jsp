@@ -36,31 +36,50 @@
 		<div class="innerOuter">
 
 			<br>
-			<!-- <form action="mypage.us" method="post"> -->
+			
 				<div class="form-group"> 
-					 <img id="profile" src="${pageContext.request.contextPath}${loginUser.profilePath }" width="30" height="30" > &nbsp; ${user.userId } &nbsp &nbsp &nbsp 게시물
+				<!-- null일때 -->
+				<c:choose>
+					<c:when test="${user.profileChangeName eq null }">  
+					 <img id="profile" src="resources/unknown.jpg" width="100" height="100" > &nbsp; ${user.userId } &nbsp; &nbsp; &nbsp; 게시물
 					&nbsp; 팔로잉 &nbsp; 팔로워 &nbsp; &nbsp;
-					<a href="updatePage.us" class="button-link">프로필 편집</a>
-					<button type="button" id="shareProfile" class="button-link">프로필 공유</button>
-					<c:choose>
-						<c:when test="${followFlag eq false }">
-							<button onclick="follow();" class="button-link">팔로우</button>
-						</c:when>
-						<c:otherwise>
-							<button onclick="unFollow();" class="button-link">언팔로우</button>
-						</c:otherwise>
-					</c:choose>					
+				</c:when>
+				<c:otherwise> 
+				<img style="border-radius:70%" id="profile" src="${user.profileChangeName }" width="100" height="100" > &nbsp; ${user.userId } &nbsp; &nbsp; &nbsp; 게시물
+					&nbsp; 팔로잉 &nbsp; 팔로워 &nbsp; &nbsp;
+					
+				</c:otherwise>	
+				</c:choose>
+				
+				<!-- null 아닐때 -->
+					<c:if test="${loginUser.userId eq user.userId }">
+							<a href="updatePage.us" class="button-link">프로필 편집</a>
+							<button type="button" id="shareProfile" class="button-link">프로필 공유</button>
+					</c:if>
+					
+					<c:if test="${loginUser.userId ne user.userId }">
+						<c:choose>
+							<c:when test="${followFlag eq false }">
+								<button onclick="follow();" class="button-link">팔로우</button>
+							</c:when>
+							<c:otherwise>
+								<button onclick="unFollow();" class="button-link">언팔로우</button>
+							</c:otherwise>
+						</c:choose>	
+					<a href="message/dm" class="button-link">메시지</a>
+					</c:if>			
 				</div>
 				<div>
 					${user.userMemo }
 				</div>
-			<!-- </form> -->
+			
 		</div>
 		<br> <br>
 		<div class="container">
 			<form action="feed">
 				<div align="center">
 					<img src="resources/apps.png" width="20" id="apps">
+					
 				</div>
 			</form>
 			<form action="">
@@ -78,6 +97,9 @@
 		<hr>
 </body>
 
+
+
+	  
 
 
 <script>
@@ -125,6 +147,7 @@
 			}
 		});
 	}
+	
 	
 </script>
 
