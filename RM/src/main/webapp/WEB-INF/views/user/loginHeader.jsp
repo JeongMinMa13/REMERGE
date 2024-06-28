@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title></title>
+<title>로그인 헤더 구현하지않음 아직 세션만가져오기 가능</title>
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c" %>
 <jsp:include page="/WEB-INF/css/headerCSS.jsp"></jsp:include>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script><!-- jquery CDN -->
@@ -95,5 +95,9 @@
     	});
     
     </script>
+
+    <h2>${loginUser.userId}</h2>
+	<a href="logout.us">로그아웃</a>
+
 </body>
 </html>
