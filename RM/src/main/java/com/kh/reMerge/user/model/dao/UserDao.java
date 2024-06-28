@@ -28,15 +28,6 @@ public class UserDao {
 		return sqlSession.selectOne("userMapper.checkId",checkId);
 	}
 	
-	public int updateUser(SqlSessionTemplate sqlSession, User u) {
-		// TODO Auto-generated method stub
-		return sqlSession.update("userMapper.updateUser",u);
-	}
-
-	public int updatePwd(SqlSessionTemplate sqlSession, User u) {
-		
-		return sqlSession.update("userMapper.updatePwd",u);
-	}
 
 	// 메시지용 - 중구
 	public ArrayList<User> getAllUsers(SqlSessionTemplate sqlSession) {
@@ -72,6 +63,7 @@ public class UserDao {
 
 		return sqlSession.delete("userMapper.deleteFollow", followList);
 	}
+
 
 	public int emailCheck(SqlSessionTemplate sqlSession, String email) {
 		return sqlSession.selectOne("userMapper.emailCheck",email);

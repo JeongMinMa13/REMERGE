@@ -12,20 +12,7 @@ public interface UserService {
 	int checkId(String checkId);
 
 	User loginUser(User u);
-
-	int updateUser(User u);
-
-	int updatePwd(User u);
-	
-	int deleteUser(String userPwd);
-	
-//       __ __  ____   ______ ___     __  ___                  
-//      / //_/ / __ \ / ____//   |   /  |/  /                 
-//     / ,<   / /_/ // __/  / /| |  / /|_/ /                 
-//    / /| | / _, _// /___ / ___ | / /  / /                 
-//   /_/ |_|/_/ |_|/_____//_/  |_|/_/  /_/                                                                           
-//    Unlock Your Potential With KREAM                        
-//    https://recruit.kreamcorp.com/                                                                     
+                                                                   
 
 	// 메시지용 - 중구
 	ArrayList<User> getAllUsers();
@@ -33,11 +20,12 @@ public interface UserService {
 	//유저 검색
 	ArrayList<User> searchUser(String searchStr);
 
-	//내가 아닌 다른 유저 프로필을 보기 위한 조회
-	User selectUser(String userId);
 	
 	//팔로우 신청
 	int insertFollow(FollowList followList);
+	
+	//내가 아닌 다른 유저 프로필을 보기 위한 조회
+	User selectUser(String userId);
 	
 	//팔로우 되어있는지 확인하기 위한 조회
 	int selectFollow(FollowList followList);
