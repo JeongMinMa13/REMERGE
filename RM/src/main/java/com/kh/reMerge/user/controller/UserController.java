@@ -1,14 +1,16 @@
 package com.kh.reMerge.user.controller;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +18,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.reMerge.user.model.service.UserService;
 import com.kh.reMerge.user.model.vo.FollowList;
@@ -77,7 +78,22 @@ public class UserController {
 			return "user/userEnrollForm";
 		}
 	}
-
+	
+	@RequestMapping("forFindUser.us")
+	public String forFindUser() {
+		//System.out.println("왔나");
+		return "user/findUser";
+	}
+	
+	@ResponseBody
+	@RequestMapping("findId.us")
+	public String findId(String idForFindEmail, HttpSession session) {
+		
+		String findId = userService.findId(idForFindEmail);
+		//System.out.println(findId);
+		return findId;
+	}
+	
 	@ResponseBody
 	@RequestMapping("checkId.us")
 	public String checkId(String checkId) {
@@ -94,6 +110,56 @@ public class UserController {
 		// System.out.println(result);
 		return result;
 	}
+	
+	@ResponseBody
+	@RequestMapping("checkPwandChange.us")
+	public String checkId(String changePwd,String cheChangePwd,String userId,HttpSession session) {
+		//System.out.println(changePwd);
+		//System.out.println(cheChangePwd);
+		
+		String result ="";
+		if(!changePwd.equals(cheChangePwd)) {//같지않다면
+			//System.out.println(changePwd.equals(cheChangePwd));
+			
+			result="NNNNN1";
+			return result;
+		}else {//이메일 인증으로 인해 버튼이 활성화 됬음으로 다른 절차는 필요하지않음
+			//System.out.println(changePwd.equals(cheChangePwd));
+			User u = new User();
+			u.setUserId(userId);
+			String bcrPwd = bcryptPasswordEncoder.encode(changePwd);
+			u.setUserPwd(bcrPwd);
+			
+			int updateCheck = userService.updateChangePwd(u);
+			
+			if(updateCheck>0) {
+				result = "NNNNY";
+				
+			}else {
+				result = "NNNNN";
+			}
+			//System.out.println(result);
+			return result;
+		}
+	}
+	
+	@ResponseBody
+	@RequestMapping("emailCheck.us")
+	private String checkEmail(String email) {
+		String result = "";
+		
+		int count = userService.checkEmail(email);
+		
+		if(count>0) {
+			result = "NNNNN";
+		}else {
+			result = "NNNNY";
+		}
+	
+		return result;
+	}
+	
+	
 
 	@ResponseBody
 	@RequestMapping("checkPw.us")
@@ -152,6 +218,83 @@ public class UserController {
 
 		return userService.deleteFollow(followList);
 	}
+	
+	//이메일 인증 메일 보내기
+		@ResponseBody
+		@RequestMapping("accEmail.us")
+		public Map  accEmail(String pwForEmail,String userId, HttpSession session, Model model) {
+			
+			Map map = new HashMap();
+			User u = new User();
+			u.setEmail(pwForEmail);
+			u.setUserId(userId);
+			
+			int result =userService.accEmail(u);
+			
+			
+			if(result >0) { //아이디 및 이메일이 일치 할때
+				
+				//session.removeAttribute("numAcc");
+				Random r = new Random();
+		        int numE = r.nextInt(9999);
+		        //session.setAttribute("numAcc", num);
+		        //model.addAttribute("numAcc", num);
+		       
+		        mailCheckNum = numE;
+		       
+				StringBuilder sb = new StringBuilder();
+				
+				
+				String setFrom = "skwjdalssk@naver.com";//발신자 이메일
+				String tomail = pwForEmail;//수신자 이메일
+				String title = "[Re:merge] 비밀번호 변경 인증 이메일입니다.";
+				sb.append(String.format("안녕하세요 %s님\n", userId));
+				sb.append(String.format("Re:merge 비밀번호 찾기(변경) 인증번호는 %d입니다.", numE));
+				String content = sb.toString();
+				
+				try {
+					//보낼 이메일 주소 선언후 작성
+					MimeMessage mm = mailSenderNaver.createMimeMessage();
+					MimeMessageHelper mh = new MimeMessageHelper(mm,true,"UTF-8");
+					mh.setFrom(setFrom);
+					mh.setTo(tomail);
+					mh.setSubject(title);
+					mh.setText(content);
+					
+					mailSenderNaver.send(mm);
+					
+				} catch (MessagingException e) {
+					//e.printStackTrace();
+					//System.out.println(e.getMessage());
+					
+				}
+				map.put("status", true);
+				map.put("num", numE);
+				map.put("m_idx",userId );
+				return map;
+				
+			}else { //아이디 및 이메일이 일치 하지 않았을때
+				//session.removeAttribute("numAcc");
+				return map;
+			}
+		}
+		
+		@ResponseBody
+		@RequestMapping("numAcc.us")
+		public int numAccCheck(int numAccInput, HttpSession session) {
+			
+			int result = 0;
+			
+			if(mailCheckNum==numAccInput) { //같다면
+				result = 1;
+				return result;
+			}else { //틀리면 그대로 0
+				return result;
+			}
+			
+		}
+	
+	
 
 	
 }

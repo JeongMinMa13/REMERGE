@@ -29,7 +29,6 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public int insertUser(User u) {
 		
-
 		return userDao.insertUser(sqlSession, u);
 	}
 
@@ -38,11 +37,8 @@ public class UserServiceImpl implements UserService {
 		//System.out.println(checkId);
 		//System.out.println(userDao.checkId(sqlSession, checkId));
 		
-		
 		return userDao.checkId(sqlSession, checkId);
 	}
-	
-
 	
 	// 메시지용 - 중구
 	@Override
@@ -56,26 +52,13 @@ public class UserServiceImpl implements UserService {
 
 		return userDao.searchUser(sqlSession,searchStr);
 	}
-<<<<<<< HEAD
-=======
-	@Override
-	public int deleteUser(String userPwd) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
->>>>>>> refs/remotes/origin/main
-	
 
-
-	
 	//팔로우 신청
 	@Override
 	public int insertFollow(FollowList followList) {
 
 		return userDao.insertFollow(sqlSession,followList);
 	}
-	
-	
 	
 	//언팔로우
 	@Override
@@ -85,7 +68,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-<<<<<<< HEAD
+
 	public User selectUser(String userId) {
 		
 		return userDao.selectUser(sqlSession, userId);
@@ -97,10 +80,6 @@ public class UserServiceImpl implements UserService {
 		return userDao.selectFollow(sqlSession, followList);
 	}
 
-
-
-	
-=======
 	public int checkEmail(String email) {
 		return userDao.emailCheck(sqlSession,email);
 	}
@@ -123,6 +102,5 @@ public class UserServiceImpl implements UserService {
 	public int accEmail(User u) {
 		return userDao.accEmail(sqlSession, u);
 	}
-
->>>>>>> refs/remotes/origin/main
 }
+
