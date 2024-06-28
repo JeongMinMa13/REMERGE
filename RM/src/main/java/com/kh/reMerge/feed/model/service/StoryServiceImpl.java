@@ -54,4 +54,17 @@ public class StoryServiceImpl implements StoryService {
 		return storyDao.insertHistory(sqlSession,history);
 	}
 	
+	//스토리 시청 기록 조회
+	@Override
+	public ArrayList<History> selectHistory(String userId) {
+
+		return storyDao.selectHistory(sqlSession,userId);
+	}
+	
+	//스토리 시청 기록 삭제
+	@Override
+	public int deleteHistory(History history) {
+
+		return storyDao.deleteHistory(sqlSession,history);
+	}
 }

@@ -11,6 +11,7 @@ import com.kh.reMerge.feed.model.dao.FeedDao;
 import com.kh.reMerge.feed.model.vo.Feed;
 import com.kh.reMerge.feed.model.vo.FeedLike;
 import com.kh.reMerge.feed.model.vo.Reply;
+import com.kh.reMerge.feed.model.vo.Tag;
 
 @Service
 public class FeedServiceImpl implements FeedService {
@@ -90,10 +91,19 @@ public class FeedServiceImpl implements FeedService {
 	public int likeCount(int feedNo) {
 		return feedDao.likeCount(sqlSession,feedNo);
 	}
-
 	
+	//태그 검색
+	@Override
+	public ArrayList<Tag> searchTag(Tag tag) {
 
-
+		return feedDao.searchTag(sqlSession,tag);
+	}
 	
+	//태그된 게시글들 조회해오기
+	@Override
+	public ArrayList<Feed> selectTag(Tag tag) {
+
+		return feedDao.selectTag(sqlSession,tag);
+	}
 
 }

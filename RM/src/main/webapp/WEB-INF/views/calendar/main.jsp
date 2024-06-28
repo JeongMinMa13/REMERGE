@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>공유 캘린더</title>
+    <title>캘린더</title>
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
@@ -128,10 +128,18 @@
     	document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
+            	customButtons: {
+            	    shareCalendar: {
+            	      text: '공유 캘린더',
+            	      click: function() {
+            	        location.href='followList.sc?userId=${loginUser.userId}';
+            	      }
+            	   }
+            	},
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                    right: 'shareCalendar'
                 },
                 selectable: true,
                 dateClick: function(info) { //날짜 클릭시 일정 추가를 위한 모달 열기
@@ -223,11 +231,14 @@
                             } 
                           
                             detailModal.show();
-                            setTimeout(function(){//모달로 지도 표시하기때문에 지도 생성보다 딜레이 시켜 지도 사이즈 다시 잡기
-                            	map.relayout();
-                            	map.setCenter(coords);
-                            },200);
-                           
+                            
+                            if(data.location!=null){//지도를 보여줄 필요가 없다면 실행시키지 않아야함 
+	                        	
+    	                        setTimeout(function(){//모달로 지도 표시하기때문에 지도 생성보다 딜레이 시켜 지도 사이즈 다시 잡기
+    	                        	map.relayout();
+    	                        	map.setCenter(coords);
+    	                        },200);
+                            }
                 		},
                 		error:function(){
                 			console.log("통신실패");

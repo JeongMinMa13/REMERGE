@@ -12,6 +12,7 @@ import com.kh.reMerge.common.model.vo.PageInfo;
 import com.kh.reMerge.feed.model.vo.Feed;
 import com.kh.reMerge.feed.model.vo.FeedLike;
 import com.kh.reMerge.feed.model.vo.Reply;
+import com.kh.reMerge.feed.model.vo.Tag;
 
 @Repository
 public class FeedDao {
@@ -93,8 +94,16 @@ public class FeedDao {
 		return sqlSession.selectOne("feedMapper.likeCount",feedNo);
 	}
 	
-	
-	
-	
+	//태그 검색
+	public ArrayList<Tag> searchTag(SqlSessionTemplate sqlSession, Tag tag) {
+
+		return (ArrayList)sqlSession.selectList("feedMapper.searchTag",tag);
+	}
+
+	//태그된 게시글들 조회해오기
+	public ArrayList<Feed> selectTag(SqlSessionTemplate sqlSession, Tag tag) {
+
+		return (ArrayList)sqlSession.selectList("feedMapper.selectTag", tag);
+	}
 
 }

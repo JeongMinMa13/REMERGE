@@ -8,6 +8,7 @@ import com.kh.reMerge.common.model.vo.PageInfo;
 import com.kh.reMerge.feed.model.vo.Feed;
 import com.kh.reMerge.feed.model.vo.FeedLike;
 import com.kh.reMerge.feed.model.vo.Reply;
+import com.kh.reMerge.feed.model.vo.Tag;
 
 
 public interface FeedService {
@@ -23,7 +24,7 @@ public interface FeedService {
 	
 	//댓글 목록조회
 	ArrayList<Reply> replyList(int feedNo);
-	
+
 	//댓글 작성
 	int insertReply(Reply r);
 	
@@ -47,6 +48,13 @@ public interface FeedService {
 	
 	//좋아요 수 조회
 	int likeCount(int feedNo);
+	
+	//태그 검색
+	ArrayList<Tag> searchTag(Tag tag);
+
+	//태그된 게시글 조회해오기
+	ArrayList<Feed> selectTag(Tag tag);
+	
 	
 	
 	

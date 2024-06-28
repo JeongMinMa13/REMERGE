@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kh.reMerge.calendar.model.service.CalendarService;
 import com.kh.reMerge.calendar.model.vo.Schedule;
+import com.kh.reMerge.user.model.vo.User;
 
 
 	@Controller
@@ -82,5 +83,24 @@ import com.kh.reMerge.calendar.model.vo.Schedule;
 			
 		}
 		
+		//캘린더 팔로우 리스트 페이지로 이동
+		@GetMapping("followList.sc")
+		public String followList(String userId,HttpSession session) {
+			
+			ArrayList<User> followList = cs.followList(userId);
+			session.setAttribute("followList", followList);
+			
+			return "/calendar/calendarFollowList";
+		}
+		
+		//공유 캘린더 버튼 눌렸을때 팔로우된 유저 스케줄 조회해서 페이지 이동
+		@GetMapping("shareCalendar.sc")
+		public String shareCalendar(String userId,HttpSession session) {
+			
+			ArrayList<Schedule> list = cs.selectShareSchedule(userId);
+			session.setAttribute("list", list);
+			
+			return "/calendar/shareCalendar";
+		}
 		
 }

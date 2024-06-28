@@ -79,32 +79,51 @@ header {
 .searchBox.active{
 	display:block;
 }
-.searchBox .searchBoxTitle {font-size:24px; font-size: 24px;
+.searchBox .searchBoxTitle {
+	font-size:24px; font-size: 24px;
     font-weight: 700;
-    padding: 32px 16px 40px;}
-.searchBox .btn {position:absolute; top:5px; right:5px;}
-.searchBox .searchfollow {padding: 0 16px;}
-.searchBox .searchfollow input {    width: 100%;
+    padding: 32px 16px 40px;
+}
+.searchBox .btn {
+	position:absolute;
+	top:5px; 
+	right:5px;
+}
+.searchBox .searchfollow {
+	padding: 0 16px;
+}
+.searchBox .searchfollow input {
+	width: 100%;
     background-color: #efefef;
     line-height: 40px;
     border-radius: 5px;
     outline: none;
-    border: none;}
-
-
+    border: none;
+}
 .searchUserResult {}
-.searchUserResult ul {    list-style: none;
-    padding: 16px;}
-.searchUserResult ul li {    display: flex;
-    gap: 10px;}
-.searchUserResult ul li .profileImage {width: 44px;
+.searchUserResult ul {    
+	list-style: none;
+    padding: 16px;
+}
+.searchUserResult ul li {
+	display: flex;
+    gap: 10px;
+}
+.searchUserResult ul li .profileImage {
+	width: 44px;
     height: 44px;
     overflow: hidden;
-    border-radius: 100%;}
+    border-radius: 100%;
+}
 .searchUserResult ul li p {
-    font-size: 14px;}
-.searchUserResult ul li p .userId {display:block;}
-.searchUserResult ul li p .email {color:##737373;}
+    font-size: 14px;
+}
+.searchUserResult ul li p .userId {
+	display:block;
+}
+.searchUserResult ul li p .email {
+	color:##737373;
+}
 
 </style>
 </head>

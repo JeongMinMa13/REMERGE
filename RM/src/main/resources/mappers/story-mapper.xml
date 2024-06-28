@@ -13,6 +13,11 @@
 		<result column="CREATE_DATE" property="createDate"/>
 	</resultMap>
 	
+	<resultMap type="History" id="historyResultSet">
+		<result column="STORY_NO" property="storyNo"/>
+		<result column="USER_ID" property="userId"/>
+	</resultMap>
+	
 	<select id="selectSequence" resultType="_int">
 		SELECT SEQ_SNO.NEXTVAL FROM DUAL
 	</select>
@@ -40,4 +45,12 @@
 	<insert id="insertHistory" parameterType="History">
 		INSERT INTO HISTORY(STORY_NO,USER_ID)VALUES(#{storyNo},#{userId})
 	</insert>
+	
+	<select id="selectHistory" parameterType="string" resultMap="historyResultSet">
+		SELECT STORY_NO ,USER_ID FROM HISTORY WHERE USER_ID=#{userId}
+	</select>
+	
+	<delete id="deleteHistory" parameterType="History">
+		DELETE HISTORY WHERE STORY_NO=#{storyNo} AND USER_ID=#{userId}
+	</delete>
 </mapper>

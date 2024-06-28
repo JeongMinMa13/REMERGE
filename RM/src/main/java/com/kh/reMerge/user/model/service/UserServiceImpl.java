@@ -34,9 +34,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public int checkId(String checkId) {
+	public int checkId(String checkId ) {
 		//System.out.println(checkId);
 		//System.out.println(userDao.checkId(sqlSession, checkId));
+		
+		
 		return userDao.checkId(sqlSession, checkId);
 	}
 	
@@ -69,6 +71,7 @@ public class UserServiceImpl implements UserService {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	
 
 	//내가 아닌 유저 프로필 보기 위한 조회
 	@Override
@@ -97,4 +100,29 @@ public class UserServiceImpl implements UserService {
 
 		return userDao.deleteFollow(sqlSession,followList);
 	}
+
+	@Override
+	public int checkEmail(String email) {
+		return userDao.emailCheck(sqlSession,email);
+	}
+	
+	//아이디 찾기
+	@Override
+	public String findId(String idForFindEmail) {
+
+		return userDao.findId(sqlSession,idForFindEmail);
+	}
+	
+	//이메일 인증 완료후 비밀번호 변경
+	@Override
+	public int updateChangePwd(User u) {
+		return userDao.updateChangePwd(sqlSession,u);
+	}
+
+	//이메일인증을 위한 아이디 및 이메일 일치하는지판별
+	@Override
+	public int accEmail(User u) {
+		return userDao.accEmail(sqlSession, u);
+	}
+
 }
