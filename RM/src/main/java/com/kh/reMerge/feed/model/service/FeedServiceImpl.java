@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.kh.reMerge.common.model.vo.PageInfo;
 import com.kh.reMerge.feed.model.dao.FeedDao;
 import com.kh.reMerge.feed.model.vo.Feed;
+import com.kh.reMerge.feed.model.vo.FeedLike;
 import com.kh.reMerge.feed.model.vo.Reply;
 import com.kh.reMerge.feed.model.vo.Tag;
 
@@ -55,19 +56,41 @@ public class FeedServiceImpl implements FeedService {
 		return feedDao.selectFeed(sqlSession,feedNo);
 	}
 
+	@Override
+	public int insertLike(FeedLike fl) {
+		
+		return feedDao.insertLike(sqlSession,fl);
+		
+	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	@Override
+	public int deleteLike(FeedLike fl) {
+		
+		return feedDao.deleteLike(sqlSession,fl);
+	}
+
+	@Override
+	public int addCount(int feedNo) {
+		
+		return feedDao.addCount(sqlSession,feedNo);
+	}
+
+	@Override
+	public int removeCount(int feedNo) {
+		
+		return feedDao.removeCount(sqlSession,feedNo);
+	}
+
+	@Override
+	public int likeCheck(int feedNo,String userId) {
+		
+		return feedDao.likeCheck(sqlSession,feedNo,userId);
+	}
+
+	@Override
+	public int likeCount(int feedNo) {
+		return feedDao.likeCount(sqlSession,feedNo);
+	}
 	
 	//태그 검색
 	@Override

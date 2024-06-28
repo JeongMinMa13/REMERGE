@@ -7,6 +7,7 @@
 <title>main 페이지</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
   <jsp:include page="/WEB-INF/css/feedCSS.jsp"></jsp:include>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -145,6 +146,10 @@
 								<textarea class="form-control" id="post_text" rows="3"
 									name="feedContent" placeholder="게시물 내용을 입력하세요..."></textarea>
 							</div>
+							<div class="hashTag">
+								<label for="tag">태그</label>
+								 <input type="text" class="tag-control" id="tag" placeholder="태그를 입력해주세요">
+							</div>
 							<div class="form-group">
 								<label for="location">위치</label> <input type="text"
 									class="form-control" id="location" name="feedLocation" placeholder="위치를 입력하세요">
@@ -159,37 +164,37 @@
 		
 		<!-- 게시물 디테일 모달 -->
 		<div class="modal fade" id="modal_detail_feed" tabindex="-1" role="dialog" aria-labelledby="modal_detail_feed" aria-hidden="true">
-			<div class="modal-dialog" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="modal_detail_feed_title">게시물</h5>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
-							<span aria-hidden="true">&times;</span>						
-						</button>
-					</div>
-					<div class="modal-body">
-						<img src="" id="feed_detail_img"> <!-- 게시글 디테일 이미지 -->
-						<div id="feed_userId"></div>
-						<div id="feed_location"></div>
-						<div id="feed_detail_content"></div>
-						<div id="feed_detail_replyList"></div>
-						<div id="like_reply">
-							<div class="mb-3">
-								<button id="like_button">
-									<i class="fas fa-heart mr-1"></i>
-								</button>
-							</div>
-						<!-- 댓글 작성 폼 -->
-							<form id="reply_form">
-								<div class="form-group">
-									 <textarea class="form-control" id="comment_text" rows="2" placeholder="댓글을 입력하세요..."></textarea>
-								</div>
-								<button type="submit" class="btn btn-primary btn-sm">등록</button>						
-							</form>	
-						</div>
-					</div>
-				</div>
-			</div>
+		    <div class="modal-dialog" role="document">
+		        <div class="modal-content">
+		            <div class="modal-header">
+		                <h5 class="modal-title" id="modal_detail_feed_title">게시물</h5>
+		                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
+		                    <span aria-hidden="true">&times;</span>                        
+		                </button>
+		            </div>
+		            <div class="modal-body">
+		                <img src="" id="feed_detail_img"> <!-- 게시글 디테일 이미지 -->
+		                <div id="feed_userId"></div>
+		                <div id="feed_location"></div>
+		                <div id="feed_detail_content"></div>
+		                <div id="feed_detail_replyList"></div> <!-- 댓글 리스트 영역 -->
+		                <div id="like_reply">
+		                    <div class="mb-3">
+		                        <button id="like_button">
+		                            <i class="fas fa-heart mr-1"></i>
+		                        </button>
+		                    </div>
+		                    <!-- 댓글 작성 폼 -->
+		                    <div class="form-group">
+		                        <input type="text" name="content" id="content${feedNo}" placeholder="댓글을 입력해주세요..">
+		                        <label>
+		                            <button onclick="insertModal(this, ${feedNo})">등록</button>
+		                        </label>    
+		                    </div>
+		                </div>
+		            </div>
+		        </div>
+		    </div>
 		</div>
 		
 		<!-- 스토리 추가 모달 -->
@@ -246,13 +251,13 @@
 		 <!--썸네일 만들기-->
 		 $(document).ready(function() {
 			feedList();
+			loadAllLikes();
 			
 			$(window).scroll(function() {
 	            if ($(window).scrollTop() == $(document).height() - $(window).height()) {
 	                // 현재 페이지 수를 가져와서 다음 페이지를 로드합니다.
 	                const currentPage = Math.ceil($('.con').length / 6) + 1; // 예시: 현재 보여지는 게시물 갯수로 대체
 	                feedList(currentPage);
-	                console.log('다음 페이지 로드: ' + currentPage);
 	            }
 	        });
 			 
@@ -306,6 +311,14 @@
 			        });
 			    });
 			});
+		 
+		 	function loadAllLikes() {
+			    $('.con').each(function() {
+			        var feedNo = $(this).data('feed-no');
+			        var userId = '${loginUser.userId}';
+			        loadLikeStatus(feedNo, userId);
+			    });
+			}
 
 	      // 첫 번째 모달 열기
 	      $('#create').click(function() {
@@ -409,16 +422,34 @@
 			         $('#feed_userId').text(result.f.feedWriter);
 			         $('#feed_location').text(result.f.feedLocation); 
 			         $('#feed_detail_content').text(result.f.feedContent);
-			         
 			         var str = "";
-			         for(var i=0; i<result.length;i++){
-			        	 console.log(result.f.reContent);
-			        	 str += '<div id="feed_detail_replyList"> </div>'
+			         for(var i = 0; i<result.rList.length; i++){
+			        	 var reply = result.rList[i];
+			                str += '<div class="modal-body">';
+			                str += '    <div id="feed_detail_replyList">';
+			                str += '        <p><strong>' + reply.userId + ':</strong> ' + reply.reContent + '</p>';
+			                str += '    </div>';
+			                str += '</div>';
+
 			         }
+			         
+			         $('#feed_detail_replyList').html(str);
+			         
+					 var reHtml = "";			        
+					 reHtml += '<div>';
+					 reHtml += '<input type="text" name="content" id="content'+result.f.feedNo+'" placeholder="댓글을 입력해주세요..">';
+// 					 reHtml += '<label><button onclick="insertModal(' + result.f.feedNo + ')">등록</button></label>'
+					 reHtml += '<label><button onclick="insertModal(this,'+result.f.feedNo+')">등록</button></label>'
+					 reHtml += '</div>';
+	
+			         var content = $("#content"+feedNo).val();
+			         console.log("content",content);
+			         $('.form-group').html(reHtml);
+			         
 			         
 				},
 				error : function(){
-					console.log("통신실패");
+					console.log("통신실패");	
 				}
 			});
 		}
@@ -479,37 +510,42 @@
 				for (var i = 0; i < response.list.length; i++){
 					var feed = response.list[i];
 					 /*str += '<div class="conA">';*/
-	                    str += '    <div class="con">';
-	                    str += '        <div class="title">';
-	                    str += '            <img src="" alt="" class="img">';
-	                    str += '            <p>' +  feed.feedWriter + '</p>'; // 작성자 예시
-	                    str += '        </div>';
-	                    str += '        <img src="' + feed.changeName + '" alt="" class="con_img">'; // 이미지 예시
-	                    str += '        <div class="logos">';
-	                    str += '            <div class="logos_left">';
-	                    str += '                <img src="resources/love.png" alt="" class="logo_img">';
-	                    str += '                <img src="resources/chat.png" class="logo_img" onclick="detailView('+feed.feedNo+')" >';
-	                    str += '                <img src="resources/direct.png" alt="" class="logo_img">';
-	                    str += '            </div>';
-	                    str += '            <div class="logos_right">';
-	                    str += '                <img src="" alt="" class="logo_img">';
-	                    str += '            </div>';
-	                    str += '        </div>';
-	                    str += '        <div class="content">';
-	                    str += '            <p><b>좋아요 32개</b></p>';
-	                    str += '            <p>' + feed.feedContent + '</p>'; 
-	                    str += '            <p><a href="www.naver.com"></a>#하잉 #하잉 #하용</p>';
-	                    str += '            <input type="text" name="reContent" id="content" placeholder="댓글을 입력해주세요..">';
-	                    str += '            <label><button onclick="insertReply()">등록</button></label>                                                                     '
-	                    str += '        </div>';
-	                    str += '    </div>';
+						str += '    <div class="con" data-feed-no="' + feed.feedNo + '">';
+						str += '        <div class="title">';
+						str += '            <img src="" alt="" class="img">';
+						str += '            <p>' + feed.feedWriter + '</p>'; // 작성자 예시
+						str += '        </div>';
+						str += '        <img src="' + feed.changeName + '" alt="" class="con_img">'; // 이미지 예시
+						str += '        <div class="logos">';
+						str += '            <div class="logos_left">';
+						str += '            <button id="likeButton' + feed.feedNo + '" class="like-button" data-feed-no="' + feed.feedNo + '" data-user-id="' + '${loginUser.userId}' + '" onclick="toggleLike(' + feed.feedNo + ', \'' + '${loginUser.userId}' + '\')">';
+						str += '                <i class="heart-icon far fa-heart" style="font-size: 30px; color: #ff5a5f;"></i>';
+						str += '            </button>';
+						str += '                <img src="resources/chat.png" class="logo_img" onclick="detailView('+feed.feedNo+')" >';
+						str += '                <img src="resources/direct.png" alt="" class="logo_img">';
+						str += '            </div>';
+						str += '            <div class="logos_right">';
+						str += '                <img src="" alt="" class="logo_img">';
+						str += '            </div>';
+						str += '        </div>';
+						str += '        <div class="content">';
+						str += '               <p><b>좋아요 <span class="like-count" data-feed-no="'+feed.feedNo+'">'+feed.likeCount+'</span>개</b></p>';
+						str += '            <p>' + feed.feedContent + '</p>';
+						str += '            <div id="replyList'+feed.feedNo+'"></div>'; // 댓글 리스트를 표시할 부분
+						str += '            <p><a href="www.naver.com"></a>#하잉 #하잉 #하용</p>';
+						str += '            <input type="text" name="reContent" id="reContent'+feed.feedNo+'" placeholder="댓글을 입력해주세요..">';
+						str += '            <label><button onclick="insertReply('+feed.feedNo+')">등록</button></label>';
+						str += '        </div>';
+						str += '    </div>';
 	                    /*str += '</div>';*/
-					
+	                    
+	                    replyList(feed.feedNo);
 				}
 					 $(".conA").append(str); //게시물 밑으로 추가
 					 if (currentPage >= response.pi.maxPage) {
 		                    $(window).unbind('scroll'); // 스크롤 이벤트 해제
 		                }
+					 loadAllLikes();
 		          },
 		          error: function() {
 		          	alert('게시물 로딩에 실패했습니다.');
@@ -520,19 +556,22 @@
 		
 		<!-- 댓글 리스트 -->
 		<script>
-			function replyList(){
+			function replyList(feedNo){
 				$.ajax({
 					url : "replyList.fe",
 					data : {
-						feedNo : ${feed.feedNo}
+						feedNo : feedNo
 					},
 					success : function(result){
-						console.log(result);
 						var str = "";
-						for(var i in result){
-						var reply =result.list[i];
-							
-						}
+						if(result.rList.length > 0){
+			                var reply = result.rList[0]; // 가장 최근 댓글 하나만 가져옴
+			                str += '<div class="reply">';
+			                str += '<p><strong>' + reply.userId + ':</strong> ' + reply.reContent + '</p>';
+			                str += '</div>';
+			            }
+						  $("#replyList" + feedNo).html(str); // 댓글 리스트를 해당 게시물 div에 추가
+						  
 					},
 					error : function(){
 						console.log("통신오류");
@@ -540,30 +579,143 @@
 					
 				});
 			};
-		<!-- 댓글 입력 -->
-		function insertReply(){
-			$.ajax({	
-				url : "insertReply.fe",
-				type : "post",
-				data : {
-					feedNo : ${feed.feedNo},
-					userId : "${loginUser.userId}",
-					reContent : $("#content").val()
-				},
-				success : function(result){
-					if(result>0){
-						replyList(); //추가된 댓글 정보까지 다시 조회
-						$("#content").val("");
-					}else{
-						alert("댓글작성실패");
+			
+			<!-- 댓글 입력 -->
+			
+				
+			function insertReply(feedNo){
+				var reContent =$("#reContent" + feedNo).val();
+				
+				console.log(reContent);
+				console.log("${loginUser.userId}");
+				$.ajax({	
+					url : "insertReply.fe",
+					type : "post",
+					data : {
+						feedNo : feedNo,
+						userId : "${loginUser.userId}",
+						reContent: reContent
+					},
+					success : function(result){
+						if(result>0){
+							replyList(feedNo); //추가된 댓글 정보까지 다시 조회
+							$("#reContent"+feedNo).val("");
+							
+							alert("댓글등록");
+						}else{
+							alert("댓글작성실패");
+						}
+					},
+					error : function(){
+						console.log("안 뜸");
 					}
-				},
-				error : function(){
-					console.log("통신오류");
-				}
-			});
-		};
+				});
+			};
+// 			$(document).on("click","#modal_detail_feed label>button",function(){
+				
+// 				console.log($(this).parent().siblings().first().attr("id"));
+// 			});
+			
+			
+			<!-- 두번째 댓글 입력 -->
+			function insertModal(el,feedNo){
+				var content = $(el).parent().siblings().first().val();
+				
+				$.ajax({
+					url : "insertModal.fe",
+					type : "post",
+					data : {
+						feedNo : feedNo,
+						userId : "${loginUser.userId}",
+						reContent : content 
+					},
+					success : function(result){
+						if(result>0){
+							var newReply = '<div class="reply">';
+			                newReply += '<p><strong>${loginUser.userId}:</strong> ' + content + '</p>';
+			                newReply += '</div>';
+			                
+			                $('#feed_detail_replyList').append(newReply); // 댓글 리스트에 새로운 댓글 추가
+			                $(el).parent().siblings().first().val(""); // 입력 필드 초기화
+							alert("댓글 등록");
+						}else{
+							alert("댓글작성실패");
+						}
+					},
+					error : function(){
+						console.log("안 떠요");
+					}
+				});
+			};
+			
 		</script>
+		
+		<!-- 좋아요 상태 확인 -->
+		<script>
+		function loadLikeStatus(feedNo, userId) {
+		    $.ajax({
+		        url: "likeStatus.fe",
+		        type: "get",
+		        data: {
+		            feedNo: feedNo,
+		            userId: userId
+		        },
+		        success: function(response) {
+		            var likeButton = $("#likeButton" + feedNo);
+		            var heartIcon = likeButton.find(".heart-icon");
+		            var likeCountElement = $(".like-count[data-feed-no='" + feedNo + "']");
+
+		            if (response.status === "liked") {
+		                likeButton.addClass("liked");
+		                heartIcon.removeClass("far fa-heart");
+		                heartIcon.addClass("fas fa-heart");
+		            } else {
+		                likeButton.removeClass("liked");
+		                heartIcon.removeClass("fas fa-heart");
+		                heartIcon.addClass("far fa-heart");
+		            }
+
+		            likeCountElement.text(response.likeCount);
+		        },
+		        error: function() {
+		            alert("게시물 정보를 가져오는데 실패했습니다.");
+		        }
+		    });
+		}
+
+	            function toggleLike(feedNo, userId) {
+	                $.ajax({
+	                    url: "feedLike.fe",
+	                    type: "post",
+	                    data: {
+	                        feedNo: feedNo,
+	                        userId: userId
+	                    },
+	                    success: function(response) {
+	                        var likeButton = $("#likeButton" + feedNo);
+	                        var heartIcon = likeButton.find(".heart-icon");
+
+	                        if (response.status === "liked") {
+	                            likeButton.addClass("liked");
+	                            heartIcon.removeClass("far fa-heart");
+	                            heartIcon.addClass("fas fa-heart");
+	                        } else {
+	                            likeButton.removeClass("liked");
+	                            heartIcon.removeClass("fas fa-heart");
+	                            heartIcon.addClass("far fa-heart");
+	                        }
+
+	                        $(".like-count[data-feed-no='" + feedNo + "']").text(response.likeCount);
+	                    },
+	                    error: function() {
+	                        alert("좋아요 실패");
+	                    }
+	                });
+	            }
+		    
+		</script>
+		
+		
 		
 		<script>
 		<!-- 스토리 추가 스크립트 -->

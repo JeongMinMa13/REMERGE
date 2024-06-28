@@ -25,6 +25,7 @@ import com.kh.reMerge.common.model.vo.PageInfo;
 import com.kh.reMerge.common.template.Pagination;
 import com.kh.reMerge.feed.model.service.FeedService;
 import com.kh.reMerge.feed.model.vo.Feed;
+import com.kh.reMerge.feed.model.vo.FeedLike;
 import com.kh.reMerge.feed.model.vo.Reply;
 import com.kh.reMerge.feed.model.vo.Tag;
 
@@ -53,6 +54,7 @@ public class FeedController {
 		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, feedLimit);
 		
 		ArrayList<Feed> list = feedService.selectList(pi);
+		
 		
 		Map<String, Object> result = new HashMap<>();
 		result.put("pi", pi);
@@ -122,24 +124,33 @@ public class FeedController {
 	
 	//댓글 목록 조회
 	@ResponseBody
-	@RequestMapping(value="replyList.fe",produces = "application/json;charset=UTF-8")
-	public ArrayList<Reply> replyList(int feedNo,Model model){
+	@RequestMapping("replyList.fe")
+	public Map<String, Object> replyList(@RequestParam("feedNo") int feedNo){
 		
 		ArrayList<Reply> rList = feedService.replyList(feedNo);
 		
-		model.addAttribute("feedNo",feedNo);
-		model.addAttribute("rList",rList);
+		 Map<String, Object> map = new HashMap<>();
+		 map.put("rList", rList);
 		
-		
-		return rList;
+		return map;
 		
 	}
 	
 	//댓글 작성 메소드
 	@ResponseBody
-	@RequestMapping("insertReply.fe")
+	@PostMapping("insertReply.fe")
 	public int insertReply(Reply r) {
+		System.out.println(r);
+		int result = feedService.insertReply(r);
 		
+		return result;
+	}
+	
+	//두번째 댓글 작성 메소드
+	@ResponseBody
+	@PostMapping("insertModal.fe")
+	public int insertModal(Reply r) {
+		System.out.println(r);
 		int result = feedService.insertReply(r);
 		
 		return result;
@@ -152,23 +163,61 @@ public class FeedController {
 		
 		Feed f = feedService.selectFeed(feedNo);
 		
-		ArrayList<Reply> replyList = feedService.replyList(feedNo);
+		ArrayList<Reply> rList = feedService.replyList(feedNo);
 		
 		Map<String, Object> result = new HashMap<>();
 	    result.put("f", f);
-	    result.put("replyList", replyList);
-	    
+	    result.put("rList", rList);
 	    
 	    return result;
 		
-		
 	}
 	
+	//게시물 좋아요
+	@ResponseBody
+	@PostMapping("feedLike.fe")
+	 public Map<String, Object> likeFeed(@RequestParam int feedNo, @RequestParam String userId) {
+		FeedLike fl = new FeedLike();
 		
+		fl.setFeedNo(feedNo);
+        fl.setUserId(userId);
+        
+        int likeCheck = feedService.likeCheck(feedNo, userId);
+        Map<String, Object> result = new HashMap<>();
+        
+        if (likeCheck > 0) {
+        	System.out.println(likeCheck);
+            feedService.deleteLike(fl);
+            feedService.removeCount(feedNo);
+            result.put("status", "unliked");
+        } else {
+            feedService.insertLike(fl);
+            feedService.addCount(feedNo);
+            result.put("status", "liked");
+        }
 		
-	
-	
+        int likeCount = feedService.likeCount(feedNo);
+        result.put("likeCount", likeCount);
 
+		return result;
+	}
+	
+	//좋아요 상태 확인
+	@ResponseBody
+	@RequestMapping("likeStatus.fe")
+		public Map<String,Object> likeStatus(@RequestParam int feedNo, @RequestParam String userId){
+			Map<String, Object> result = new HashMap<>();
+		    try {
+		        int likeCheck = feedService.likeCheck(feedNo, userId);
+		        result.put("status", likeCheck > 0 ? "liked" : "unliked"); //좋아요 됐고 안 됐고 반펼
+	
+		        int likeCount = feedService.likeCount(feedNo);
+		        result.put("likeCount", likeCount);
+		    } catch (Exception e) {
+		        result.put("error", e.getMessage());
+		    }
+		    return result;
+	}
 	
 	
 	
