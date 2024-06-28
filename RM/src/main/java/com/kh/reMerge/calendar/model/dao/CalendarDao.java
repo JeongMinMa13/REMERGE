@@ -6,6 +6,8 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.kh.reMerge.calendar.model.vo.Schedule;
+import com.kh.reMerge.user.model.vo.FollowList;
+import com.kh.reMerge.user.model.vo.User;
 
 @Repository
 public class CalendarDao {
@@ -39,5 +41,18 @@ public class CalendarDao {
 		
 		return sqlSession.update("calendarMapper.updateSchedule",s);
 	}
+	
+	//팔로우 리스트로 이동하기 위한 팔로우 리스트 조회 
+	public ArrayList<User> followList(SqlSessionTemplate sqlSession, String userId) {
+		
+		return (ArrayList)sqlSession.selectList("calendarMapper.followList", userId);
+	}
+
+	//공유 캘린더 조회
+	public ArrayList<Schedule> selectShareSchedule(SqlSessionTemplate sqlSession, String userId) {
+
+		return (ArrayList)sqlSession.selectList("calendarMapper.selectShareSchedule", userId);
+	}
+
 
 }

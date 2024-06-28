@@ -18,7 +18,6 @@
 		<typeAlias type="com.kh.reMerge.feed.model.vo.Reply" alias="Reply"/>
 		<typeAlias type="com.kh.reMerge.feed.model.vo.History" alias="History"/>
 		
-
  	</typeAliases>
  	
  

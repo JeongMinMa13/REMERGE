@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+  pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,82 +18,119 @@
 		<c:remove var="alertMsg"/>
 	</c:if>	
 	<header>
-        <div class="sidebar">
-            <div class="logo">
-                <img src="resources/Remergelogo.png" alt="Remerge logo">
-            </div>
-            <nav class="menu">
-                <ul>
-                    <li><div class="menu-item" id="home"><img src="resources/home.png">홈</div></li>
-                    <li><div class="menu-item" id="search"  onclick="searchDisplay();"><img src="resources/search.png">검색</div></li>
-                    <li><div class="menu-item" id="explore"><img src="resources/explore.png">탐색</div></li>
-                    <li><div class="menu-item" id="messages"><img src="resources/messages.png"><a href="/reMerge/message/dm">메시지</a></div></li>
-                    <li><div class="menu-item" id="notifications"><img src="resources/notifications.png">알림</div></li>
-                    <li><div class="menu-item" id="create"><img src="resources/create.png">만들기</div></li>
-                    <li><div class="menu-item" id="store"><img src="resources/store.png">스토어</div></li>
-                    <li><div class="menu-item" id="profile"><a href="myPage.us?userId=${loginUser.userId}"><img src="resources/unknown.jpg">프로필</a></div></li>
-                    <li><div class="menu-item" id="calendarIcon"><a href="calendar.sc"><img src="resources/calendaricon.png">캘린더</a></div></li>
-
-            </nav>
-        </div>
-        <div class="searchBox">
-        	<div class="searchBoxTitle">검색</div>
-        	<button class="btn btn-danger" onclick="closeSearch();">X</button>
-	       	<div id="searchfollow" class="searchfollow"><!-- 검색 인풋 영역 -->
-	       		<input type="text" id="searchUser" oninput="search();"><!-- oninput == 입력값이 변할때마다 -->
-	       	</div>
-	       	<div id="searchUserResult" class="searchUserResult"></div><!-- 검색 결과 -->
-	       	
-        </div>
-    </header>
-    <script>
-    	function searchDisplay(){//검색 버튼 클릭시 검색 창 영역 보여주기
-    		$('.searchBox').toggleClass('active');
-    	}
-    	
-    	function closeSearch(){//검색창 활성화시 x버튼 클릭하면 검색창 닫기
-    		$('.searchBox').removeClass('active');
-    	}
-    
-    	function search(){//검색창에 하나의 단어 입력시마다 db에 저장된 아이디값에 포함된 단어의 아이디 조회해서 보여주기
-    		var searchStr = $('#searchUser').val();
-    		$.ajax({
-    			url:"searchUser.us",
-    			type:"get",
-    			data:{
-    				searchStr:searchStr
-    			},
-    			success:function(data){
-    				console.log(data)// 데이터 확인
-    				var html = "";
-    				html += "<ul>";
-    				for(var i=0;i<data.length;i++){
-    					html+="<li class='searchResult' onclick='profileUser("+JSON.stringify(data[i])+");'>";//해당하는 div 클릭시 data를 매개변수로 보내 클릭시 아이디값 알수 있게 하기
-	    				html+="<span class='profileImage'><img src='"+data[i].profilePath+"'></span>";
-	    				html+="<p>";
-	    				html+="<strong class='userId'>"+data[i].userId+"</strong>";
-	    				html+="<span class='email'>"+data[i].email+"</span>";
-	    				html+="</p>";
-	    				html+="</li>";
-    				}
-    				html+="</ul>"	
-	    			$('#searchUserResult').html(html);
-    			},
-    			error:function(){
-					console.log("통신 실패");    				
-    			}
-    		});
-    	}
-    	
-    	function profileUser(data){//검색결과에서 해당하는 사용자 클릭시 프로필로 이동하는 함수
-    		console.log(data.userId);
-    		location.href="/reMerge/myPage.us?userId="+data.userId;
-    	}  
-    	
-    	$('#home').click(function(){
-    		location.href="/reMerge/feed.fe";
-    	});
-    
-    </script>
+    <div class="sidebar">
+      <div class="logo">
+        <img src="resources/Remergelogo.png" alt="Remerge logo">
+      </div>
+      <nav class="menu">
+        <ul>
+          <li><div class="menu-item" id="home"><img src="resources/home.png">홈</div></li>
+          <li><div class="menu-item" id="search" onclick="searchDisplay();"><img src="resources/search.png">검색</div></li>
+          <li><div class="menu-item" id="explore"><img src="resources/explore.png">탐색</div></li>
+          <li><div class="menu-item" id="messages"><img src="resources/messages.png"><a href="/reMerge/message/dm">메시지</a></div></li>
+          <li><div class="menu-item" id="notifications"><img src="resources/notifications.png">알림</div></li>
+          <li><div class="menu-item" id="create"><img src="resources/create.png">만들기</div></li>
+          <li><div class="menu-item" id="store"><img src="resources/store.png">스토어</div></li>
+          <li><div class="menu-item" id="profile"><a href="myPage.us?userId=${loginUser.userId}"><img src="">프로필</a></div></li>
+          <li><div class="menu-item" id="calendarIcon"><a href="calendar.sc"><img src="resources/calendaricon.png">캘린더</a></div></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="searchBox">
+    	<div class="searchBoxTitle">검색</div>
+    	<button class="btn btn-danger" onclick="closeSearch();">X</button>
+	    	<div id="searchfollow" class="searchfollow"><!-- 검색 인풋 영역 -->
+	    		<input type="text" id="searchUser" oninput="search();"><!-- oninput == 입력값이 변할때마다 -->
+	    	</div>
+	    	<div id="searchUserResult" class="searchUserResult"></div><!-- 검색 결과 -->
+	    	
+    </div>
+  </header>
+  <script>
+  	function searchDisplay(){//검색 버튼 클릭시 검색 창 영역 보여주기
+  		$('.searchBox').toggleClass('active');
+  	}
+   	
+  	function closeSearch(){//검색창 활성화시 x버튼 클릭하면 검색창 닫기
+  		$('.searchBox').removeClass('active');
+  	}
+  	function search(){//검색창에 하나의 단어 입력시마다 db에 저장된 아이디값에 포함된 단어의 아이디 조회해서 보여주기
+  		var searchStr = $('#searchUser').val();
+  		if(searchStr==""){
+  			$('#searchUserResult').html("");//검색어 지웠을때 처리'
+  		}else{
+	  		if(searchStr.includes('#')){//태그 검색
+	  			//console.log('태그시도');//작동하는지 확인
+	  			$.ajax({
+	  				url:"searchTag.fe",
+	  				type:"get",
+	  				data:{
+	  					tagContent:searchStr
+	  				},
+	  				success:function(data){
+	  					console.log(data);
+	  					var html = "<ul>";
+	  					if(!data||data.length===0){
+	  						html+="<li>조회된 태그가 없습니다.</li>";
+	  					}else{
+								for(var i=0;i<data.length;i++){
+									html+="<li onclick='selectTag("+JSON.stringify(data[i])+");'>#"+data[i].tagContent+"</li>";
+								}   						
+	  					}
+	  					$('#searchUserResult').html(html);
+	  				},
+	  				error:function(){
+	   					
+	  				}
+	  			});
+	  		}
+	   	
+	  		$.ajax({//사용자 검색
+	  			url:"searchUser.us",
+	  			type:"get",
+	  			data:{
+	  				searchStr:searchStr
+	  			},
+	  			success:function(data){
+	  				//console.log(data)// 데이터 확인
+	  				var html = "";
+	  				if(!data||data.length===0){
+							html ="조회된 데이터가 없습니다.";   					
+	  				}
+	  				html += "<ul>";
+	  				for(var i=0;i<data.length;i++){
+	  					html+="<li class='searchResult' onclick='profileUser("+JSON.stringify(data[i])+");'>";//해당하는 div 클릭시 data를 매개변수로 보내 클릭시 아이디값 알수 있게 하기
+		  				html+="<span class='profileImage'><img src='"+data[i].profilePath+"'></span>";
+		  				html+="<p>";
+		  				html+="<strong class='userId'>"+data[i].userId+"</strong>";
+		  				html+="<span class='email'>"+data[i].email+"</span>";
+		  				html+="</p>";
+		  				html+="</li>";
+	  				}
+	  				html+="</ul>"	
+		  			$('#searchUserResult').html(html);
+	  			},
+	  			error:function(){
+						console.log("통신 실패");   				
+	  			}
+	  		});
+  		}
+  	}
+   	
+  	function profileUser(data){//검색결과에서 해당하는 사용자 클릭시 프로필로 이동하는 함수
+  		//console.log(data.userId);
+  		location.href="/reMerge/myPage.us?userId="+data.userId;
+  	}
+   	
+  	$('#home').click(function(){
+  		location.href="/reMerge/feed.fe";
+  	});
+  	function selectTag(data){
+  		//console.log(data.tagContent);
+  		location.href="/reMerge/selectTag.fe?tagContent="+data.tagContent
+  	}
+  </script>
+   <h2>${loginUser.userId}</h2>
+	<a href="logout.us">로그아웃</a>
 </body>
 </html>

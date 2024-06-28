@@ -58,6 +58,10 @@ header {
 	border-radius: 50%;
 	border: 3px solid #f42664;
 }
+/* 읽었던 스토리에 추가될 css */
+.readed { 
+	border: 3px solid gray;
+}
 
 .story span {
 	margin-top: 5px;
@@ -318,6 +322,24 @@ header {
 /* 스토리 미리 보기 칸  */
 #thumbnailContainer{
 	display:none;
+}
+
+/* 임시 좋아요 버튼*/
+.like-button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+}
+
+.like-button:focus {
+    outline: none;
+}
+
+.heart-icon {
+    font-size: 30px;
+    color: #ff5a5f;
 }
 
 

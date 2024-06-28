@@ -34,9 +34,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public int checkId(String checkId) {
+	public int checkId(String checkId ) {
 		//System.out.println(checkId);
 		//System.out.println(userDao.checkId(sqlSession, checkId));
+		
+		
 		return userDao.checkId(sqlSession, checkId);
 	}
 	
@@ -54,6 +56,14 @@ public class UserServiceImpl implements UserService {
 
 		return userDao.searchUser(sqlSession,searchStr);
 	}
+<<<<<<< HEAD
+=======
+	@Override
+	public int deleteUser(String userPwd) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+>>>>>>> refs/remotes/origin/main
 	
 
 
@@ -75,6 +85,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+<<<<<<< HEAD
 	public User selectUser(String userId) {
 		
 		return userDao.selectUser(sqlSession, userId);
@@ -89,4 +100,29 @@ public class UserServiceImpl implements UserService {
 
 
 	
+=======
+	public int checkEmail(String email) {
+		return userDao.emailCheck(sqlSession,email);
+	}
+	
+	//아이디 찾기
+	@Override
+	public String findId(String idForFindEmail) {
+
+		return userDao.findId(sqlSession,idForFindEmail);
+	}
+	
+	//이메일 인증 완료후 비밀번호 변경
+	@Override
+	public int updateChangePwd(User u) {
+		return userDao.updateChangePwd(sqlSession,u);
+	}
+
+	//이메일인증을 위한 아이디 및 이메일 일치하는지판별
+	@Override
+	public int accEmail(User u) {
+		return userDao.accEmail(sqlSession, u);
+	}
+
+>>>>>>> refs/remotes/origin/main
 }
