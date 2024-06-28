@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.kh.reMerge.calendar.model.dao.CalendarDao;
 import com.kh.reMerge.calendar.model.vo.Schedule;
+import com.kh.reMerge.user.model.vo.FollowList;
+import com.kh.reMerge.user.model.vo.User;
 
 @Service
 public class CalendarServiceImpl implements CalendarService {
@@ -51,5 +53,19 @@ public class CalendarServiceImpl implements CalendarService {
 	public int updateSchedule(Schedule s) {
 
 		return calendarDao.updateSchedule(sqlSession,s);
+	}
+	
+	//팔로우 리스트로 이동하기 위한 팔로우 리스트 조회 
+	@Override
+	public ArrayList<User> followList(String userId) {
+
+		return calendarDao.followList(sqlSession,userId);
+	}
+	
+	//공유 캘린더 조회
+	@Override
+	public ArrayList<Schedule> selectShareSchedule(String userId) {
+
+		return calendarDao.selectShareSchedule(sqlSession,userId);
 	}
 }

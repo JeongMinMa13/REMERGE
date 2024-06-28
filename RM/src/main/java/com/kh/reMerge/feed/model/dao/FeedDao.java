@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.kh.reMerge.common.model.vo.PageInfo;
 import com.kh.reMerge.feed.model.vo.Feed;
 import com.kh.reMerge.feed.model.vo.Reply;
+import com.kh.reMerge.feed.model.vo.Tag;
 
 @Repository
 public class FeedDao {
@@ -37,6 +38,31 @@ public class FeedDao {
 	public ArrayList<Reply> replyList(SqlSessionTemplate sqlSession, int feedNo) {
 		
 		return (ArrayList)sqlSession.selectList("feedMapper.replyList",feedNo);
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	//태그 검색
+	public ArrayList<Tag> searchTag(SqlSessionTemplate sqlSession, Tag tag) {
+
+		return (ArrayList)sqlSession.selectList("feedMapper.searchTag",tag);
+	}
+
+	//태그된 게시글들 조회해오기
+	public ArrayList<Feed> selectTag(SqlSessionTemplate sqlSession, Tag tag) {
+
+		return (ArrayList)sqlSession.selectList("feedMapper.selectTag", tag);
 	}
 
 }

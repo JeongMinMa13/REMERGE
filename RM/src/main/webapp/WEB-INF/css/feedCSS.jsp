@@ -58,6 +58,10 @@ header {
 	border-radius: 50%;
 	border: 3px solid #f42664;
 }
+/* 읽었던 스토리에 추가될 css */
+.readed { 
+	border: 3px solid gray;
+}
 
 .story span {
 	margin-top: 5px;
