@@ -20,7 +20,7 @@ import com.kh.reMerge.user.model.service.GoogleLoginApi;
 
 @Component
 public class GoogleLoginBo {
-	private final static String GOOGLE_CLIENT_ID = "363177318285-ssbc38p1uc9ngg94n28op1qqsh1oiumc.apps.googleusercontent.com";
+	private final static String GOOGLE_CLIENT_ID = "";
     private final static String GOOGLE_CLIENT_SECRET = "";
     private final static String GOOGLE_REDIRECT_URI = "http://localhost:8888/reMerge/google/callback";
     private final static String GOOGLE_SCOPE = "email openid profile";
