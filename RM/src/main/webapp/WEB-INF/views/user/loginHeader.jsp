@@ -132,5 +132,7 @@
     		location.href="/reMerge/selectTag.fe?tagContent="+data.tagContent
     	}
     </script>
+     <h2>${loginUser.userId}</h2>
+	<a href="logout.us">로그아웃</a>
 </body>
 </html>

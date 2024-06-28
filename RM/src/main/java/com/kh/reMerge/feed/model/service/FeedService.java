@@ -39,6 +39,12 @@ public interface FeedService {
 	//태그된 게시글 조회해오기
 	ArrayList<Feed> selectTag(Tag tag);
 	
+	//댓글 작성
+	int insertReply(Reply r);
+	
+	//게시글 디테일
+	Feed selectFeed(int feedNo);
+	
 	
 	
 	

@@ -43,6 +43,18 @@ public class FeedServiceImpl implements FeedService {
 		return feedDao.replyList(sqlSession,feedNo);
 	}
 
+	@Override
+	public int insertReply(Reply r) {
+		
+		return feedDao.insertReply(sqlSession,r);
+	}
+
+	@Override
+	public Feed selectFeed(int feedNo) {
+		
+		return feedDao.selectFeed(sqlSession,feedNo);
+	}
+
 
 	
 	
