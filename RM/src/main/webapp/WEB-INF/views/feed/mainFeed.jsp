@@ -364,7 +364,7 @@
 				},
 				success:function(history){
 					history=history;
-					console.log(history);
+					/* console.log(history); */
 				},
 				error:function(){
 					console.log("통신 실패");

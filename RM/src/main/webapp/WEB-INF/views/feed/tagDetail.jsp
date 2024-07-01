@@ -14,7 +14,7 @@
 		<div class="tagListTitle">
 			<div class="tagInfo">
 				<span>#${tag.tagContent }</span>
-				<span>총 게시글 수 : ${fn:length(list) }</span>
+				<span>총 게시글 수 : ${fn:length(tagList) }</span>
 			</div>
 		</div>
 		<hr>
@@ -26,7 +26,7 @@
 				<c:otherwise>
 					<c:forEach var="f" items="${tagList }">
 						<div class="feedBlock">
-							<img src="${tagList.changeName}">
+							<img src="${f.changeName}">
 						</div>
 					</c:forEach>		
 				</c:otherwise>

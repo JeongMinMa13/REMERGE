@@ -115,14 +115,19 @@ header {
     overflow: hidden;
     border-radius: 100%;
 }
+.searchUserResult ul li button {
+	background-color: #ffffff;
+	border: 0px;
+	
+}
 .searchUserResult ul li p {
     font-size: 14px;
 }
 .searchUserResult ul li p .userId {
 	display:block;
 }
-.searchUserResult ul li p .email {
-	color:##737373;
+.searchUserResult ul li p .memo {
+	color:#737373;
 }
 
 </style>
