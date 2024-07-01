@@ -14,7 +14,7 @@
 		<div class="tagListTitle">
 			<div class="tagInfo">
 				<span>#${tag.tagContent }</span>
-				<span>총 게시글 수 : ${fn:length(list) }</span>
+				<span>총 게시글 수 : ${fn:length(tagList) }</span>
 			</div>
 		</div>
 		<hr>

@@ -35,7 +35,11 @@
 		    	   ,#{originName}
 		    	   ,#{changeName}
 		    	   ,#{feedLocation})
-	</insert>     
+	</insert>
+	
+	<select id="selectFeedNo" resultType="_int">
+	SELECT SEQ_FNO.CURRVAL FROM DUAL
+	</select>     
 	
 	<select id="selectList" resultMap="feedResultSet">
 		SELECT FEED_NO
@@ -143,5 +147,30 @@
                         WHERE TAG_CONTENT=#{tagContent})
 	 	ORDER BY CREATE_DATE DESC
 	</select>
+	
+	<!-- 게시글 삭제 -->
+	<update id="deleteFeed" parameterType="_int">
+		UPDATE FEED
+		SET STATUS = 'N'
+		WHERE FEED_NO =#{feedNo}
+		AND STATUS = 'Y'
+	</update>
+	
+	<!-- insert 태그 추가 -->
+	<insert id="insertTag" parameterType="Tag">
+    INSERT INTO TAG(TAG_CONTENT, REF_FNO)
+    VALUES(#{tagContent}, #{refFno})
+	</insert>
+	
+	<!-- 태그 리스트 뽑기 -->
+	<select id="getTagsByFeedNo" parameterType="_int" resultType="string">
+	 SELECT TAG_CONTENT
+     FROM TAG
+     WHERE REF_FNO = #{feedNo}
+	</select>
+	
+	
+	
+	
 
 </mapper>

@@ -124,42 +124,42 @@
 
 		<!-- 두 번째 모달: 게시물 작성 -->
 		<div class="modal fade" id="modal_second" tabindex="-1" role="dialog"
-			aria-labelledby="modal_second_title" aria-hidden="true">
-			<div class="modal-dialog" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="modal_second_title">게시물 작성</h5>
-						<button type="button" class="close" data-dismiss="modal"
-							aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<form  id="uploadForm" action="insert.fe" method="post" enctype="multipart/form-data">
-					<input type="hidden" value="${loginUser.userId}" name="feedWriter">	
-						<div class="modal-body">
-							<div class="thumbnail-container">
-								<img id="selectedThumbnail" class="thumbnail" src="#" alt="Selected Thumbnail">
-								<input type="hidden" id="hiddenFile" name="upfile">
-							</div>
-							<div class="form-group">
-								<label for="post_text">게시물 내용</label>
-								<textarea class="form-control" id="post_text" rows="3"
-									name="feedContent" placeholder="게시물 내용을 입력하세요..."></textarea>
-							</div>
-							<div class="hashTag">
-								<label for="tag">태그</label>
-								 <input type="text" class="tag-control" id="tag" placeholder="태그를 입력해주세요">
-							</div>
-							<div class="form-group">
-								<label for="location">위치</label> <input type="text"
-									class="form-control" id="location" name="feedLocation" placeholder="위치를 입력하세요">
-							</div>
-							<button type="submit" id="submit_post_button"
-								class="btn btn-primary">게시</button>
-						</div>
-					</form>
-				</div>
-			</div>
+		    aria-labelledby="modal_second_title" aria-hidden="true">
+		    <div class="modal-dialog" role="document">
+		        <div class="modal-content">
+		            <div class="modal-header">
+		                <h5 class="modal-title" id="modal_second_title">게시물 작성</h5>
+		                <button type="button" class="close" data-dismiss="modal"
+		                    aria-label="Close">
+		                    <span aria-hidden="true">&times;</span>
+		                </button>
+		            </div>
+		            <form id="uploadForm" action="insert.fe" method="post" enctype="multipart/form-data">
+		                <input type="hidden" value="${loginUser.userId}" name="feedWriter">    
+		                <div class="modal-body">
+		                    <div class="thumbnail-container">
+		                        <img id="selectedThumbnail" class="thumbnail" src="#" alt="Selected Thumbnail">
+		                        <input type="hidden" id="hiddenFile" name="upfile">
+		                    </div>
+		                    <div class="form-group">
+		                        <label for="post_text">게시물 내용</label>
+		                        <textarea class="form-control" id="post_text" rows="3"
+		                            name="feedContent" placeholder="게시물 내용을 입력하세요..."></textarea>
+		                    </div>
+		                    <div class="hashTag">
+		                        <label for="tag">태그</label>
+		                        <input type="text" class="tag-control" id="tags" name="tags" placeholder="태그를 입력해주세요">
+		                        <div id="tagSuggestions" class="list-group"></div> <!-- 태그 제안 리스트 -->
+		                    </div>
+		                    <div class="form-group">
+		                        <label for="location">위치</label> <input type="text"
+		                            class="form-control" id="location" name="feedLocation" placeholder="위치를 입력하세요">
+		                    </div>
+		                    <button type="submit" id="submit_post_button" class="btn btn-primary">게시</button>
+		                </div>
+		            </form>
+		        </div>
+		    </div>
 		</div>
 		
 		<!-- 게시물 디테일 모달 -->
@@ -247,6 +247,17 @@
 		</div>
 		<script>
 		
+		<!-- 태그 -->
+		$(document).ready(function() {
+		    $('#uploadForm').submit(function(event) {
+		        var tags = $('#tag').val();
+		        if (tags) {
+		            tags = tags.split(' ').join(','); // 공백으로 구분된 태그를 쉼표로 구분
+		            $('#tag').val(tags);
+		        }
+		    });
+		});
+		
 		<!-- 게시물 등록 스크립트 -->
 		 <!--썸네일 만들기-->
 		 $(document).ready(function() {
@@ -291,6 +302,7 @@
 			        formData.append('feedWriter', $('[name="feedWriter"]').val());
 			        formData.append('feedContent', $('#post_text').val());
 			        formData.append('feedLocation', $('#location').val());
+			        formData.append('tags',$('#tags').val());
 			        
 				<!-- 게시글 등록 ajax -->
 			        $.ajax({
@@ -438,7 +450,6 @@
 					 var reHtml = "";			        
 					 reHtml += '<div>';
 					 reHtml += '<input type="text" name="content" id="content'+result.f.feedNo+'" placeholder="댓글을 입력해주세요..">';
-// 					 reHtml += '<label><button onclick="insertModal(' + result.f.feedNo + ')">등록</button></label>'
 					 reHtml += '<label><button onclick="insertModal(this,'+result.f.feedNo+')">등록</button></label>'
 					 reHtml += '</div>';
 	
@@ -532,7 +543,14 @@
 						str += '               <p><b>좋아요 <span class="like-count" data-feed-no="'+feed.feedNo+'">'+feed.likeCount+'</span>개</b></p>';
 						str += '            <p>' + feed.feedContent + '</p>';
 						str += '            <div id="replyList'+feed.feedNo+'"></div>'; // 댓글 리스트를 표시할 부분
-						str += '            <p><a href="www.naver.com"></a>#하잉 #하잉 #하용</p>';
+										  // 태그 추가 부분
+						                if (feed.tags && feed.tags.length > 0) {
+						                    str += '            <p>';
+						                    for (var j = 0; j < feed.tags.length; j++) {
+						                        str += '<a href="selectTag.fe?tagContent=' + encodeURIComponent(feed.tags[j]) + '">#' + feed.tags[j] + '</a> ';
+						                    }
+						                    str += '            </p>';
+						                }
 						str += '            <input type="text" name="reContent" id="reContent'+feed.feedNo+'" placeholder="댓글을 입력해주세요..">';
 						str += '            <label><button onclick="insertReply('+feed.feedNo+')">등록</button></label>';
 						str += '        </div>';
