@@ -59,6 +59,7 @@
   		var searchStr = $('#searchUser').val();
   		if(searchStr==""){
   			$('#searchUserResult').html("");//검색어 지웠을때 처리'
+  			selectSearchHistory();//검색 버튼 클릭시 검색 기록 함수 실행
   		}else{
 	  		if(searchStr.includes('#')){//태그 검색
 	  			//console.log('태그시도');//작동하는지 확인
@@ -120,7 +121,23 @@
    	
   	function profileUser(data){//검색결과에서 해당하는 사용자 클릭시 프로필로 이동하는 함수
   		//console.log(data.userId);
-  		location.href="/reMerge/myPage.us?userId="+data.userId;
+  		var searchUser=data.userId;
+    		$.ajax({
+    			url:"insertSearchHistory.us",
+    			type:"post",
+    			data:{
+    				fromUser:"${loginUser.userId}",
+    				searchUser:data.userId
+    			},
+    			success:function(data){
+    				//console.log(data);
+    				location.href="/reMerge/myPage.us?userId="+searchUser;
+    			},
+    			error:function(){
+    				console.log("통신 실패");
+    			}
+    		});
+    	}  
   	}
    	
   	$('#home').click(function(){
@@ -134,6 +151,63 @@
   		//console.log(data.tagContent);
   		location.href="/reMerge/selectTag.fe?tagContent="+data.tagContent
   	}
+  	function selectSearchHistory(){//검색 기록 조회
+    		$.ajax({
+				url:"selectSearchHistory.us",
+				type:"post",
+				data:{
+					userId:"${loginUser.userId}"
+				},
+				success:function(data){
+					//console.log(data);
+					var html = "<strong>최근 검색 기록</strong><hr>";
+					
+    				if(!data||data.length===0){
+						html ="검색 기록이 없습니다.";    					
+    				}
+    				html += "<ul>";
+    				for(var i=0;i<data.length;i++){
+    					html+="<li class='searchResult' onclick='profileUser("+JSON.stringify(data[i])+");'>";//해당하는 div 클릭시 data를 매개변수로 보내 클릭시 아이디값 알수 있게 하기
+	    				html+="<span class='profileImage'><img src='"+data[i].profilePath+"'></span>";
+	    				html+="<p>";
+	    				html+="<strong class='userId'>"+data[i].userId+"</strong>";
+	    				html+="<span class='email'>"+data[i].userMemo+"</span>";
+	    				html+="</p>";
+	    				html+="<button onclick='deleteSearchHistory(event,"+JSON.stringify(data[i])+");'>x</button>";
+	    				html+="</li>";
+    				}
+    				html+="</ul>"	
+	    			$('#searchUserResult').html(html);
+				},
+				error:function(){
+					console.log("통신 실패");
+				}
+			});
+    	}
+    	
+    	function deleteSearchHistory(e,data){//검색 기록 삭제
+    		e.preventDefault();
+    		e.stopPropagation(); // 부모 li 요소의 클릭 이벤트가 발생하지 않도록 방지(해당 유저 마이페이지 이동 막기)
+    		$.ajax({
+    			url:"deleteSearchHistory.us",
+    			type:"post",
+    			data:{
+    				fromUser:"${loginUser.userId}",
+    				searchUser:data.userId
+    			},
+    			success:function(data){
+    				console.log(data);
+    				$(e.target).closest('li').hide();//x 버튼 눌렸을때 해당 기록 지워주기(부모 li요소 숨기기)
+    			},
+    			error:function(){
+    				console.log("통신 실패");
+    			}
+    		});
+    	}
+    	
+  	
+  	
+  	
   </script>
    <h2>${loginUser.userId}</h2>
 	<a href="logout.us">로그아웃</a>

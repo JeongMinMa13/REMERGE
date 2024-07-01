@@ -3,6 +3,7 @@ package com.kh.reMerge.user.model.service;
 import java.util.ArrayList;
 
 import com.kh.reMerge.user.model.vo.FollowList;
+import com.kh.reMerge.user.model.vo.SearchHistory;
 import com.kh.reMerge.user.model.vo.User;
 
 public interface UserService {
@@ -44,6 +45,15 @@ public interface UserService {
 	
 	//이메일인증을 마친 비밀번호 변경
 	int updateChangePwd(User u);
+
+	//검색 기록 넣기
+	int insertSearchHistory(SearchHistory searchHistory);
+
+	//검색 기록 조회
+	ArrayList<User> selectSearchHistory(String userId);
+
+	//검색 기록 삭제
+	int deleteSearchHistory(SearchHistory searchHistory);
 
 	
 	
