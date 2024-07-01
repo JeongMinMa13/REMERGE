@@ -742,21 +742,21 @@
 			 $('#modal_create_story').modal('show');//모달 켜기
 		}		
 		
-			var storyFile = document.getElementById('storyFile');//파일 인풋 요소 잡기
-			var storyThumbnail = document.getElementById('storyThumbnail'); //미리보기요소 잡아주기
-	
-			//스토리 이미지 파일 선택시 미리보기
-			storyFile.addEventListener('change', function(event) {//인풋요소에 파일이 들어오면
-			     var file = event.target.files[0];//인풋요소 처음들어온 파일 잡고
-			     if (file) {//들어온 파일이 있다면
-			    	 document.getElementById('thumbnailContainer').style.display='block';//미리보기 감싸는 div숨겨놓고 사진 입력되면 보여주기
-			         var storyFileReader = new FileReader();//파일 정보 읽어줄 객체 FileReader() 준비
-			         storyFileReader.onload = function(e) {
-			             storyThumbnail.setAttribute('src', e.target.result);//파일 읽어 src속성에 넣어주기
-			         }
-			         reader.readAsDataURL(file);
-			     }
-			 });
+		var storyFile = document.getElementById('storyFile');//파일 인풋 요소 잡기
+		var storyThumbnail = document.getElementById('storyThumbnail'); //미리보기요소 잡아주기
+
+		//스토리 이미지 파일 선택시 미리보기
+		storyFile.addEventListener('change', function(event) {//인풋요소에 파일이 들어오면
+		     var file = event.target.files[0];//인풋요소 처음들어온 파일 잡고
+		     if (file) {//들어온 파일이 있다면
+		    	 document.getElementById('thumbnailContainer').style.display='block';//미리보기 감싸는 div숨겨놓고 사진 입력되면 보여주기
+		         var storyFileReader = new FileReader();//파일 정보 읽어줄 객체 FileReader() 준비
+		         storyFileReader.onload = function(e) {
+		             storyThumbnail.setAttribute('src', e.target.result);//파일 읽어 src속성에 넣어주기
+		         }
+		         storyFileReader.readAsDataURL(file);
+		     }
+		 });
 
 		</script>
 </body>

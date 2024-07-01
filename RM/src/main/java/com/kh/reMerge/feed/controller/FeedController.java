@@ -43,7 +43,7 @@ public class FeedController {
 	@GetMapping("feed.fe")
 	public String feed() {
 		
-	return "feed/feed.fe";
+	return "feed/mainFeed";
 	}
 	
 	//리스트 조회
