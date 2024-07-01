@@ -114,20 +114,4 @@
 		AND USER_ID = #{userId}
 	</select>
 	
-	<insert id="insertSearchHistory" parameterType="SearchHistory">
-		INSERT INTO SEARCH_HISTORY(FROM_USER,SEARCH_USER)VALUES(#{fromUser},#{searchUser})
-	</insert>
-	
-	<select id="selectSearchHistory" parameterType="string" resultMap="userResultSet">
-		SELECT USER_ID,PROFILE_PATH,PROFILE_ORIGINNAME,PROFILE_CHANGENAME,USER_MEMO
-		FROM USERS
-		WHERE USER_ID IN (SELECT SEARCH_USER
-		                  FROM SEARCH_HISTORY
-		                  WHERE FROM_USER=#{userId})
-		AND STATUS='Y'
-	</select>
-	
-	<delete id="deleteSearchHistory" parameterType="SearchHistory">
-		DELETE FROM SEARCH_HISTORY WHERE FROM_USER=#{fromUser} AND SEARCH_USER=#{searchUser}
-	</delete>
 </mapper>

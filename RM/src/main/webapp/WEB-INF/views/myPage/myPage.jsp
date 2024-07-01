@@ -50,7 +50,7 @@
 				<!-- null 아닐때 -->
 					<c:if test="${loginUser.userId eq user.userId }">
 							<a href="updatePage.us" class="button-link">프로필 편집</a>
-							<button type="button" id="shareProfile" class="button-link"></button>
+							<button type="button" id="shareProfile" class="button-link">프로필 공유</button>
 					</c:if>
 					
 					<c:if test="${loginUser.userId ne user.userId }">

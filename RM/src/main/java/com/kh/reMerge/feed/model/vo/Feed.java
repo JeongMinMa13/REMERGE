@@ -17,5 +17,6 @@ public class Feed {
 	private String originName;
 	private String changeName;
 	private String status;
+	private int likeCount;
 	private String feedLocation;
 }

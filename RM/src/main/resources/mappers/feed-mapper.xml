@@ -82,6 +82,48 @@
 		WHERE FEED_NO = #{feedNo}
 		AND STATUS = 'Y'
 	</select>
+	
+	 <!-- 좋아요 추가 -->
+    <insert id="insertLike" parameterType="FeedLike">
+        INSERT INTO FEED_LIKE (FEED_LIKE,USER_ID, FEED_NO)
+        VALUES (SEQ_LNO.NEXTVAL,#{userId}, #{feedNo})
+    </insert>
+
+    <!-- 좋아요 취소 -->
+    <delete id="deleteLike" parameterType="FeedLike">
+        DELETE FROM FEED_LIKE
+        WHERE USER_ID = #{userId}
+        AND FEED_NO = #{feedNo}
+    </delete>
+
+    <!-- 좋아요 수 증가 -->
+    <update id="addCount" parameterType="_int">
+        UPDATE FEED
+        SET LIKE_COUNT = LIKE_COUNT + 1
+        WHERE FEED_NO = #{feedNo}
+    </update>
+
+    <!-- 좋아요 수 감소 -->
+    <update id="removeCount" parameterType="_int">
+        UPDATE FEED
+        SET LIKE_COUNT = LIKE_COUNT - 1
+        WHERE FEED_NO = #{feedNo}
+    </update>
+
+    <!-- 좋아요 여부 확인 -->
+    <select id="likeCheck" parameterType="map" resultType="_int">
+        SELECT COUNT(*)
+        FROM FEED_LIKE
+        WHERE FEED_NO = #{feedNo}
+        AND USER_ID = #{userId}
+    </select>
+
+    <!-- 좋아요 수 조회 -->
+    <select id="likeCount" parameterType="_int" resultType="_int">
+        SELECT LIKE_COUNT
+        FROM FEED
+        WHERE FEED_NO = #{feedNo}
+    </select>
 		
 	<select id="searchTag" parameterType="Tag" resultType="Tag">
 		SELECT TAG_CONTENT tagContent, REF_FNO refFno FROM TAG WHERE TAG_CONTENT LIKE '%'||#{tagContent}||'%'

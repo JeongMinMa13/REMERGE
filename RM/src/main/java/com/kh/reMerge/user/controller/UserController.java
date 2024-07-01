@@ -1,5 +1,4 @@
 package com.kh.reMerge.user.controller;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +7,6 @@ import java.util.Random;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -19,17 +17,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.reMerge.user.model.service.UserService;
 import com.kh.reMerge.user.model.vo.FollowList;
 import com.kh.reMerge.user.model.vo.SearchHistory;
 import com.kh.reMerge.user.model.vo.User;
-
-
-
-
-
 @Controller
 public class UserController {
 	@Autowired
@@ -38,9 +30,8 @@ public class UserController {
 	@Autowired
 	private BCryptPasswordEncoder bcryptPasswordEncoder;
 	
-	@Autowired 
+	@Autowired
 	private JavaMailSender mailSenderNaver;;
-
 	private int mailCheckNum = 0;
 	
 	private int loginCount = 0;
@@ -62,7 +53,6 @@ public class UserController {
 				session.setAttribute("alertMsg", "로그인 실패!");
 				return"user/mainLogin";
 			}
-
 		} else {
 			loginCount =0;
 			session.setAttribute("loginUser", loginUser);
@@ -113,12 +103,11 @@ public class UserController {
 		u.setUserPwd(bcrPwd);
 		int result = userService.insertUser(u);
 		
-		if (result > 0) { 
+		if (result > 0) {
 			session.setAttribute("alertMsg", "회원 가입 성공!!");
 			return "user/mainLogin";
 		} else {
 			session.setAttribute("alertMsg", "회원 가입 실패!!");
-
 			return "user/userEnrollForm";
 		}
 	}
@@ -179,7 +168,7 @@ public class UserController {
 		@ResponseBody
 		@RequestMapping("emailCheck.us")
 		private String checkEmail(String email) {
-			String result = ""; 
+			String result = "";
 			
 			int count = userService.checkEmail(email);
 			
@@ -195,7 +184,6 @@ public class UserController {
 		@ResponseBody
 		@RequestMapping("checkPw.us")
 		public String checkPw(String checkPw,String checkpwChk) {
-
 			String resultPw = "";
 			
 			if(checkPw.equals(checkpwChk) ) {
@@ -207,132 +195,30 @@ public class UserController {
 			return resultPw;
 		}
 
-	// 마이페이지로 이동
-	@RequestMapping("myPage.us")
-	public String myPage(String userId, HttpSession session) {
-		
-		boolean followFlag=false;//팔로우 되어있는지 확인하기 위한 초기화
-		String myId=((User)session.getAttribute("loginUser")).getUserId();//로그인된 유저 아이디 추출
-		User u = userService.selectUser(userId);//선택된 유저 정보 조회
-		FollowList followList = new FollowList(userId,myId);//팔로우 정보 조회하기 위해 담기
-		int result = userService.selectFollow(followList);//팔로우 되어있는지 확인하기 위한 조회
-		if(result>0) {//팔로우 되어 있다면 true
-			followFlag=true;
+		// 메시지용 - 중구
+		@RequestMapping("userList.us")
+		public String userList(Model model) {
+		    ArrayList<User> userList = userService.getAllUsers();
+		    model.addAttribute("userList", userList);
+		   
+		    for (User user : userList) {
+		        System.out.println(user);
+		    }
+		    return "user/userList";
+		}
+		@ResponseBody
+		@RequestMapping("userListAjax.us")
+		public ArrayList<User> getUserListAjax() {
+		    return userService.getAllUsers();
 		}
 		
-		session.setAttribute("user", u);
-		session.setAttribute("followFlag", followFlag);
-		
-		return "myPage/myPage";
-	}
-
-
-		// 프로필 편집 페이지로 이동
-		@RequestMapping("updatePage.us")
-		public String updatePage() {
-			return "myPage/updatePage";
-		}
-
-		@RequestMapping("update.us")
-		public String updateUser(User u, Model model, HttpSession session) {
-
-			System.out.println(u);
-			int result = userService.updateUser(u);
-
-			if (result > 0) {
-
-				User updateUs = userService.loginUser(u);
-				session.setAttribute("loginUser", updateUs);
-				session.setAttribute("alertMsg", "정보 수정 성공");
-
-				System.out.println(result);
-				return "myPage/myPage";
-
-			} else {
-				model.addAttribute("alertMsg", "정보 수정 실패");
-				return "myPage/updatePage";
-			}
-		}
-
-		@PostMapping("updatePwd.us")
-		public String updatePwd(User u, Model model,String updatePwd, HttpSession session) {
-			String bcrPwd = bcryptPasswordEncoder.encode(updatePwd);
-			u.setUserPwd(bcrPwd);
-			int result = userService.updatePwd(u);
+		//유저 검색
+		@ResponseBody
+		@GetMapping("searchUser.us")
+		public ArrayList<User> searchUser(String searchStr){
 			
-			if(result>0) {
-				User updateUser = userService.loginUser(u);
-				session.setAttribute("loginUser", updateUser);
-				session.setAttribute("alertMsg", "비밀번호 변경 성공");
-				
-			}else {
-				model.addAttribute("alertMsg","비밀번호 변경 실패");
-			}
-			
-			return "user/mainLogin";
-			
+			return userService.searchUser(searchStr);
 		}
-
-		private String saveFile(MultipartFile upfile, HttpSession session) {
-			String profilePath=upfile.getOriginalFilename();
-			
-			String savePath = session.getServletContext().getRealPath("/resources/uploadFiles/");
-			
-			return profilePath;
-		}
-
-		@RequestMapping("delete.us")
-		public String deleteUser(String userPwd, HttpSession session, Model model) {
-			User loginUser = ((User) session.getAttribute("loginUser"));
-			String encPwd = loginUser.getUserPwd();
-			String userId = loginUser.getUserId();
-
-			int result = userService.deleteUser(userPwd);
-			if (bcryptPasswordEncoder.matches(userPwd, encPwd)) {
-
-				if (result > 0) {
-					session.removeAttribute("loginUser"); // 로그인 정보 삭제
-					session.setAttribute("alertMsg", "회원탈퇴가 완료되었습니다.");
-					return "redirect:/";
-				} else {
-					// 탈퇴 실패시 - 에러페이지로 이동
-					model.addAttribute("errorMsg", "회원 탈퇴 실패");
-					return "myPage/myPage";
-				}
-
-			} else {// 비밀번호를 잘못 입력한 경우
-				session.setAttribute("alertMsg", "비밀번호 입력 오류!");
-				return "user/mainLogin";
-			}
-
-		}
-
-		
-	
-	// 메시지용 - 중구
-	@RequestMapping("userList.us")
-	public String userList(Model model) {
-	    ArrayList<User> userList = userService.getAllUsers();
-	    model.addAttribute("userList", userList);
-	    
-	    for (User user : userList) {
-	        System.out.println(user);
-	    }
-	    return "user/userList";
-	}
-	@ResponseBody
-	@RequestMapping("userListAjax.us")
-	public ArrayList<User> getUserListAjax() {
-	    return userService.getAllUsers();
-	}
-		
-	//유저 검색
-	@ResponseBody
-	@GetMapping("searchUser.us")
-	public ArrayList<User> searchUser(String searchStr){
-
-		return userService.searchUser(searchStr);
-	}
 		
 	//팔로우 신청
 	@ResponseBody
@@ -352,13 +238,11 @@ public class UserController {
 	
 	
 	//이메일 인증 메일 보내기
-
 	@ResponseBody
 	@RequestMapping("accEmail.us")
 	public Map  accEmail(String pwForEmail,String userId, HttpSession session, Model model) {
 		
 		Map map = new HashMap();
-        
 		User u = new User();
 		u.setEmail(pwForEmail);
 		u.setUserId(userId);
@@ -373,9 +257,9 @@ public class UserController {
 	        int numE = r.nextInt(9999);
 	        //session.setAttribute("numAcc", num);
 	        //model.addAttribute("numAcc", num);
-	        
+	       
 	        mailCheckNum = numE;
-	        
+	       
 			StringBuilder sb = new StringBuilder();
 			
 			
@@ -410,7 +294,7 @@ public class UserController {
 		}else { //아이디 및 이메일이 일치 하지 않았을때
 			//session.removeAttribute("numAcc");
 			return map;
-		} 
+		}
 	}
 	
 	@ResponseBody
