@@ -9,9 +9,9 @@ import com.kh.reMerge.shop.model.service.ShopService;
 @Controller
 public class ShopController {
 	
-	@Autowired
-	private ShopService shopService;
-	
+//	@Autowired
+//	private ShopService shopService;
+//	
 	
 	@RequestMapping("shopPage.sh")
 	public String memberEnrollForm() {
