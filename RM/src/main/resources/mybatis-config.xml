@@ -18,6 +18,7 @@
 		<typeAlias type="com.kh.reMerge.feed.model.vo.Tag" alias="Tag"/>
 		<typeAlias type="com.kh.reMerge.user.model.vo.FollowList" alias="FollowList"/>
 		<typeAlias type="com.kh.reMerge.feed.model.vo.Reply" alias="Reply"/>
+		<typeAlias type="com.kh.reMerge.user.model.vo.SearchHistory" alias="SearchHistory"/>
 
  	</typeAliases>
  	

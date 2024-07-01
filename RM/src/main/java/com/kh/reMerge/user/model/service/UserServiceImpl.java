@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.kh.reMerge.user.model.dao.UserDao;
 import com.kh.reMerge.user.model.vo.FollowList;
+import com.kh.reMerge.user.model.vo.SearchHistory;
 import com.kh.reMerge.user.model.vo.User;
 
 @Service
@@ -125,4 +126,24 @@ public class UserServiceImpl implements UserService {
 		return userDao.accEmail(sqlSession, u);
 	}
 
+	//검색기록 넣기
+	@Override
+	public int insertSearchHistory(SearchHistory searchHistory) {
+
+		return userDao.insertSearchHistory(sqlSession,searchHistory);
+	}
+	
+	//검색기록 조회
+	@Override
+	public ArrayList<User> selectSearchHistory(String userId) {
+
+		return userDao.selectSearchHistory(sqlSession,userId);
+	}
+	
+	//검색 기록 삭제
+	@Override
+	public int deleteSearchHistory(SearchHistory searchHistory) {
+
+		return userDao.deleteSearchHistory(sqlSession,searchHistory);
+	}
 }
