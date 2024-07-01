@@ -2,9 +2,11 @@ package com.kh.reMerge.feed.model.dao;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -105,5 +107,29 @@ public class FeedDao {
 
 		return (ArrayList)sqlSession.selectList("feedMapper.selectTag", tag);
 	}
+
+	public int deleteFeed(SqlSessionTemplate sqlSession, int feedNo) {
+		
+		return sqlSession.update("feedMapper.deleteFeed",feedNo);
+	}
+	
+	//태그 넣기
+	public int insertTag(SqlSessionTemplate sqlSession, Tag tag) {
+		
+		return sqlSession.insert("feedMapper.insertTag",tag);
+	}
+	
+	//마지막 번호 추출
+	public int selectFeedNo(SqlSessionTemplate sqlSession) {
+		
+		return sqlSession.selectOne("feedMapper.selectFeedNo");
+	}
+	
+	//태그 리스트 
+	public List<String> getTagsByFeedNo(SqlSessionTemplate sqlSession, int feedNo) {
+		
+		return sqlSession.selectList("feedMapper.getTagsByFeedNo",feedNo);
+	}
+
 
 }
