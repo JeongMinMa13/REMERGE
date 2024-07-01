@@ -5,7 +5,6 @@ import java.sql.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,5 +18,4 @@ public class Message {
 	private String content;			//    CONTENT VARCHAR2(200) NOT NULL,
 	private String photo;			//    PHOTO VARCHAR2(200),
 	private int readCheck;			//    READ_CHECK NUMBER(1) NOT NULL,
-
 }
