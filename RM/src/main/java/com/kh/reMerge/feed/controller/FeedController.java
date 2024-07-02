@@ -30,7 +30,10 @@ import com.kh.reMerge.feed.model.service.FeedService;
 import com.kh.reMerge.feed.model.vo.Feed;
 import com.kh.reMerge.feed.model.vo.FeedLike;
 import com.kh.reMerge.feed.model.vo.Reply;
+import com.kh.reMerge.feed.model.vo.ReplyLike;
 import com.kh.reMerge.feed.model.vo.Tag;
+
+import oracle.jdbc.proxy.annotation.Post;
 
 
 @Controller
@@ -92,7 +95,7 @@ public class FeedController {
 	            List<Tag> tagList = new ArrayList<>();
 	            for (String tagContent : tagArray) {
 	                Tag tag = new Tag();
-	                tag.setTagContent(tagContent.trim());
+	                tag.setTagContent(tagContent.trim()); //앞 뒤 공백을 제거해준대요
 	                tag.setRefFno(f.getFeedNo());
 	                tagList.add(tag);
 	                feedService.insertTag(tag);
@@ -208,7 +211,6 @@ public class FeedController {
         Map<String, Object> result = new HashMap<>();
         
         if (likeCheck > 0) {
-        	System.out.println(likeCheck);
             feedService.deleteLike(fl);
             feedService.removeCount(feedNo);
             result.put("status", "unliked");
@@ -282,6 +284,51 @@ public class FeedController {
 		}
 		return "redirect:feed.fe";
 	}
+	
+	//댓글 좋아요
+	@ResponseBody
+	@PostMapping("replyLike.fe")
+	public Map<String, Object> likeReply(@RequestParam int replyNo, @RequestParam String userId) {
+	    ReplyLike rl = new ReplyLike();
+	    rl.setReplyNo(replyNo);
+	    rl.setUserId(userId);
+
+	    int likeCheck = feedService.checkReplyLike(replyNo, userId);
+	    Map<String, Object> result = new HashMap<>();
+
+	    if (likeCheck > 0) {
+	        feedService.deleteReplyLike(rl);
+	        result.put("status", "unliked");
+	    } else {
+	        feedService.insertReplyLike(rl);
+	        result.put("status", "liked");
+	    }
+
+	    int likeCount = feedService.countReplyLikes(replyNo);
+	    result.put("likeCount", likeCount);
+
+	    return result; 
+	
+	}
+	
+	//댓글 좋아요 상태 확인
+	@ResponseBody
+	@GetMapping("replyLikeStatus.fe")
+	public Map<String,Object> replyLikeStatus(@RequestParam int replyNo, @RequestParam String userId){
+		Map<String, Object> result = new HashMap<>();
+	    try {
+	        int likeCheck = feedService.checkReplyLike(replyNo, userId);
+	        result.put("status", likeCheck > 0 ? "liked" : "unliked"); //좋아요 됐고 안 됐고 반별
+
+	        int likeCount = feedService.likeCount(replyNo);
+	        result.put("likeCount", likeCount);
+	    } catch (Exception e) {
+	        result.put("error", e.getMessage());
+	    }
+	    return result;
+	
+	}
+	
 	
 }
 	

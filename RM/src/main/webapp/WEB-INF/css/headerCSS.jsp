@@ -6,14 +6,6 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
-.sidebar{
-	body {
-	height: auto;
-	margin: 0;
-	padding: 0;
-	background-color: #fafafa;
-	font-family: 'Arial', sans-serif;
-}
 body {
 	height: auto;
 	margin: 0;

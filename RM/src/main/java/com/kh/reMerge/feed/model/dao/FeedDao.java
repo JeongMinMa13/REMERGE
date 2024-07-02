@@ -14,6 +14,7 @@ import com.kh.reMerge.common.model.vo.PageInfo;
 import com.kh.reMerge.feed.model.vo.Feed;
 import com.kh.reMerge.feed.model.vo.FeedLike;
 import com.kh.reMerge.feed.model.vo.Reply;
+import com.kh.reMerge.feed.model.vo.ReplyLike;
 import com.kh.reMerge.feed.model.vo.Tag;
 
 @Repository
@@ -129,6 +130,32 @@ public class FeedDao {
 	public List<String> getTagsByFeedNo(SqlSessionTemplate sqlSession, int feedNo) {
 		
 		return sqlSession.selectList("feedMapper.getTagsByFeedNo",feedNo);
+	}
+	
+	//좋아요 추가
+	public int insertReplyLike(SqlSessionTemplate sqlSession, ReplyLike rl) {
+		
+		return sqlSession.insert("feedMapper.insertReplyLike",rl);
+	}
+	
+	//좋아요 취소
+	public int deleteReplyLike(SqlSessionTemplate sqlSession, ReplyLike rl) {
+		
+		return sqlSession.delete("feedMapper.deleteReplyLike",rl);
+	}
+	
+	//좋아요 여부 확인
+	public int checkReplyLike(SqlSessionTemplate sqlSession, int replyNo, String userId) {
+		Map<String, Object> params = new HashMap<>();
+        params.put("replyNo", replyNo);
+        params.put("userId", userId);
+		
+		return sqlSession.selectOne("feedMapper.checkReplyLike",params);
+	}
+
+	public int countReplyLikes(SqlSessionTemplate sqlSession, int replyNo) {
+		
+		return sqlSession.selectOne("feedMapper.countReplyLikes", replyNo);
 	}
 
 

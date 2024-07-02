@@ -12,6 +12,7 @@ import com.kh.reMerge.feed.model.dao.FeedDao;
 import com.kh.reMerge.feed.model.vo.Feed;
 import com.kh.reMerge.feed.model.vo.FeedLike;
 import com.kh.reMerge.feed.model.vo.Reply;
+import com.kh.reMerge.feed.model.vo.ReplyLike;
 import com.kh.reMerge.feed.model.vo.Tag;
 
 @Service
@@ -130,6 +131,36 @@ public class FeedServiceImpl implements FeedService {
 	public List<String> getTagsByFeedNo(int feedNo) {
 		
 		return feedDao.getTagsByFeedNo(sqlSession,feedNo);
+	}
+	
+	//댓글 좋아요
+	@Override
+	public int insertReplyLike(ReplyLike rl) {
+		
+		return feedDao.insertReplyLike(sqlSession,rl);
+		
+	}
+	
+	//댓글 좋아요 취소
+	@Override
+	public int deleteReplyLike(ReplyLike rl) {
+		
+		return feedDao.deleteReplyLike(sqlSession,rl);
+		
+	}
+	
+	//댓글 좋아요 여부
+	@Override
+	public int checkReplyLike(int replyNo, String userId) {
+		
+		return feedDao.checkReplyLike(sqlSession,replyNo,userId);
+	}
+	
+	//댓글 좋아요 수
+	@Override
+	public int countReplyLikes(int replyNo) {
+		
+		return feedDao.countReplyLikes(sqlSession,replyNo);
 	}
 
 
