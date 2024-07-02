@@ -25,74 +25,61 @@
 </head>
 <body>
 	<%@include file="../user/loginHeader.jsp"%>
-	<script
-		src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<div class="body">
+		<!--스토리 목록-->
+		<div class="storys">
+			<div class="story" onclick="addStory();">
+				<img class="story_img" src="resources/plusicon.jpeg"> 
+				<span>스토리 추가하기</span>
+			</div>
+		</div>
+	
 	<div class="con_wrap">
 		<div class="conA"></div>
 	</div>
-	<div class="body">
-		<!--스토리 목록-->
-		<!-- <div class="swiper"> -->
-		<div class="storys">
-			<div class="story" onclick="addStory();">
-				<img class="story_img" src="resources/plusicon.jpeg"> <span>스토리
-					추가하기</span>
-			</div>
-			<!-- <div class="swiper-button-prev"></div>
-  				<div class="swiper-button-next"></div> -->
-		</div>
-	</div>
-	<!--  </div> -->
-	<div class="container">
-		<div class="profile-header">
-			<img src="" alt="Your Profile Picture">
-			<div class="profile-info">
-				<span class="username">junhyung_ing</span> <span class="subtext">신준형</span>
-			</div>
-		</div>
-		<div class="suggestions-header">
-			<span>인기 팔로워</span> <a href="#">모두보기</a>
-		</div>
-		<div class="suggestion">
-			<div class="suggestion-info">
-				<img src="" alt="Profile Picture">
-				<div>
-					<div class="name">junhyung_ing</div>
-					<div class="subtext">신준형</div>
+		<div class="container">
+			<div class="profile-header">
+				<img src="" alt="Your Profile Picture">
+				<div class="profile-info">
+					<span class="username">junhyung_ing</span> <span class="subtext">신준형</span>
 				</div>
 			</div>
-			<button class="follow-btn">팔로우</button>
-		</div>
-		<div class="suggestion">
-			<div class="suggestion-info">
-				<img src="" alt="Profile Picture">
-				<div>
-					<div class="name">junhyung_ing</div>
-					<div class="subtext">신준형</div>
-				</div>
+			<div class="suggestions-header">
+				<span>인기 팔로워</span> <a href="#">모두보기</a>
 			</div>
-			<button class="follow-btn">팔로우</button>
-		</div>
-		<div class="suggestion">
-			<div class="suggestion-info">
-				<img src="" alt="Profile Picture">
-				<div>
-					<div class="name">junhyung_ing</div>
-					<div class="subtext">신준형</div>
+			<div class="suggestion">
+				<div class="suggestion-info">
+					<img src="" alt="Profile Picture">
+					<div>
+						<div class="name">junhyung_ing</div>
+						<div class="subtext">신준형</div>
+					</div>
 				</div>
+				<button class="follow-btn">팔로우</button>
 			</div>
-			<button class="follow-btn">팔로우</button>
+			<div class="suggestion">
+				<div class="suggestion-info">
+					<img src="" alt="Profile Picture">
+					<div>
+						<div class="name">junhyung_ing</div>
+						<div class="subtext">신준형</div>
+					</div>
+				</div>
+				<button class="follow-btn">팔로우</button>
+			</div>
+			<div class="suggestion">
+				<div class="suggestion-info">
+					<img src="" alt="Profile Picture">
+					<div>
+						<div class="name">junhyung_ing</div>
+						<div class="subtext">신준형</div>
+					</div>
+				</div>
+				<button class="follow-btn">팔로우</button>
+			</div>
 		</div>
 	</div>
-	<div class="footer">
-		<div>
-			<a href="#">소개</a> <a href="#">도움말</a> <a href="#">홍보 센터</a> <a
-				href="#">API</a> <a href="#">채용 정보</a> <a href="#">개인정보처리방침</a> <a
-				href="#">약관</a> <a href="#">위치</a> <a href="#">언어</a>
-		</div>
-		<div>© 2024 ReMERGE FROM KH정보교육원 4조</div>
-	</div>
-
 	<!-- 첫 번째 모달: 이미지 업로드 -->
 	<div class="modal fade" id="modal_create" tabindex="-1" role="dialog"
 		aria-labelledby="modal_create_title" aria-hidden="true">
@@ -162,8 +149,6 @@
 					</div>
 				</form>
 			</div>
-		</div>
-	</div>
 
 	<!-- 게시물 디테일 모달 -->
 	<div class="modal fade" id="modal_detail_feed" tabindex="-1"
@@ -202,39 +187,38 @@
 				</div>
 			</div>
 		</div>
-	</div>
-
-	<!-- 스토리 추가 모달 -->
-	<div class="modal fade" id="modal_create_story" tabindex="-1"
-		role="dialog" aria-labelledby="modal_create_story" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="modal_create_story_title">스토리 만들기</h5>
-					<button type="button" class="close" data-dismiss="modal"
-						aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body" id="storyModalBody">
-					<form action="insertStory.fe" method="post"
-						enctype="multipart/form-data">
-						<div class="form-group">
-							<input type="hidden" name="userId" value="${loginUser.userId }">
-							<label for="storyFile">이미지 선택</label> <input type="file"
-								class="form-control-file" id="storyFile" name="storyFile">
-						</div>
-						<div id="thumbnailContainer">
-							<img id="storyThumbnail" class="thumbnail" alt="Thumbnail">
-						</div>
-						<br> <label for="storyContent">한줄 내용 : </label> <input
-							type="text" name="storyContent" style="width: 300px;">
-						<button type="submit" class="btn btn-primary">등록</button>
-					</form>
+		
+		<!-- 스토리 추가 모달 -->
+		<div class="modal fade" id="modal_create_story" tabindex="-1" role="dialog" aria-labelledby="modal_create_story" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="modal_create_story_title">스토리 만들기</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body" id="storyModalBody">
+						<form action="insertStory.fe" method="post" enctype="multipart/form-data">
+							<div class="form-group">
+								<input type="hidden" name="userId" value="${loginUser.userId }">
+								<label for="storyFile">이미지 선택</label> 
+								<input type="file" class="form-control-file" id="storyFile" name="storyFile">
+							</div>
+							<div id="thumbnailContainer">
+								<img id="storyThumbnail" class="thumbnail" alt="Thumbnail">
+							</div>
+								<br>
+								<label for="storyContent">한줄 내용 : </label>
+								<input type="text" name="storyContent" style="width:300px;">
+								<button type="submit" class="btn btn-primary">등록</button>
+						</form>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+
 
 	<!-- 스토리 뷰 모달 -->
 	<div class="modal fade" id="modal_view_story" tabindex="-1"
@@ -260,7 +244,6 @@
 		</div>
 	</div>
 	<script>
-		
 		<!-- 태그 -->
 		$(document).ready(function() {
 		    $('#uploadForm').submit(function(event) {
@@ -364,17 +347,14 @@
 		   $('#modal_second').modal('hide');
 		 });
 		 
-		 //게시물 모달 열기
-		
-		 
 		 //게시물 모달 닫기
 		 $('#close_createDetail_button').click(function() {
 		   $('#createDetail').modal('hide');
 		 });
 		
 		</script>
-
-	<!-- 스토리 조회해오기 -->
+		
+	<!-- 스토리 조회해오기 --> 
 	<script>
 		// 전역 변수 선언
 	    var currentStoryIndex = 0;
@@ -435,6 +415,7 @@
 
 		<!-- 게시글 detail 불러오기 -->
 		function detailView(feedNo){
+			var userId = '${loginUser.userId}';
 			$('#modal_detail_feed').modal('show');
 			$.ajax({
 				url : "detail.fe",
@@ -448,18 +429,27 @@
 			         $('#feed_userId').text(result.f.feedWriter);
 			         $('#feed_location').text(result.f.feedLocation); 
 			         $('#feed_detail_content').text(result.f.feedContent);
+			         
+			         loadLikeStatusDetail(result.f.feedNo, userId); //디테일 게시글 좋아요 유저
+			         
 			         var str = "";
 			         for(var i = 0; i<result.rList.length; i++){
 			        	 var reply = result.rList[i];
-			                str += '<div class="modal-body">';
-			                str += '    <div id="feed_detail_replyList">';
-			                str += '        <p><strong>' + reply.userId + ':</strong> ' + reply.reContent + '</p>';
-			                str += '    </div>';
-			                str += '</div>';
+			        		str += '<div class="modal-body">';
+			        	    str += '    <div id="feed_detail_replyList">';
+			        	    str += '        <p><strong>' + reply.userId + ':</strong> ' + reply.reContent;
+			        	    str += '            <button class="reply-like-button" onclick="toggleReplyLike(' + reply.replyNo + ', \'' + userId + '\')">';
+			        	    str += '                <i class="reply-heart-icon far fa-heart"></i>';
+			        	    str += '            </button>';
+			        	    str += '            <span class="reply-like-count" id="reply-like-count-' + reply.replyNo + '"></span>';
+			        	    str += '        </p>';
+			        	    str += '    </div>';
+			        	    str += '</div>';
 
 			         }
 			         
 			         $('#feed_detail_replyList').html(str);
+			         
 			         
 					 var reHtml = "";			        
 					 reHtml += '<div>';
@@ -471,6 +461,15 @@
 			         console.log("content",content);
 			         $('.form-group').html(reHtml);
 			         
+			         $("#likeButtonDetail").off("click").on("click", function() {
+			                toggleLikeDetail(result.f.feedNo, userId);
+			            });
+			         
+			         // 댓글 좋아요 상태 로드
+			            for (var i = 0; i < result.rList.length; i++) {
+			                var reply = result.rList[i];
+			                loadReplyLikeStatus(reply.replyNo, userId);
+			            }
 			         
 				},
 				error : function(){
@@ -586,40 +585,41 @@
     	};
 		</script>
 
-	<!-- 댓글 리스트 -->
-	<script>
-			function replyList(feedNo){
-				$.ajax({
-					url : "replyList.fe",
-					data : {
-						feedNo : feedNo
-					},
-					success : function(result){
-						var str = "";
-						if(result.rList.length > 0){
-			                var reply = result.rList[0]; // 가장 최근 댓글 하나만 가져옴
-			                str += '<div class="reply">';
-			                str += '<p><strong>' + reply.userId + ':</strong> ' + reply.reContent + '</p>';
-			                str += '</div>';
-			            }
-						  $("#replyList" + feedNo).html(str); // 댓글 리스트를 해당 게시물 div에 추가
-						  
-					},
-					error : function(){
-						console.log("통신오류");
-					}
-					
-				});
-			};
+		<!-- 댓글 리스트 -->
+		<script>
+		function replyList(feedNo){
+		    $.ajax({
+		        url : "replyList.fe",
+		        data : {
+		            feedNo : feedNo
+		        },
+		        success : function(result){
+		            var str = "";
+		            if(result.rList.length > 0){
+		                for (var i = 0; i < result.rList.length; i++){
+		                    var reply = result.rList[i];
+		                    str += '<div class="comment">';
+		                    str += '    <img src="프로필_이미지_URL" alt="프로필 사진">';
+		                    str += '    <p><strong class="username">' + reply.userId + ':</strong> ' + reply.reContent + '</p>';
+		                    str += '    <button class="reply-like-button" onclick="toggleReplyLike(' + reply.replyNo + ', \'' + userId + '\')">';
+		                    str += '        <i class="reply-heart-icon far fa-heart"></i>';
+		                    str += '    </button>';
+		                    str += '    <span class="reply-like-count" id="reply-like-count-' + reply.replyNo + '"></span>';
+		                    str += '</div>';
+		                }
+		            }
+		            $("#feed_detail_replyList").html(str); // 댓글 리스트를 해당 게시물 div에 추가
+		        },
+		        error : function(){
+		            console.log("통신오류");
+		        }
+		    });
+		};
 			
 			<!-- 댓글 입력 -->
-			
-				
 			function insertReply(feedNo){
 				var reContent =$("#reContent" + feedNo).val();
 				
-				console.log(reContent);
-				console.log("${loginUser.userId}");
 				$.ajax({	
 					url : "insertReply.fe",
 					type : "post",
@@ -647,7 +647,6 @@
 				
 // 				console.log($(this).parent().siblings().first().attr("id"));
 // 			});
-			
 			
 			<!-- 두번째 댓글 입력 -->
 			function insertModal(el,feedNo){
@@ -744,7 +743,134 @@
 	                    }
 	                });
 	            }
-		    
+	            
+	         // 디테일 모달 좋아요 상태 로드
+	            function loadLikeStatusDetail(feedNo, userId) {
+	                $.ajax({
+	                    url: "likeStatus.fe",
+	                    type: "get",
+	                    data: {
+	                        feedNo: feedNo,
+	                        userId: userId
+	                    },
+	                    success: function(response) {
+	                        var likeButton = $("#likeButtonDetail");
+	                        var heartIcon = likeButton.find(".heart-icon");
+	                        var likeCountElement = $("#likeCountDetail");
+
+	                        if (response.status === "liked") {
+	                            likeButton.addClass("liked");
+	                            heartIcon.removeClass("far fa-heart");
+	                            heartIcon.addClass("fas fa-heart");
+	                        } else {
+	                            likeButton.removeClass("liked");
+	                            heartIcon.removeClass("fas fa-heart");
+	                            heartIcon.addClass("far fa-heart");
+	                        }
+
+	                        likeCountElement.text(response.likeCount);
+	                    },
+	                    error: function() {
+	                        alert("실패.");
+	                    }
+	                });
+	            }
+	         
+	         // 디테일 모달 좋아요 토글
+	            function toggleLikeDetail(feedNo, userId) {
+	                $.ajax({
+	                    url: "feedLike.fe",
+	                    type: "post",
+	                    data: {
+	                        feedNo: feedNo,
+	                        userId: userId
+	                    },
+	                    success: function(response) {
+	                        var likeButton = $("#likeButtonDetail");
+	                        var heartIcon = likeButton.find(".heart-icon");
+
+	                        if (response.status === "liked") {
+	                            likeButton.addClass("liked");
+	                            heartIcon.removeClass("far fa-heart");
+	                            heartIcon.addClass("fas fa-heart");
+	                        } else {
+	                            likeButton.removeClass("liked");
+	                            heartIcon.removeClass("fas fa-heart");
+	                            heartIcon.addClass("far fa-heart");
+	                        }
+
+	                        $("#likeCountDetail").text(response.likeCount);
+	                    },
+	                    error: function() {
+	                        alert("좋아요 실패");
+	                    }
+	                });
+	            }
+	         
+	         //댓글 좋아요 
+	         function toggleReplyLike(replyNo, userId) {
+				    $.ajax({
+				        url: 'replyLike.fe',
+				        type: 'post',
+				        data: {
+				            replyNo: replyNo,
+				            userId: userId
+				        },
+				        success: function(response) {
+				            var likeButton = $('.reply-like-button[onclick="toggleReplyLike(' + replyNo + ', \'' + userId + '\')"]');
+				            var heartIcon = likeButton.find('.reply-heart-icon');
+				            var likeCountElement = likeButton.siblings('.reply-like-count');
+				
+				            if (response.status === 'liked') {
+				                likeButton.addClass('liked');
+				                heartIcon.removeClass('far fa-heart');
+				                heartIcon.addClass('fas fa-heart');
+				            } else {
+				                likeButton.removeClass('liked');
+				                heartIcon.removeClass('fas fa-heart');
+				                heartIcon.addClass('far fa-heart');
+				            }
+				
+				            likeCountElement.text(response.likeCount);
+				        },
+				        error: function() {
+				            alert('댓글 좋아요 처리에 실패했습니다.');
+				        }
+				    });
+				}
+			        
+			// 댓글 좋아요 상태 로드 함수 (필요 시 호출)
+			function loadReplyLikeStatus(replyNo, userId) {
+				    $.ajax({
+				        url: 'replyLikeStatus.fe',
+				        type: 'get',
+				        data: {
+				            replyNo: replyNo,
+				            userId: userId
+				        },
+				        success: function(response) {
+				            var likeButton = $('.reply-like-button[onclick="toggleReplyLike(' + replyNo + ', \'' + userId + '\')"]');
+				            var heartIcon = likeButton.find('.reply-heart-icon');
+				            var likeCountElement = likeButton.siblings('.reply-like-count');
+				
+				            if (response.status === 'liked') {
+				                likeButton.addClass('liked');
+				                heartIcon.removeClass('far fa-heart');
+				                heartIcon.addClass('fas fa-heart');
+				            } else {
+				                likeButton.removeClass('liked');
+				                heartIcon.removeClass('fas fa-heart');
+				                heartIcon.addClass('far fa-heart');
+				            }
+				
+				            likeCountElement.text(response.likeCount);
+				        },
+				        error: function() {
+				            alert('댓글 좋아요 상태를 가져오는데 실패했습니다.');
+				        }
+				    });
+				}
+	        
 		</script>
 
 
@@ -772,6 +898,6 @@
 		     }
 		 });
 
-		</script>
+	</script>
 </body>
 </html>

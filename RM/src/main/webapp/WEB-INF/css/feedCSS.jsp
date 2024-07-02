@@ -85,79 +85,82 @@ header {
 	display: flex;
 	justify-content: center;
 	align-items: flex-start;
-	margin-top: 50px;
 }
 
 .conA {
 	flex: 2;
-	margin: 10px 50px 30px 200px;
-	justify-content: center;
+    margin: 10px;
+    justify-content: center;
 }
 
 .conA .con {
-	width: 500px;
-	height: 600px;
-	margin-bottom: 100px;
-	margin-left: 500px;
-	border: 1px solid #DBDBDB;
-	border-radius: 3px;
-	background-color: #ffffff;
+	width: 100%;
+    max-width: 600px;
+    margin-bottom: 30px;
+    border: 1px solid #dbdbdb;
+    border-radius: 3px;
+    background-color: #ffffff;
 }
 
 .title {
-	display: flex; /* 프로필사진과 User이름이 옆으로 쌓이게 하기 위함. */
-	margin: 10px;
+	display: flex;
+    align-items: center;
+    padding: 10px;
 }
 
 .title p {
-	margin: 5px 15px;
-	font-size: 20px;
+	margin-left: 10px;
+    font-size: 16px;
+    font-weight: bold;;
 }
 
 .con_img {
-	width: 497px;
-	height: 380px;
+	width: 100%;
+    height: auto;
 }
 
 .img {
-	width: 50px;
-	height: 50px;
-	border-radius: 50%;
+	width: 40px;
+    height: 40px;
+    border-radius: 50%;
 }
 
 .logos {
-	display: flex; /* logo들이 옆으로 쌓이게 하기 위함. */
+	display: flex; 
 	justify-content: space-between;
-	/* logos_left와 logos_right를 양 끝으로 배치시킴. */
-	padding: 0 10px;
+	padding: 10px;
 }
 
 .content {
 	padding: 10px;
 }
 
+.content p {
+    margin: 5px 0;
+}
+
 .content input {
 	width: 100%;
-	height: 45px;
-	border: none;
-	border-top: 1px solid #DBDBDB;
-	color: #999999;
-	font-size: 16px;
+    height: 40px;
+    border: none;
+    border-top: 1px solid #dbdbdb;
+    padding: 5px;
+    font-size: 14px;
 }
 
 .content input:focus {
 	outline: none;
 }
 
-.container {
-	position: fixed;
-	top: 100px;
-	width: 300px;
-	left: 1400px;
-	background-color: white;
-	border: 1px solid #dbdbdb;
-	border-radius: 10px;
-	padding: 20px;
+.body .container {
+    position: fixed;
+    top: 100px;
+    right: 200px;
+    width: 300px; /* 원하는 너비로 조정 */
+    background-color: white;
+    border: 1px solid #dbdbdb;
+    border-radius: 10px;
+    padding: 20px;
 }
 
 .profile-header {
@@ -244,56 +247,160 @@ header {
 	background-color: #007bb5;
 }
 
-.footer {
-	position: fixed;
-	top: 420px;
-	right: 130px;
-	font-size: 12px;
-	color: #8e8e8e;
-	text-align: center;
-}
-
-.footer a {
-	color: #8e8e8e;
-	text-decoration: none;
-	margin: 0 5px;
-}
-
-.footer a:hover {
-	text-decoration: underline;
-}
-
-.footer div {
-	margin-top: 10px;
-}
-
 <!--모달-->
 .modal-content {
+    display: flex;
+    flex-direction: row;
+    width: 90%;
+    max-width: 100%;
     border-radius: 10px;
     overflow: hidden;
     border: none;
 }
 
-.modal-header, .modal-footer {
-    border: none;
+.modal-body {
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 90vh; /* 모달의 높이를 늘림 */
+}
+
+.modal-image {
+    flex: 1;
+    background-color: #000;
+}
+
+.modal-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.modal-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
 }
 
 .modal-header {
-    padding: 15px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #007bff;
-    color: #fff;
+    border-bottom: 1px solid #dbdbdb;
+    padding: 10px 20px;
 }
 
-.modal-title {
-    font-size: 18px;
-    font-weight: 600;
+.modal-header img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
 }
 
-.modal-body {
+.modal-header .username {
+    font-weight: bold;
+    display: block; /* 사용자 이름과 위치를 세로로 배치 */
+}
+
+.modal-header .text-muted {
+    color: #8e8e8e;
+}
+
+.modal-header .close {
+    font-size: 20px;
+    color: #333;
+}
+
+.modal-body-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.modal-footer {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid #dbdbdb;
+    padding: 10px 20px;
+}
+
+.like-button, .reply-like-button {
+    background: none;
+    border: none;
     padding: 0;
+    margin: 0;
+    cursor: pointer;
+    color: #ff5a5f;
+}
+
+.like-button:focus, .reply-like-button:focus {
+    outline: none;
+}
+
+.reply-heart-icon {
+    font-size: 16px; 
+    color: black; 
+}
+
+.reply-heart-icon.liked {
+    color: #ff5a5f; 
+}
+
+.modal-content .modal-body-content .comment-section {
+    margin-top: 5px; /* 댓글 섹션 상단 간격 줄임 */
+}
+
+.comment {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px; /* 댓글 간격 줄임 */
+    padding-left: 0; /* 왼쪽 여백을 제거하여 정렬 */
+}
+
+.comment img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.comment p {
+    margin: 0;
+    font-size: 14px;
+}
+
+.comment .username {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.comment-input {
+    display: flex;
+    align-items: center;
+    border-top: 1px solid #dbdbdb;
+    padding-top: 5px; /* 댓글 입력 상자 위쪽 간격 줄임 */
+}
+
+.comment-input input {
+    flex: 1;
+    border: none;
+    padding: 5px; /* 댓글 입력 상자의 패딩을 줄임 */
+    font-size: 14px;
+    height: 40px; /* 댓글 입력 상자 높이 설정 */
+}
+
+.comment-input input:focus {
+    outline: none;
+}
+
+.comment-input button {
+    background-color: transparent;
+    border: none;
+    color: #0095f6;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 .thumbnail-container, .form-group, .hashTag {
@@ -347,7 +454,6 @@ header {
 	display:none;
 }
 
-/* 임시 좋아요 버튼*/
 .like-button {
     background: none;
     border: none;
@@ -363,6 +469,28 @@ header {
 .heart-icon {
     font-size: 30px;
     color: #ff5a5f;
+}
+
+/* 댓글 좋아요 버튼 스타일 */
+.reply-like-button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.reply-like-button:focus {
+    outline: none;
+}
+
+.reply-heart-icon {
+    font-size: 16px; 
+    color: #black; 
+}
+
+.reply-heart-icon.liked {
+    color: #ff5a5f; 
 }
 
 /* 태그 검색시 보여지는 tagDetail View CSS */
@@ -388,7 +516,5 @@ header {
 </style>
 </head>
 <body>
-
 </body>
-
 </html>
