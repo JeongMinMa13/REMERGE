@@ -105,87 +105,88 @@
 			</div>
 		</div>
 	</div>
-
-	<!-- 두 번째 모달: 게시물 작성 -->
-	<div class="modal fade" id="modal_second" tabindex="-1" role="dialog"
-		aria-labelledby="modal_second_title" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="modal_second_title">게시물 작성</h5>
-					<button type="button" class="close" data-dismiss="modal"
-						aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<form id="uploadForm" action="insert.fe" method="post"
-					enctype="multipart/form-data">
-					<input type="hidden" value="${loginUser.userId}" name="feedWriter">
-					<div class="modal-body">
-						<div class="thumbnail-container">
-							<img id="selectedThumbnail" class="thumbnail" src="#"
-								alt="Selected Thumbnail"> <input type="hidden"
-								id="hiddenFile" name="upfile">
-						</div>
-						<div class="form-group">
-							<label for="post_text">게시물 내용</label>
-							<textarea class="form-control" id="post_text" rows="3"
-								name="feedContent" placeholder="게시물 내용을 입력하세요..."></textarea>
-						</div>
-						<div class="hashTag">
-							<label for="tag">태그</label> <input type="text"
-								class="tag-control" id="tags" name="tags"
-								placeholder="태그를 입력해주세요">
-							<div id="tagSuggestions" class="list-group"></div>
-							<!-- 태그 제안 리스트 -->
-						</div>
-						<div class="form-group">
-							<label for="location">위치</label> <input type="text"
-								class="form-control" id="location" name="feedLocation"
-								placeholder="위치를 입력하세요">
-						</div>
-						<button type="submit" id="submit_post_button"
-							class="btn btn-primary">게시</button>
-					</div>
-				</form>
-			</div>
-
+	<!-- 두 번째 모달: 게시글 작성 -->
+	<div class="modal fade" id="modal_second" tabindex="-1" role="dialog" aria-labelledby="modal_second_title" aria-hidden="true">
+		    <div class="modal-dialog modal-lg" role="document">
+		        <div class="modal-content">
+		            <div class="modal-header">
+		                <h5 class="modal-title" id="modal_second_title">게시물 작성</h5>
+		                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		                    <span aria-hidden="true">&times;</span>
+		                </button>
+		            </div>
+		            <form id="uploadForm" action="insert.fe" method="post" enctype="multipart/form-data">
+		                <input type="hidden" value="${loginUser.userId}" name="feedWriter">
+		                <div class="modal-body d-flex">
+		                    <div class="thumbnail-container flex-fill text-center">
+		                        <img id="selectedThumbnail" class="thumbnail img-fluid" src="#" alt="Selected Thumbnail">
+		                        <input type="hidden" id="hiddenFile" name="upfile">
+		                    </div>
+		                    <div class="flex-fill ml-3">
+		                        <div class="form-group">
+		                            <label for="post_text">게시물 내용</label>
+		                            <textarea class="form-control" id="post_text" rows="3" name="feedContent" placeholder="게시물 내용을 입력하세요..."></textarea>
+		                        </div>
+		                        <div class="form-group">
+		                            <label for="tags">태그</label>
+		                            <input type="text" class="form-control" id="tags" name="tags" placeholder="(#제외)태그를 입력해주세요">
+		                            <div id="tagSuggestions" class="list-group"></div> <!-- 태그 제안 리스트 -->
+		                        </div>
+		                        <div class="form-group">
+		                            <label for="location">위치</label>
+		                            <input type="text" class="form-control" id="feedLocation" name="feedLocation" placeholder="위치를 입력하세요">
+		                            <input type="button" onclick="searchAddress();" value="위치 검색">
+		                        </div>
+		                        <button type="submit" id="submit_post_button" class="btn btn-primary">게시</button>
+		                    </div>
+		                </div>
+		            </form>
+		        </div>
+		    </div>
+		</div>
 	<!-- 게시물 디테일 모달 -->
-	<div class="modal fade" id="modal_detail_feed" tabindex="-1"
-		role="dialog" aria-labelledby="modal_detail_feed" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="modal_detail_feed_title">게시물</h5>
-					<button type="button" class="close" data-dismiss="modal"
-						aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<img src="" id="feed_detail_img">
-					<!-- 게시글 디테일 이미지 -->
-					<div id="feed_userId"></div>
-					<div id="feed_location"></div>
-					<div id="feed_detail_content"></div>
-					<div id="feed_detail_replyList"></div>
-					<!-- 댓글 리스트 영역 -->
-					<div id="like_reply">
-						<div class="mb-3">
-							<button id="like_button">
-								<i class="fas fa-heart mr-1"></i>
-							</button>
-						</div>
-						<!-- 댓글 작성 폼 -->
-						<div class="form-group">
-							<input type="text" name="content" id="content${feedNo}"
-								placeholder="댓글을 입력해주세요.."> <label>
-								<button onclick="insertModal(this, ${feedNo})">등록</button>
-							</label>
-						</div>
-					</div>
-				</div>
-			</div>
+		<div class="modal fade" id="modal_detail_feed" tabindex="-1" role="dialog" aria-labelledby="modal_detail_feed" aria-hidden="true">
+		    <div class="modal-dialog modal-xl" role="document">
+		        <div class="modal-content">
+		            <div class="modal-body d-flex p-0">
+		                <div class="modal-image flex-fill">
+		                    <img src="" id="feed_detail_img" class="w-100 h-100" style="object-fit: cover;">
+		                </div>
+		                <div class="modal-details flex-fill d-flex flex-column">
+		                    <div class="modal-header">
+		                        <div class="d-flex align-items-center">
+		                            <img src="" id="feed_user_img" class="rounded-circle" alt="프로필 사진" style="width: 40px; height: 40px;">
+		                            <div class="ml-2">
+		                                <span class="username" id="feed_userId">사용자 이름</span>
+		                                <div id="feed_location" class="text-muted" style="font-size: 12px;">위치 정보</div>
+		                            </div>
+		                        </div>
+		                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		                            <span aria-hidden="true">&times;</span>
+		                        </button>
+		                    </div>
+		                    <div class="modal-body-content flex-fill p-3" style="overflow-y: auto;">
+		                        <div id="feed_detail_content" class="mb-3"></div>
+		                        <div id="feed_detail_replyList" class="comment-section"></div>
+		                    </div>
+		                    <div class="modal-footer border-top p-3 flex-column">
+		                        <div id="feed_detail_like" class="mb-2 d-flex align-items-center w-100">
+		                            <button id="likeButtonDetail" class="like-button btn p-0 mr-2">
+		                                <i class="heart-icon far fa-heart" style="font-size: 24px; color: #FF5A5F;"></i>
+		                            </button>
+		                            <span id="likeCountDetail"></span>개
+		                        </div>
+		                        <div id="like_reply" class="w-100">
+		                            <div class="form-group d-flex mb-0">
+		                                <input type="text" name="content" id="content${feedNo}" class="form-control mr-2" placeholder="댓글을 입력해주세요.." style="height: 40px;">
+		                                <button class="btn btn-primary" onclick="insertReply(${feedNo})">등록</button>
+		                            </div>
+		                        </div>
+		                    </div>
+		                </div>
+		            </div>
+		        </div>
+		    </div>
 		</div>
 		
 		<!-- 스토리 추가 모달 -->

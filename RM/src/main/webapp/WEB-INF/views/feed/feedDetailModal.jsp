@@ -13,32 +13,42 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 	<!-- 게시물 디테일 모달 -->
 		<div class="modal fade" id="modal_detail_feed" tabindex="-1" role="dialog" aria-labelledby="modal_detail_feed" aria-hidden="true">
-		    <div class="modal-dialog" role="document">
+		    <div class="modal-dialog modal-xl" role="document">
 		        <div class="modal-content">
-		            <div class="modal-header">
-		                <h5 class="modal-title" id="modal_detail_feed_title">게시물</h5>
-		                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
-		                    <span aria-hidden="true">&times;</span>                        
-		                </button>
-		            </div>
-		            <div class="modal-body">
-		                <img src="" id="feed_detail_img"> <!-- 게시글 디테일 이미지 -->
-		                <div id="feed_userId"></div>
-		                <div id="feed_location"></div>
-		                <div id="feed_detail_content"></div>
-		                <div id="feed_detail_replyList"></div> <!-- 댓글 리스트 영역 -->
-		                <div id="like_reply">
-		                    <div class="mb-3">
-		                        <button id="like_button">
-		                            <i class="fas fa-heart mr-1"></i>
+		            <div class="modal-body d-flex p-0">
+		                <div class="modal-image flex-fill">
+		                    <img src="" id="feed_detail_img" class="w-100 h-100" style="object-fit: cover;">
+		                </div>
+		                <div class="modal-details flex-fill d-flex flex-column">
+		                    <div class="modal-header">
+		                        <div class="d-flex align-items-center">
+		                            <img src="" id="feed_user_img" class="rounded-circle" alt="프로필 사진" style="width: 40px; height: 40px;">
+		                            <div class="ml-2">
+		                                <span class="username" id="feed_userId">사용자 이름</span>
+		                                <div id="feed_location" class="text-muted" style="font-size: 12px;">위치 정보</div>
+		                            </div>
+		                        </div>
+		                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		                            <span aria-hidden="true">&times;</span>
 		                        </button>
 		                    </div>
-		                    <!-- 댓글 작성 폼 -->
-		                    <div class="form-group">
-		                        <input type="text" name="content" id="content${feedNo}" placeholder="댓글을 입력해주세요..">
-		                        <label>
-		                            <button onclick="insertModal(this, ${feedNo})">등록</button>
-		                        </label>    
+		                    <div class="modal-body-content flex-fill p-3" style="overflow-y: auto;">
+		                        <div id="feed_detail_content" class="mb-3"></div>
+		                        <div id="feed_detail_replyList" class="comment-section"></div>
+		                    </div>
+		                    <div class="modal-footer border-top p-3 flex-column">
+		                        <div id="feed_detail_like" class="mb-2 d-flex align-items-center w-100">
+		                            <button id="likeButtonDetail" class="like-button btn p-0 mr-2">
+		                                <i class="heart-icon far fa-heart" style="font-size: 24px; color: #FF5A5F;"></i>
+		                            </button>
+		                            <span id="likeCountDetail"></span>개
+		                        </div>
+		                        <div id="like_reply" class="w-100">
+		                            <div class="form-group d-flex mb-0">
+		                                <input type="text" name="content" id="content${feedNo}" class="form-control mr-2" placeholder="댓글을 입력해주세요.." style="height: 40px;">
+		                                <button class="btn btn-primary" onclick="insertReply(${feedNo})">등록</button>
+		                            </div>
+		                        </div>
 		                    </div>
 		                </div>
 		            </div>
