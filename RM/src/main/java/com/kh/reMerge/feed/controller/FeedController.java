@@ -4,10 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import javax.mail.Session;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +58,11 @@ public class FeedController {
 		
 		ArrayList<Feed> list = feedService.selectList(pi);
 		
+		  for (Feed feed : list) {
+		        List<String> tags = feedService.getTagsByFeedNo(feed.getFeedNo());
+		        feed.setTags(tags);
+		    }
+		
 		
 		Map<String, Object> result = new HashMap<>();
 		result.put("pi", pi);
@@ -66,8 +74,7 @@ public class FeedController {
 	
 	//게시글 넣기
 	@PostMapping("insert.fe")
-	public String insertFeed(Feed f, @RequestPart MultipartFile upfile, HttpSession session) {
-		
+	public String insertFeed(Feed f, @RequestPart MultipartFile upfile, HttpSession session, @RequestParam(value="tags", required=false) String tags) {
 		if (!upfile.getOriginalFilename().equals("")) {
 			String changeName = saveFile(upfile,session);
 			f.setOriginName(upfile.getOriginalFilename());
@@ -77,6 +84,21 @@ public class FeedController {
 		int result = feedService.insertFeed(f);
 		
 		if (result > 0) {// 게시글 작성 성공
+			int feedNo = feedService.selectFeedNo();
+			f.setFeedNo(feedNo);
+			
+			if (tags != null && !tags.isEmpty()) {
+	            String[] tagArray = tags.split(",");
+	            List<Tag> tagList = new ArrayList<>();
+	            for (String tagContent : tagArray) {
+	                Tag tag = new Tag();
+	                tag.setTagContent(tagContent.trim());
+	                tag.setRefFno(f.getFeedNo());
+	                tagList.add(tag);
+	                feedService.insertTag(tag);
+	            }
+	        }
+			
 			session.setAttribute("alertMsg", "게시글이 등록 되었습니다.");
 			return "redirect:feed.fe";
 		} else {
@@ -209,7 +231,7 @@ public class FeedController {
 			Map<String, Object> result = new HashMap<>();
 		    try {
 		        int likeCheck = feedService.likeCheck(feedNo, userId);
-		        result.put("status", likeCheck > 0 ? "liked" : "unliked"); //좋아요 됐고 안 됐고 반펼
+		        result.put("status", likeCheck > 0 ? "liked" : "unliked"); //좋아요 됐고 안 됐고 반별
 	
 		        int likeCount = feedService.likeCount(feedNo);
 		        result.put("likeCount", likeCount);
@@ -218,164 +240,6 @@ public class FeedController {
 		    }
 		    return result;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	//태그 검색
 	@ResponseBody
@@ -400,7 +264,28 @@ public class FeedController {
 		return "/feed/tagDetail";
 	}
 	
+
 	
-	
+	//게시글 삭제
+	@PostMapping("delete.fe")
+	public String deleteFeed(int feedNo,String filePath,HttpSession session) {
+		
+		int result = feedService.deleteFeed(feedNo);
+		
+		if(result>0) {
+			if(!filePath.equals("")) {//넘어온 파일정보가 빈문자열이 아닐때(즉,있을때)
+				new File(session.getServletContext().getRealPath(filePath)).delete();
+			}
+				session.setAttribute("alertMsg", "게시글 삭제 성공!");
+		}else {
+				session.setAttribute("alertMsg", "게시글 삭제 실패");
+		}
+		return "redirect:feed.fe";
+	}
 	
 }
+	
+	
+	
+	
+

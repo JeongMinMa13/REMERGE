@@ -1,13 +1,18 @@
 package com.kh.reMerge.message.model.service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.kh.reMerge.message.model.vo.Message;
 
 public interface MessageService {
-    ArrayList<Message> getMessagesBetweenUsers(String sendId, String receiveId);
+    void saveMessage(Message message);
     
-    int saveMessage(Message message);
+    List<Message> getChatHistory(int messageRoomNo);
     
-    boolean sendMessage(Message message);
+    int getMessageRoomNo(String sendId, String receiveId);
+    
+    int createChatRoom(String sendId, String receiveId);
+    
+    
 }

@@ -202,7 +202,7 @@ public class UserController {
 		    model.addAttribute("userList", userList);
 		   
 		    for (User user : userList) {
-		        System.out.println(user);
+		        System.out.println("유저비동기"+user);
 		    }
 		    return "user/userList";
 		}
