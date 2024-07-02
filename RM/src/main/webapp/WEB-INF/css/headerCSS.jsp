@@ -15,10 +15,7 @@ body {
 	font-family: 'Arial', sans-serif;
 }
 
-.outer{
-	width: calc(100% - 250px); 
-	margin-left:250px;
-}
+.outer{width: calc(100% - 250px); margin-left:250px;}
 
 header {
 	display: flex;
@@ -119,14 +116,19 @@ header {
     overflow: hidden;
     border-radius: 100%;
 }
+.searchUserResult ul li button {
+	background-color: #ffffff;
+	border: 0px;
+	
+}
 .searchUserResult ul li p {
     font-size: 14px;
 }
 .searchUserResult ul li p .userId {
 	display:block;
 }
-.searchUserResult ul li p .email {
-	color:##737373;
+.searchUserResult ul li p .memo {
+	color:#737373;
 }
 
 </style>

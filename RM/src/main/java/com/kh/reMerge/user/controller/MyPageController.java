@@ -136,6 +136,7 @@ public class MyPageController {
 			}
 		}
 
+
 		int result = mypageService.updateProfile(u);
 
 		if (result > 0) {
@@ -147,46 +148,50 @@ public class MyPageController {
 		} else {
 			session.setAttribute("alertMsg", "사진 수정 실패");
 			return "myPage/updatePage";
+		}
+	}
+
+
+		//파일 업로드 처리 메소드(재활용)
+		public String saveFile(MultipartFile upfile ,HttpSession session) {
+			
+			//파일명 수정작업하기 
+			//1.원본파일명 추출
+			String profileOriginName = upfile.getOriginalFilename();
+			
+			//2.시간형식 문자열로 만들기 
+			//20240527162730
+			String currentTime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+			
+			//3.확장자 추출하기 파일명 뒤에서부터 . 찾아서 뒤로 잘라내기 
+			String ext = profileOriginName.substring(profileOriginName.lastIndexOf("."));
+			
+			//4.랜덤값 5자리 뽑기 
+			int ranNum = (int)(Math.random()*90000+10000);
+			
+			//5.하나로 합쳐주기 
+			String profileChangePath = currentTime+ranNum+ext;
+			
+			//6.업로드하고자하는 물리적인 경로 알아내기 (프로젝트 내에 저장될 실제 경로 찾기)
+			String savePath = session.getServletContext().getRealPath("/resources/profile/");
+			
+			try {
+				//7.경로와 수정 파일명을 합쳐서 파일 업로드 처리하기
+				upfile.transferTo(new File(savePath+profileChangePath));
+				
+			} catch (IllegalStateException | IOException e) {
+				
+				e.printStackTrace();
+			}
+			
+			return profileChangePath;
+			
 
 		}
 
-	}
+	
 
-	// 파일 업로드 처리 메소드(재활용)
-	public String saveFile(MultipartFile upfile, HttpSession session) {
-
-		// 파일명 수정작업하기
-		// 1.원본파일명 추출
-		String profileOriginName = upfile.getOriginalFilename();
-
-		// 2.시간형식 문자열로 만들기
-		// 20240527162730
-		String currentTime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-
-		// 3.확장자 추출하기 파일명 뒤에서부터 . 찾아서 뒤로 잘라내기
-		String ext = profileOriginName.substring(profileOriginName.lastIndexOf("."));
-
-		// 4.랜덤값 5자리 뽑기
-		int ranNum = (int) (Math.random() * 90000 + 10000);
-
-		// 5.하나로 합쳐주기
-		String profileChangePath = currentTime + ranNum + ext;
-
-		// 6.업로드하고자하는 물리적인 경로 알아내기 (프로젝트 내에 저장될 실제 경로 찾기)
-		String savePath = session.getServletContext().getRealPath("/resources/profile/");
-		
-		try {
-			// 7.경로와 수정 파일명을 합쳐서 파일 업로드 처리하기
-			upfile.transferTo(new File(savePath + profileChangePath));
-
-		} catch (IllegalStateException | IOException e) {
-
-			e.printStackTrace();
-		}
-
-		return profileChangePath;
-
-	}
+	
 
 	// 회원탈퇴 메소드
 	@RequestMapping("delete.us")

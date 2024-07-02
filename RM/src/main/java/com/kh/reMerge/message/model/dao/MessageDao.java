@@ -13,8 +13,8 @@ import com.kh.reMerge.message.model.vo.Message;
 @Repository
 public class MessageDao {
 
-    public void saveMessage(SqlSessionTemplate sqlSession, Message message) {
-        sqlSession.insert("messageMapper.saveMessage", message);
+    public int saveMessage(SqlSessionTemplate sqlSession, Message message) {
+        return sqlSession.insert("messageMapper.saveMessage", message);
     }
 
     public List<Message> getChatHistory(SqlSessionTemplate sqlSession, int messageRoomNo) {
@@ -35,6 +35,6 @@ public class MessageDao {
         params.put("receiveId", receiveId);
         return sqlSession.insert("messageMapper.createChatRoom", params);
     }
-    
+
     
 }
