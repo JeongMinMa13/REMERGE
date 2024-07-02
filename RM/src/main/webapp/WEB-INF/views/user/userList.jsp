@@ -10,16 +10,7 @@
 <body>
     <%@include file="/WEB-INF/views/user/loginHeader.jsp" %>
 
-    <div class="container">
-        <div class="menu-bar">
-            <!-- 좌측 메뉴 -->
-            <table class="left-menu">
-                <tr>
-                    <td>메뉴 아이콘</td>
-                </tr>
-            </table>
-        </div>
-
+    <div class="outer">
         <div class="table-container">
             <table class="sel">
                 <thead>
