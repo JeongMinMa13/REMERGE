@@ -130,7 +130,7 @@
     </select>
 		
 	<select id="searchTag" parameterType="Tag" resultType="Tag">
-		SELECT TAG_CONTENT tagContent, REF_FNO refFno FROM TAG WHERE TAG_CONTENT LIKE '%'||#{tagContent}||'%'
+		SELECT TAG_CONTENT tagContent, MIN(REF_FNO) refFno FROM TAG WHERE TAG_CONTENT LIKE '%'||#{tagContent}||'%' GROUP BY TAG_CONTENT
 	</select>
 
 	<select id="selectTag" parameterType="Tag" resultMap="feedResultSet">
