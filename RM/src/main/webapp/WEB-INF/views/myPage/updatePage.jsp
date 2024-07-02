@@ -57,7 +57,7 @@
                     <label for="upfile" class="upfilebtn" >사진 변경</label>
                     <input type="file" id="upfile" class="form-control-file border" name="upfile" style="display: none;"><Br>
                     <button type="submit">완료</button>
-                    <button type="reset">삭제</button>
+                   
                    </form>
                 </div> 
 					

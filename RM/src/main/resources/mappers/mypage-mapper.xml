@@ -18,8 +18,23 @@
 		<result column="USER_MEMO" property="userMemo" />
 		<result column="PROFILE_ORIGINNAME"	property="profileOriginName" />
 		<result column="PROFILE_CHANGENAME"	property="profileChangeName" />
-		
 	</resultMap>
+	
+	<resultMap type="FollowList" id="followResultSet">
+		<result column="TO_USER" property="toUser" />
+		<result column="FROM_USER" property="fromUser" />
+	</resultMap>
+	
+	<resultMap type="Feed" id="feedResultSet">
+			<result column="FEED_NO" property="feedNo"/>
+			<result column="FEED_CONTENT" property="feedContent"/>
+			<result column="FEED_WRITER" property="feedWriter"/>
+			<result column="CREATE_DATE" property="createDate"/>
+			<result column="ORIGIN_NAME" property="originName"/>
+			<result column="CHANGE_NAME" property="changeName"/>
+			<result column="STATUS" property="status"/>
+			<result column="FEED_LOCATION" property="feedLocation"/>
+		</resultMap>
 	
 	<select id="loginUser" resultMap="userResultSet">
 		SELECT *
@@ -65,6 +80,33 @@
 		WHERE USER_ID = #{userId}
 		AND STATUS = 'Y'
 	</update>
+	
+	<select id="countFollowing" resultType="_int" parameterType="string">
+		SELECT COUNT (TO_USER)
+		FROM FOLLOWLIST
+		WHERE FROM_USER= #{fromUser}
+	</select>
+	
+	<select id="countFollower" resultType="_int" parameterType="string">
+		SELECT COUNT (FROM_USER)
+		FROM FOLLOWLIST
+		WHERE TO_USER= #{toUser}
+	</select>
+	
+ 	<select id="countFeed" resultType="_int" parameterType="string">
+		  SELECT COUNT (*)
+   		 FROM FEED
+    	WHERE FEED_WRITER= #{feedWriter}
+	</select>
+	
+	<select id="followList" resultType="FollowList" parameterType="_int">
+	SELECT TO_USER
+	FROM FOLLOWLIST
+	WHERE FROM_USER = #{fromUser}
+	
+	</select>
+
+	
 
 
 

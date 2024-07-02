@@ -6,14 +6,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
-.sidebar{
-	body {
-	height: auto;
-	margin: 0;
-	padding: 0;
-	background-color: #fafafa;
-	font-family: 'Arial', sans-serif;
-}
+
 body {
 	height: auto;
 	margin: 0;
@@ -22,7 +15,10 @@ body {
 	font-family: 'Arial', sans-serif;
 }
 
-.outer{width: calc(100% - 250px); margin-left:250px;}
+.outer{
+	width: calc(100% - 250px); 
+	margin-left:250px;
+}
 
 header {
 	display: flex;

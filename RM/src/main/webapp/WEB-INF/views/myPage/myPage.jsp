@@ -36,19 +36,15 @@
 				<div class="form-group">
 				<!-- null일때 -->
 				<c:choose>
-<<<<<<< HEAD
-					<c:when test="${user.profileChangeName eq null }">  
-					 <img id="profile" src="resources/unknown.jpg" width="100" height="100" > &nbsp; ${user.userId } &nbsp; &nbsp; &nbsp; 게시물 
-					&nbsp; 팔로잉 ${user.toUser } 팔로워 ${user.fromUser }; &nbsp;
-=======
+					
+				
 					<c:when test="${user.profileChangeName eq null }">
-					 <img id="profile" src="resources/unknown.jpg" width="100" height="100" > &nbsp; ${user.userId } &nbsp; &nbsp; &nbsp; 게시물
-					&nbsp; 팔로잉 &nbsp; 팔로워 &nbsp; &nbsp;
->>>>>>> refs/remotes/origin/main
+					 <img id="profile" src="resources/unknown.jpg" width="100" height="100" > &nbsp; ${user.userId } &nbsp; &nbsp; &nbsp; 게시물 ${feedCount }
+					&nbsp; 팔로잉  ${followingCount }   팔로워 ${followerCount }  &nbsp; &nbsp;
 				</c:when>
 				<c:otherwise>
-				<img style="border-radius:70%" id="profile" src="${user.profileChangeName }" width="100" height="100" > &nbsp; ${user.userId } &nbsp; &nbsp; &nbsp; 게시물
-					&nbsp; 팔로잉 &nbsp; 팔로워 &nbsp; &nbsp;
+				<img style="border-radius:70%" id="profile" src="${user.profileChangeName }" width="100" height="100" > &nbsp; ${user.userId } &nbsp; &nbsp; &nbsp; 게시물 ${feedCount }
+					&nbsp; 팔로잉  ${followingCount}  팔로워 ${followerCount } &nbsp; &nbsp;
 					
 				</c:otherwise>	
 				</c:choose>
@@ -56,7 +52,7 @@
 				<!-- null 아닐때 -->
 					<c:if test="${loginUser.userId eq user.userId }">
 							<a href="updatePage.us" class="button-link">프로필 편집</a>
-							<button type="button" id="shareProfile" class="button-link"></button>
+							
 					</c:if>
 					
 					<c:if test="${loginUser.userId ne user.userId }">
