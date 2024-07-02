@@ -247,7 +247,7 @@ public class UserController {
 		u.setEmail(pwForEmail);
 		u.setUserId(userId);
 		
-		int result =userService.accEmail(u);
+		int result = userService.accEmail(u);
 		
 		
 		if(result >0) { //아이디 및 이메일이 일치 할때

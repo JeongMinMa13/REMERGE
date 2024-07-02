@@ -107,6 +107,11 @@
 		AND STATUS='Y'
 	</update>
 	
+	<!-- 메시지용 - 중구 -->
+	<select id="getAllUsers" resultMap="userResultSet">
+		SELECT * FROM USERS
+	</select>
+	
 	<select id="accEmail" parameterType="User" resultType="_int">
 		SELECT COUNT(*)
 		FROM USERS

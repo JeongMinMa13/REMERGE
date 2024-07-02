@@ -513,10 +513,10 @@
 						str += '    <div class="con" data-feed-no="' + feed.feedNo + '">';
 						str += '        <div class="title">';
 						str += '            <img src="" alt="" class="img">';
-						str += '            <p>' + feed.feedWriter + '</p>'; // 작성자 예시
 						str += '        </div>';
 						str += '        <img src="' + feed.changeName + '" alt="" class="con_img">'; // 이미지 예시
-						str += '        <div class="logos">';
+						str += '        <div class="logos">';            <p>' + feed.feedWriter + '</p>'; // 작성자 예시
+						str += '
 						str += '            <div class="logos_left">';
 						str += '            <button id="likeButton' + feed.feedNo + '" class="like-button" data-feed-no="' + feed.feedNo + '" data-user-id="' + '${loginUser.userId}' + '" onclick="toggleLike(' + feed.feedNo + ', \'' + '${loginUser.userId}' + '\')">';
 						str += '                <i class="heart-icon far fa-heart" style="font-size: 30px; color: #ff5a5f;"></i>';

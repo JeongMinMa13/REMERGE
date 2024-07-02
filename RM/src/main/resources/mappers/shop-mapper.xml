@@ -2,7 +2,20 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="userMapper">
+<mapper namespace="shopMapper">
+	<resultMap type="Shop" id="shopResultSet">
+		<result column="SHOP_NO" property="shopNo" />
+		<result column="SHOP_STATUS" property="shopStatus" />
+		<result column="BRANDNAMELIST" property="brandNameList" />
+		<result column="BRANDLIST" property="brandList" />
+		<result column="BRANDSIZE" property="brandSize" />
+		<result column="KRW" property="KRW" />
+		<result column="INVEN" property="inven" />
+		<result column="FILEPATH" property="filePath" />
+		<result column="MODELNAME" property="modelName" />
+		<result column="ADDRESS" property="shopAddress" />
+	</resultMap>
+	
 	<resultMap type="User" id="userResultSet">
 		<result column="USER_ID" property="userId" />
 		<result column="USER_PWD" property="userPwd" />
@@ -15,7 +28,31 @@
 		<result column="SHOP_BRANDCHEK" property="shopBrandChek" />
 		<result column="USER_MEMO" property="userMemo" />
 	</resultMap>
-	<select id="loginUser" resultMap="userResultSet">
+	
+	<update id="UpdateStatus" parameterType="User">
+		UPDATE USERS
+		SET SHOP_BRANDCHEK = 'Y'
+		WHERE USER_ID = #{userId}
+		AND STATUS = 'Y'
+	</update> 
+	
+	<select id="selectAllShop" resultMap="shopResultSet">
+		SELECT SHOP_NO,
+        SHOP_STATUS,
+        BRANDNAMELIST,
+        BRANDLIST,
+        BRANDSIZE,
+        KRW,
+        INVEN,
+        FILEPATH,
+        MODELNAME,
+        ADDRESS
+		FROM SHOP
+		WHERE BRANDNAMELIST = #{brandList}
+		AND BRANDLIST = #{brandNameList}
+	</select>
+	
+	<!-- <select id="loginUser" resultMap="userResultSet">
 		SELECT *
 		FROM USERS
 		WHERE USER_ID = #{userId}
@@ -23,7 +60,7 @@
 		STATUS = 'Y'
 	</select>
 	
-	<!-- <select id="loginUser" resultMap="userResultSet">
+	 <select id="loginUser" resultMap="userResultSet">
 		SELECT USER_ID,
 		USER_PWD,
 		EMAIL,
@@ -36,7 +73,7 @@
 		WHERE USER_ID = #{userId}
 		AND
 		STATUS = 'Y'
-	</select> -->
+	</select> 
 	<insert id="insertUser" parameterType="User">
 		INSERT INTO USERS(USER_ID,
 						USER_PWD,
@@ -68,16 +105,10 @@
 		,USER_MEMO =#{userMemo}
 		WHERE USER_ID=#{userId}
 		AND STATUS='Y'
-	</update>
+	</update> -->
 	
-	<update id="updatePwd" parameterType="User">
-		UPDATE USERS
-		SET USER_PWD=#{userPwd}
-		WHERE USER_ID=#{userId}
-		AND STATUS='Y'
-	</update>
 	
-	<select id="selectUser" parameterType="string" resultMap="userResultSet">
+	<!-- <select id="selectUser" parameterType="string" resultMap="userResultSet">
 		SELECT USER_ID,EMAIL,USER_MEMO,PROFILE_PATH,PROFILE_CHANGENAME, PROFILE_ORIGINNAME FROM USERS WHERE USER_ID=#{userId}
 	</select>
 	
@@ -107,11 +138,6 @@
 		AND STATUS='Y'
 	</update>
 	
-	<!-- 메시지용 - 중구 -->
-	<select id="getAllUsers" resultMap="userResultSet">
-		SELECT * FROM USERS
-	</select>
-	
 	<select id="accEmail" parameterType="User" resultType="_int">
 		SELECT COUNT(*)
 		FROM USERS
@@ -134,5 +160,5 @@
 	
 	<delete id="deleteSearchHistory" parameterType="SearchHistory">
 		DELETE FROM SEARCH_HISTORY WHERE FROM_USER=#{fromUser} AND SEARCH_USER=#{searchUser}
-	</delete>
+	</delete> -->
 </mapper>
