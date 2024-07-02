@@ -17,7 +17,14 @@
 					<ul>
 						<c:forEach var='u' items='${followList}'>
 							<li class="followUser" onclick="selectId('${u.userId}');">
-								<span class="profileImage"><img src="${u.profilePath }"></span>
+								<c:choose>
+									<c:when test="${u.profileChangeName eq null} ">
+										<span class="profileImage"><img src="resources/unknown.jpg"></span>
+									</c:when>
+									<c:otherwise>
+										<span class="profileImage"><img src="${u.profileChangeName }"></span>
+									</c:otherwise>
+								</c:choose>
 								<p>
 									<strong class="userId">${u.userId }</strong>
 									<span class="memo">${u.userMemo }</span>

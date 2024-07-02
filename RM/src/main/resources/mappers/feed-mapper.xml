@@ -130,7 +130,7 @@
     </select>
 		
 	<select id="searchTag" parameterType="Tag" resultType="Tag">
-		SELECT TAG_CONTENT tagContent, REF_FNO refFno FROM TAG WHERE TAG_CONTENT LIKE '%'||#{tagContent}||'%'
+		SELECT TAG_CONTENT tagContent, MIN(REF_FNO) refFno FROM TAG WHERE TAG_CONTENT LIKE '%'||#{tagContent}||'%' GROUP BY TAG_CONTENT
 	</select>
 
 	<select id="selectTag" parameterType="Tag" resultMap="feedResultSet">
@@ -168,6 +168,30 @@
      FROM TAG
      WHERE REF_FNO = #{feedNo}
 	</select>
+	
+	<insert id="insertReplyLike" parameterType="ReplyLike">
+		INSERT INTO REPLY_LIKE(USER_ID,REPLY_NO)
+		VALUES (#{userId},#{replyNo})
+	</insert>
+	
+	<delete id="deleteReplyLike" parameterType="ReplyLike">
+		DELETE FROM REPLY_LIKE
+		WHERE USER_ID = #{userId}
+		AND REPLY_NO = #{replyNo}
+	</delete>
+	
+	<select id="checkReplyLike" parameterType="ReplyLike" resultType="_int">
+		SELECT COUNT(*)
+        FROM REPLY_LIKE
+        WHERE REPLY_NO = #{replyNo}
+        AND USER_ID = #{userId}
+	</select>
+	
+	<select id="countReplyLikes" parameterType="_int" resultType="_int">
+        SELECT COUNT(*)
+        FROM REPLY_LIKE
+        WHERE REPLY_NO = #{replyNo}
+    </select>
 	
 	
 	
