@@ -1,10 +1,15 @@
 package com.kh.reMerge.message.model.service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.reMerge.message.model.dao.MessageDao;
 import com.kh.reMerge.message.model.vo.Message;
@@ -18,8 +23,8 @@ public class MessageServiceImpl implements MessageService {
     private MessageDao messageDao;
 
     @Override
-    public void saveMessage(Message message) {
-        messageDao.saveMessage(sqlSession, message);
+    public int saveMessage(Message message) {
+        return messageDao.saveMessage(sqlSession, message);
     }
 
     @Override
@@ -38,6 +43,6 @@ public class MessageServiceImpl implements MessageService {
         int messageRoomNo = messageDao.createChatRoom(sqlSession, sendId, receiveId);
         return messageRoomNo;
     }
-    
+
     
 }
