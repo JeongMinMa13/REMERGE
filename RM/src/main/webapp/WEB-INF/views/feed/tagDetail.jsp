@@ -6,10 +6,10 @@
 <head>
 <meta charset="UTF-8">
 <title>#${tag.tagContent }</title>
+
 </head>
 <body>
-	<%@include file="../user/loginHeader.jsp" %>
-	
+	<%@include file="feedDetailModal.jsp" %>	
 	<div class="outer">
 		<div class="tagListTitle">
 			<div class="tagInfo">
@@ -24,11 +24,13 @@
 					<div>조회된 게시글이 없습니다.</div>						
 				</c:when>
 				<c:otherwise>
-					<c:forEach var="f" items="${tagList }">
-						<div class="feedBlock">
-							<img src="${f.changeName}">
+						<div class="feedBox">
+							<c:forEach var="f" items="${tagList }">
+								<div class="feedBlock" onclick="detailView(${f.feedNo});">
+									<img class="feedBlockImg" src="${f.changeName}" >
+								</div>
+							</c:forEach>		
 						</div>
-					</c:forEach>		
 				</c:otherwise>
 			</c:choose>
 		</div>

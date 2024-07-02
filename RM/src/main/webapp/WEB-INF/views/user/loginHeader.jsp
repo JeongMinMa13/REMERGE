@@ -33,6 +33,7 @@
                     <li><div class="menu-item" id="store"><img src="resources/store.png">스토어</div></li>
                     <li><div class="menu-item" id="profile"><a href="myPage.us?userId=${loginUser.userId}"><img src="resources/unknown.jpg">프로필</a></div></li>
                     <li><div class="menu-item" id="calendarIcon"><a href="calendar.sc"><img src="resources/calendaricon.png">캘린더</a></div></li>
+                    <li><div class="menu-item" id="festivalIcon"><a href="festival.fs"><img src="resources/festivalIcon.png">축제</a></div></li>
                 </ul>
             </nav>
         </div>
@@ -211,7 +212,7 @@
     				searchUser:data.userId
     			},
     			success:function(data){
-    				console.log(data);
+    				
     				$(e.target).closest('li').hide();//x 버튼 눌렸을때 해당 기록 지워주기(부모 li요소 숨기기)
     			},
     			error:function(){

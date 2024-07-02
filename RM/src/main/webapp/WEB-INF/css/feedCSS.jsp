@@ -268,40 +268,63 @@ header {
 }
 
 <!--모달-->
-
 .modal-content {
-    background-color: #fff;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    border: none;
+}
+
+.modal-header, .modal-footer {
+    border: none;
 }
 
 .modal-header {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     background-color: #007bff;
     color: #fff;
-    border-bottom: none;
 }
 
 .modal-title {
-    font-weight: bold;
+    font-size: 18px;
+    font-weight: 600;
 }
 
 .modal-body {
+    padding: 0;
+}
+
+.thumbnail-container, .form-group, .hashTag {
     padding: 20px;
 }
 
-.modal-footer {
-    border-top: none;
+.thumbnail-container img {
+    width: 100%;
+    height: auto;
+    display: block;
 }
 
-.modal-footer button {
-    padding: 10px 20px;
-    border-radius: 20px;
-    background-color: #007bff;
-    color: #fff;
+.btn-primary {
+    background-color: #0095f6;
+    border-color: #0095f6;
+    border-radius: 4px;
+    padding: 5px 15px;
+    font-weight: 600;
 }
 
-.modal-footer button:hover {
-    background-color: #0056b3;
+.btn-primary:hover {
+    background-color: #007bb5;
+    border-color: #007bb5;
+}
+
+.close {
+    font-size: 20px;
+}
+
+.close:hover {
+    color: #ff5a5f;
 }
 
 /* 썸네일 스타일 */
@@ -342,6 +365,25 @@ header {
     color: #ff5a5f;
 }
 
+/* 태그 검색시 보여지는 tagDetail View CSS */
+.feedBox {
+	display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.feedBlock{
+	height: 22.7vw;
+    flex: 0 0 30%;
+    box-sizing: border-box;
+    margin: 16px;
+    border-radius: 5%;
+    overflow: hidden;
+    position: relative;
+}
+.feedBlock::before {content:''; position:absolute; top:0; left:0; bottom:0; right:0; background-color:#000; opacity:0;}
+.feedBlock:hover::before{opacity:0.3;}
+.feedBlock img {width:100%; height:100%;}
 
 </style>
 </head>
