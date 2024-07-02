@@ -20,6 +20,7 @@
 		<typeAlias type="com.kh.reMerge.feed.model.vo.History" alias="History"/>
 		<typeAlias type="com.kh.reMerge.feed.model.vo.FeedLike" alias="FeedLike"/>
 		<typeAlias type="com.kh.reMerge.feed.model.vo.Tag" alias="Tag"/>
+		<typeAlias type="com.kh.reMerge.feed.model.vo.ReplyLike" alias="ReplyLike"/>
 		
  	</typeAliases>
  	
