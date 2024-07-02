@@ -1,6 +1,7 @@
 package com.kh.reMerge.feed.model.service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -55,6 +56,17 @@ public interface FeedService {
 	//태그된 게시글 조회해오기
 	ArrayList<Feed> selectTag(Tag tag);
 	
+	//게시글 삭제하기
+	int deleteFeed(int feedNo);
+	
+	//태그 넣기
+	int insertTag(Tag tag);
+	
+	//번호 하나 추출하기
+	int selectFeedNo();
+	
+	//태그 리스트
+	List<String> getTagsByFeedNo(int feedNo);
 	
 	
 	

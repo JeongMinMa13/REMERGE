@@ -1,6 +1,7 @@
 package com.kh.reMerge.feed.model.service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,5 +106,32 @@ public class FeedServiceImpl implements FeedService {
 
 		return feedDao.selectTag(sqlSession,tag);
 	}
+
+	@Override
+	public int deleteFeed(int feedNo) {
+		
+		return feedDao.deleteFeed(sqlSession,feedNo);
+	}
+	
+	//태그 넣기
+	@Override
+	public int insertTag(Tag tag) {
+		
+		return feedDao.insertTag(sqlSession,tag);
+	}
+
+	@Override
+	public int selectFeedNo() {
+		// TODO Auto-generated method stub
+		return feedDao.selectFeedNo(sqlSession);
+	}
+
+	@Override
+	public List<String> getTagsByFeedNo(int feedNo) {
+		
+		return feedDao.getTagsByFeedNo(sqlSession,feedNo);
+	}
+
+
 
 }

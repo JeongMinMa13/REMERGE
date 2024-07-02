@@ -46,12 +46,17 @@ public class MyPageController {
 		if (result > 0) {// 팔로우 되어 있다면 true
 			followFlag = true;
 			
+	
+			
 		}
-		System.out.println("마이페이지에서 찍힌 유저:"+u);
+		
 		session.setAttribute("user", u);
 		session.setAttribute("followFlag", followFlag);
 
 		return "myPage/myPage";
+		
+		
+		
 	}
 
 	// 프로필 편집 페이지로 이동

@@ -18,6 +18,7 @@
 		<result column="USER_MEMO" property="userMemo" />
 		<result column="PROFILE_ORIGINNAME"	property="profileOriginName" />
 		<result column="PROFILE_CHANGENAME"	property="profileChangeName" />
+		
 	</resultMap>
 	
 	<select id="loginUser" resultMap="userResultSet">
@@ -64,6 +65,7 @@
 		WHERE USER_ID = #{userId}
 		AND STATUS = 'Y'
 	</update>
+
 
 
 

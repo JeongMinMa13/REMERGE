@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
@@ -16,9 +17,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
+
 import com.kh.reMerge.user.model.service.UserService;
 import com.kh.reMerge.user.model.vo.FollowList;
+import com.kh.reMerge.user.model.vo.SearchHistory;
 import com.kh.reMerge.user.model.vo.User;
 @Controller
 public class UserController {
@@ -193,7 +195,6 @@ public class UserController {
 			return resultPw;
 		}
 
-		
 		// 메시지용 - 중구
 		@RequestMapping("userList.us")
 		public String userList(Model model) {
@@ -201,7 +202,7 @@ public class UserController {
 		    model.addAttribute("userList", userList);
 		   
 		    for (User user : userList) {
-		        System.out.println(user);
+		        System.out.println("유저비동기"+user);
 		    }
 		    return "user/userList";
 		}
@@ -311,10 +312,29 @@ public class UserController {
 		
 	}
 	
+	//검색 기록 넣기 
+	@ResponseBody
+	@PostMapping("insertSearchHistory.us")
+	public int insertSearchHistory(SearchHistory searchHistory) {
+
+		return userService.insertSearchHistory(searchHistory);
+	}
 	
+	//검색 기록 조회
+	@ResponseBody
+	@PostMapping("selectSearchHistory.us")
+	public ArrayList<User> selectSearchHistory(String userId){
+
+		return userService.selectSearchHistory(userId);
+	}
 	
-	
-	
+	//검색 기록 삭제
+	@ResponseBody
+	@PostMapping("deleteSearchHistory.us")
+	public int deleteSearchHistory(SearchHistory searchHistory) {
+		
+		return userService.deleteSearchHistory(searchHistory);
+	}
 	
 	
 	

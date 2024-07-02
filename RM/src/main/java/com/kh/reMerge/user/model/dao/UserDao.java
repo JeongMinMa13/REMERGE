@@ -6,6 +6,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.kh.reMerge.user.model.vo.FollowList;
+import com.kh.reMerge.user.model.vo.SearchHistory;
 import com.kh.reMerge.user.model.vo.User;
 
 @Repository
@@ -80,5 +81,23 @@ public class UserDao {
 
 	public int accEmail(SqlSessionTemplate sqlSession, User u) {
 		return sqlSession.selectOne("userMapper.accEmail",u);
+	}
+
+	//검색기록 넣기
+	public int insertSearchHistory(SqlSessionTemplate sqlSession, SearchHistory searchHistory) {
+
+		return sqlSession.insert("userMapper.insertSearchHistory", searchHistory);
+	}
+
+	//검색 기록 조회
+	public ArrayList<User> selectSearchHistory(SqlSessionTemplate sqlSession, String userId) {
+
+		return (ArrayList)sqlSession.selectList("userMapper.selectSearchHistory", userId);
+	}
+
+	//검색 기록 삭제
+	public int deleteSearchHistory(SqlSessionTemplate sqlSession, SearchHistory searchHistory) {
+
+		return sqlSession.delete("userMapper.deleteSearchHistory", searchHistory);
 	}
 }

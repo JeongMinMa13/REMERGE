@@ -1,6 +1,7 @@
 package com.kh.reMerge.feed.model.vo;
 
 import java.sql.Date;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,4 +20,6 @@ public class Feed {
 	private String status;
 	private int likeCount;
 	private String feedLocation;
+	
+	private List<String> tags;
 }

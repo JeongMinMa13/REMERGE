@@ -1,4 +1,3 @@
-
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -14,13 +13,12 @@
 	grid-template-columns: 1fr 1fr 1fr;;
 	gap: 0px;
 }
-
 .button-link {
 	display: inline-block;
 	padding: 10px 15px;
 	font-size: 15px;
 	color: black;
-	background-color: #dcdee0;
+	background-color: #DCDEE0;
 	text-decoration: none;
 	border-radius: 4px;
 	border: none;
@@ -28,23 +26,27 @@
 	text-align: center;
 }
 </style>
-
 <body>
 	 <%@include file="/WEB-INF/views/user/loginHeader.jsp" %>
 	<div class="outer">
 		<br> <br>
 		<div class="innerOuter">
-
 			<br>
 			
-				<div class="form-group"> 
+				<div class="form-group">
 				<!-- null일때 -->
 				<c:choose>
+<<<<<<< HEAD
 					<c:when test="${user.profileChangeName eq null }">  
 					 <img id="profile" src="resources/unknown.jpg" width="100" height="100" > &nbsp; ${user.userId } &nbsp; &nbsp; &nbsp; 게시물 
 					&nbsp; 팔로잉 ${user.toUser } 팔로워 ${user.fromUser }; &nbsp;
+=======
+					<c:when test="${user.profileChangeName eq null }">
+					 <img id="profile" src="resources/unknown.jpg" width="100" height="100" > &nbsp; ${user.userId } &nbsp; &nbsp; &nbsp; 게시물
+					&nbsp; 팔로잉 &nbsp; 팔로워 &nbsp; &nbsp;
+>>>>>>> refs/remotes/origin/main
 				</c:when>
-				<c:otherwise> 
+				<c:otherwise>
 				<img style="border-radius:70%" id="profile" src="${user.profileChangeName }" width="100" height="100" > &nbsp; ${user.userId } &nbsp; &nbsp; &nbsp; 게시물
 					&nbsp; 팔로잉 &nbsp; 팔로워 &nbsp; &nbsp;
 					
@@ -96,12 +98,7 @@
 		</div>
 		<hr>
 </body>
-
-
-
-	  
-
-
+	 
 <script>
 	function follow(){
 		$.ajax({
@@ -150,7 +147,4 @@
 	
 	
 </script>
-
-
 </html>
-
