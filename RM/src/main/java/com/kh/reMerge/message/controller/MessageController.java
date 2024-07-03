@@ -1,11 +1,14 @@
 package com.kh.reMerge.message.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,8 +17,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kh.reMerge.message.model.service.MessageService;
 import com.kh.reMerge.message.model.vo.Message;
 import com.kh.reMerge.message.server.MessageServer;
@@ -38,22 +42,15 @@ public class MessageController {
     @ResponseBody
     public int getChatRoom(HttpSession session, @RequestParam("receiveId") String receiveId) {
         User loginUser = (User) session.getAttribute("loginUser");
-        if (loginUser == null) {
-            throw new IllegalArgumentException("로그인 정보가 없습니다.");
-        }
 
         String sendId = loginUser.getUserId();
-//        System.out.println("겟챗룸 센드아이디 확인: " + sendId);
-//        System.out.println("겟챗룸 리시브아이디 확인: " + receiveId);
         
         // 메시지가 있는지 확인하여 채팅방 번호를 받아옴
         int messageRoomNo = messageService.getMessageRoomNo(sendId, receiveId);
-        System.out.println("기존 채팅방이 있을때: " + messageRoomNo);
 
         // 채팅방이 없으면 새로 생성
         if (messageRoomNo == 0) {
             messageRoomNo = messageService.createChatRoom(sendId, receiveId);
-            System.out.println("새로운 채팅방 생성 : " + messageRoomNo);
         }
         return messageRoomNo;
     }
@@ -66,4 +63,21 @@ public class MessageController {
     }
     
     
+    public String saveFile(MultipartFile upfile, HttpSession session) {
+        String originName = upfile.getOriginalFilename();
+        String currentTime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+        String ext = originName.substring(originName.lastIndexOf("."));
+        int ranNum = (int)(Math.random()*90000 + 10000);
+        String changeName = currentTime + ranNum + ext;
+        String savePath = session.getServletContext().getRealPath("/resources/uploadFiles/");
+
+        try {
+            upfile.transferTo(new File(savePath + changeName));
+        } catch (IllegalStateException | IOException e) {
+            e.printStackTrace();
+        }
+
+        return changeName;
+    }
+
 }
