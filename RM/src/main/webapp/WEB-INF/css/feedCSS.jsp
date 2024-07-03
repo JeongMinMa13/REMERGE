@@ -66,14 +66,17 @@ header {
 	justify-content: flex-end;
 	padding-right: 250px;
 }
+
 .title .info {
     display: flex;
     flex-direction: column;
 }
+
 .title .username {
     font-weight: bold;
     margin-left: 10px;
-}
+    }
+    
 .con_wrap {
 	display: flex;
 	justify-content: center;
@@ -102,12 +105,14 @@ header {
     font-size: 16px;
     font-weight: bold;;
 }
+
 .title .location {
     font-size: 12px;
     margin-left: 10px;
     color: gray;
     display: inline-block;
 }
+
 .con_img {
 	width: 100%;
     height: auto;
@@ -375,9 +380,11 @@ header {
 .close:hover {
     color: #FF5A5F;
 }
+
 .modal-lg {
     max-width: 800px;
 }
+
 /* 썸네일 스타일 */
 .thumbnail-container {
     max-width: 300px;
@@ -392,6 +399,8 @@ header {
 #thumbnailFeed{
 	display:none;
 }
+
+
 /* 스토리 미리 보기 칸  */
 #thumbnailContainer{
 	display:none;
