@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,22 +19,17 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=91ad4af1e5f058ed4f88efab8357dc34&libraries=services,clusterer"></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-
 </head>
 <body>
-	<%@include file="../user/loginHeader.jsp" %>
+	<%@include file="../user/loginHeader.jsp"%>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <div class="body">
         <!--스토리 목록-->
-		<!-- <div class="swiper"> -->
             <div class="storys">
             	<div class="story" onclick="addStory();">
 		      		<img class="story_img" src="resources/plusicon.jpeg">
 		      		<span>스토리 추가하기</span>
 		      	</div>
-                <!-- <div class="swiper-button-prev"></div>
-  				<div class="swiper-button-next"></div> -->
-       <!--  </div> -->
             </div>
 		   <div class="con_wrap">
 		    <div class="conA">
@@ -117,8 +112,8 @@
 		</div>
 
 		
-		<!-- 두 번째 모달: 게시물 작성 -->
-		<div class="modal fade" id="modal_second" tabindex="-1" role="dialog" aria-labelledby="modal_second_title" aria-hidden="true">
+	<!-- 두 번째 모달: 게시글 작성 -->
+	<div class="modal fade" id="modal_second" tabindex="-1" role="dialog" aria-labelledby="modal_second_title" aria-hidden="true">
 		    <div class="modal-dialog modal-lg" role="document">
 		        <div class="modal-content">
 		            <div class="modal-header">
@@ -156,8 +151,7 @@
 		        </div>
 		    </div>
 		</div>
-		
-		<!-- 게시물 디테일 모달 -->
+	<!-- 게시물 디테일 모달 -->
 		<div class="modal fade" id="modal_detail_feed" tabindex="-1" role="dialog" aria-labelledby="modal_detail_feed" aria-hidden="true">
 		    <div class="modal-dialog modal-xl" role="document">
 		        <div class="modal-content">
@@ -192,7 +186,7 @@
 		                    <div class="modal-footer border-top p-3 flex-column">
 		                        <div id="feed_detail_like" class="mb-2 d-flex align-items-center w-100">
 		                            <button id="likeButtonDetail" class="like-button btn p-0 mr-2">
-		                                <i class="heart-icon far fa-heart" style="font-size: 24px; color: #ff5a5f;"></i>
+		                                <i class="heart-icon far fa-heart" style="font-size: 24px; color: #FF5A5F;"></i>
 		                            </button>
 		                            <span id="likeCountDetail"></span>개
 		                        </div>
@@ -255,26 +249,32 @@
 				</div>
 			</div>
 		</div>
-		
-		<!-- 스토리 뷰 모달 -->
-		<div class="modal fade" id="modal_view_story" tabindex="-1" role="dialog" aria-labelledby="modal_view_story_title" aria-hidden="true">
-			<div class="modal-dialog" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="modal_view_story_title">스토리</h5>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body">
-						<img src="" id="story_view_img"><!-- 스토리 사진 영역 -->
-						<div id="story_view_content"></div> <!-- 스토리 내용 영역 -->
-						<button id="nextStory">next</button>
-					</div>
+
+
+	<!-- 스토리 뷰 모달 -->
+	<div class="modal fade" id="modal_view_story" tabindex="-1"
+		role="dialog" aria-labelledby="modal_view_story_title"
+		aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="modal_view_story_title">스토리</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<img src="" id="story_view_img">
+					<!-- 스토리 사진 영역 -->
+					<div id="story_view_content"></div>
+					<!-- 스토리 내용 영역 -->
+					<button id="nextStory">next</button>
 				</div>
 			</div>
 		</div>
-		<script>
+	</div>
+	<script>
 		<!-- 태그 -->
 		$(document).ready(function() {
 		    $('#uploadForm').submit(function(event) {
@@ -401,7 +401,7 @@
 				},
 				success:function(history){
 					history=history;
-					console.log(history);
+					/* console.log(history); */
 				},
 				error:function(){
 					console.log("통신 실패");
@@ -550,8 +550,8 @@
 	    
 
 		</script>
-		
-		<script>
+
+	<script>
 		<!-- 게시글 리스트 목록 -->
 		function feedList(currentPage){
 			  $.ajax({
@@ -620,7 +620,7 @@
        		 });
     	};
 		</script>
-		
+
 		<!-- 댓글 리스트 -->
 		<script>
 		function replyList(feedNo){
@@ -677,7 +677,6 @@
 				
 // 				console.log($(this).parent().siblings().first().attr("id"));
 // 			});
-			
 			
 			<!-- 두번째 댓글 입력 -->
 			function insertModal(el,feedNo){
@@ -1038,6 +1037,6 @@
 		     }
 		 });
 
-		</script>
+	</script>
 </body>
 </html>

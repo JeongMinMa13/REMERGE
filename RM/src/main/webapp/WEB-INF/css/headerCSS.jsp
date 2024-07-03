@@ -6,6 +6,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
+
 body {
 	height: auto;
 	margin: 0;
@@ -108,6 +109,7 @@ header {
 .searchUserResult ul li {
 	display: flex;
     gap: 10px;
+    margin-top: 16px;
 }
 .searchUserResult ul li .profileImage {
 	width: 44px;
@@ -115,14 +117,23 @@ header {
     overflow: hidden;
     border-radius: 100%;
 }
+.searchUserResult ul li .profileImage img{
+	widgh: 100%;
+	height: 100%;
+}
+.searchUserResult ul li button {
+	background-color: #ffffff;
+	border: 0px;
+	
+}
 .searchUserResult ul li p {
     font-size: 14px;
 }
 .searchUserResult ul li p .userId {
 	display:block;
 }
-.searchUserResult ul li p .email {
-	color:##737373;
+.searchUserResult ul li p .memo {
+	color:#737373;
 }
 
 </style>

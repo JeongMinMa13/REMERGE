@@ -17,7 +17,14 @@
 					<ul>
 						<c:forEach var='u' items='${followList}'>
 							<li class="followUser" onclick="selectId('${u.userId}');">
-								<span class="profileImage"><img src="${u.profilePath }"></span>
+								<c:choose>
+									<c:when test="${empty u.profileChangeName }">
+										<span class="profileImage"><img src="resources/unknown.jpg"></span>
+									</c:when>
+									<c:otherwise>
+										<span class="profileImage"><img src="${u.profileChangeName }"></span>
+									</c:otherwise>
+								</c:choose>
 								<p>
 									<strong class="userId">${u.userId }</strong>
 									<span class="memo">${u.userMemo }</span>
@@ -37,6 +44,9 @@
 		function selectId(data){//팔로우된 사용자 클릭시 캘린더로 이동
 			location.href="shareCalendar.sc?userId="+data; 
 		}
+		$(function(){
+			console.log("${followList}");
+		})
 	</script>
 
 </body>
