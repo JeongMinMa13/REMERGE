@@ -47,11 +47,12 @@ public class MypageDao {
 		return sqlSession.selectOne("mypageMapper.countFeed",feedWriter);
 	}
 
-	public ArrayList<FollowList> followingList(SqlSessionTemplate sqlSession, String toUser) {
+	public ArrayList<FollowList> followingList(SqlSessionTemplate sqlSession,String toUser) {
 		
 		return (ArrayList)sqlSession.selectList("mypageMapper.followingList",toUser);
 	}
 
+	
 	
 
 	

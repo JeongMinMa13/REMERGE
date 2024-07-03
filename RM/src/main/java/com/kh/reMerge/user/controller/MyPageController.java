@@ -47,6 +47,9 @@ public class MyPageController {
 		int followingCount = mypageService.countFollowing(userId);
 		int followerCount = mypageService.countFollower(userId);
 		int feedCount = mypageService.countFeed(userId);
+		ArrayList<FollowList> followingList = mypageService.followingList(userId);
+		
+		
 		User u = userService.selectUser(userId);// 선택된 유저 정보 조회
 		FollowList followList = new FollowList(userId, myId);// 팔로우 정보 조회하기 위해 담기
 		int result = userService.selectFollow(followList);// 팔로우 되어있는지 확인하기 위한 조회
@@ -60,6 +63,7 @@ public class MyPageController {
 		session.setAttribute("followingCount", followingCount);
 		session.setAttribute("followerCount", followerCount);
 		session.setAttribute("feedCount", feedCount);
+		session.setAttribute("followingList", followingList);
 
 		return "myPage/myPage";
 
@@ -231,16 +235,19 @@ public class MyPageController {
 		}
 	}
 	
-	//팔로잉 목록 조회
-	@ResponseBody
-	@RequestMapping(value="follwingList.us")
-	public ArrayList<FollowList> followingList(String toUser){
-		
-		ArrayList<FollowList> followingList = mypageService.followingList(toUser);
-		
-		return followingList;
-		
-	}
+//	//팔로잉 목록 조회
+//	@ResponseBody
+//	@RequestMapping(value="follwingList.us")
+//	public String followingList(Model model,String userId){
+//		
+//		ArrayList<FollowList> followingList = mypageService.followingList(userId);
+//		model.addAttribute("followingList",followingList);
+//		
+//		
+//		
+//		return "myPage/myPage";
+//		
+//	}
 
 
 }

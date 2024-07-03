@@ -31,11 +31,7 @@
                     <li><div class="menu-item" id="notifications"><img src="${pageContext.request.contextPath}/resources/notifications.png">알림</div></li>
                     <li><div class="menu-item" id="create"><img src="${pageContext.request.contextPath}/resources/create.png">만들기</div></li>
                     <li><div class="menu-item" id="store"><img src="${pageContext.request.contextPath}/resources/store.png">스토어</div></li>
-<<<<<<< HEAD
                     <li><div class="menu-item" id="profile"><a href="myPage.us?userId=${loginUser.userId}"><img src="${pageContext.request.contextPath}/resources/unknown.jpg">프로필</a></div></li>
-=======
-                    <li><div class="menu-item" id="profile"><a href="myPage.us?userId=${loginUser.userId}"><img src="resources/unknown.jpg">프로필</a></div></li>
->>>>>>> refs/remotes/origin/main
                     <li><div class="menu-item" id="calendarIcon"><a href="calendar.sc"><img src="${pageContext.request.contextPath}/resources/calendaricon.png">캘린더</a></div></li>
                     <li><div class="menu-item" id="festivalIcon"><a href="festival.fs"><img src="${pageContext.request.contextPath}/resources/festivalIcon.png">축제</a></div></li>
                 </ul>

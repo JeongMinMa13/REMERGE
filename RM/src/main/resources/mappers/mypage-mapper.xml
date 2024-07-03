@@ -99,11 +99,10 @@
     	WHERE FEED_WRITER= #{feedWriter}
 	</select>
 	
-	<select id="followList" resultType="FollowList" parameterType="_int">
+	<select id="followingList" resultType="FollowList" parameterType="string">
 	SELECT TO_USER
 	FROM FOLLOWLIST
 	WHERE FROM_USER = #{fromUser}
-	
 	</select>
 
 	
