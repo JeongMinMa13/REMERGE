@@ -18,7 +18,7 @@
 						<c:forEach var='u' items='${followList}'>
 							<li class="followUser" onclick="selectId('${u.userId}');">
 								<c:choose>
-									<c:when test="${u.profileChangeName eq null} ">
+									<c:when test="${empty u.profileChangeName }">
 										<span class="profileImage"><img src="resources/unknown.jpg"></span>
 									</c:when>
 									<c:otherwise>
@@ -44,6 +44,9 @@
 		function selectId(data){//팔로우된 사용자 클릭시 캘린더로 이동
 			location.href="shareCalendar.sc?userId="+data; 
 		}
+		$(function(){
+			console.log("${followList}");
+		})
 	</script>
 
 </body>
