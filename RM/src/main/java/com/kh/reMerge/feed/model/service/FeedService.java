@@ -3,8 +3,6 @@ package com.kh.reMerge.feed.model.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.stereotype.Service;
-
 import com.kh.reMerge.common.model.vo.PageInfo;
 import com.kh.reMerge.feed.model.vo.Feed;
 import com.kh.reMerge.feed.model.vo.FeedLike;

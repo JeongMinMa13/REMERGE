@@ -8,7 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>	
   <jsp:include page="/WEB-INF/css/feedCSS.jsp"></jsp:include>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <!-- 스와이퍼 css,cdn -->
@@ -17,6 +17,9 @@
   href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
 />
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=91ad4af1e5f058ed4f88efab8357dc34&libraries=services,clusterer"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
 </head>
 <body>
 	<%@include file="../user/loginHeader.jsp" %>
@@ -39,10 +42,16 @@
 		    </div>
 		    <div class="container">
 		        <div class="profile-header">
-		            <img src="" alt="Your Profile Picture">
+		        <c:choose>
+		         	<c:when test="${user.profileChangeName eq null}">
+		         		<img id="profile" src="resources/unknown.jpg">
+		         	</c:when>
+		         	<c:otherwise>
+		         		<img id="profile" src="${user.profileChangeName}">
+		         	</c:otherwise>
+		        </c:choose>
 		            <div class="profile-info">
-		                <span class="username">junhyung_ing</span>
-		                <span class="subtext">신준형</span>
+		                <span class="username">${loginUser.userId}</span>
 		            </div>
 		        </div>
 		        <div class="suggestions-header">
@@ -82,6 +91,7 @@
 		    </div>
 		</div>
 	</div>
+	
 		<!-- 첫 번째 모달: 이미지 업로드 -->
 		<div class="modal fade" id="modal_create" tabindex="-1" role="dialog" aria-labelledby="modal_create_title" aria-hidden="true">
 		    <div class="modal-dialog" role="document">
@@ -106,6 +116,7 @@
 		    </div>
 		</div>
 
+		
 		<!-- 두 번째 모달: 게시물 작성 -->
 		<div class="modal fade" id="modal_second" tabindex="-1" role="dialog" aria-labelledby="modal_second_title" aria-hidden="true">
 		    <div class="modal-dialog modal-lg" role="document">
@@ -135,7 +146,8 @@
 		                        </div>
 		                        <div class="form-group">
 		                            <label for="location">위치</label>
-		                            <input type="text" class="form-control" id="location" name="feedLocation" placeholder="위치를 입력하세요">
+		                            <input type="text" class="form-control" id="feedLocation" name="feedLocation" placeholder="위치를 입력하세요">
+		                            <input type="button" onclick="searchAddress();" value="위치 검색">
 		                        </div>
 		                        <button type="submit" id="submit_post_button" class="btn btn-primary">게시</button>
 		                    </div>
@@ -156,7 +168,14 @@
 		                <div class="modal-details flex-fill d-flex flex-column">
 		                    <div class="modal-header">
 		                        <div class="d-flex align-items-center">
-		                            <img src="" id="feed_user_img" class="rounded-circle" alt="프로필 사진" style="width: 40px; height: 40px;">
+		                        	<c:choose>
+                               			 <c:when test="${user.profileChangeName eq null}">
+                                    		<img src="resources/unknown.jpg" id="feed_user_img" class="rounded-circle" alt="프로필 사진">
+                               			 </c:when>
+                               			 <c:otherwise>
+                                    		<img src="${user.profileChangeName}" id="feed_user_img" class="rounded-circle" alt="프로필 사진">
+                               			 </c:otherwise>
+                           			 </c:choose>
 		                            <div class="ml-2">
 		                                <span class="username" id="feed_userId">사용자 이름</span>
 		                                <div id="feed_location" class="text-muted" style="font-size: 12px;">위치 정보</div>
@@ -190,6 +209,23 @@
 		    </div>
 		</div>
 		
+		<!-- 지도 모달 -->
+		<div class="modal fade" id="mapModal" tabindex="-1" role="dialog" aria-labelledby="mapModalTitle" aria-hidden="true">
+		    <div class="modal-dialog modal-lg" role="document">
+		        <div class="modal-content">
+		            <div class="modal-header">
+		                <h5 class="modal-title" id="mapModalTitle">위치 지도</h5>
+		                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		                    <span aria-hidden="true">&times;</span>
+		                </button>
+		            </div>
+		            <div class="modal-body">
+		                <div id="map" style="width: 100%; height: 800px;"></div>
+		            </div>
+		        </div>
+		    </div>
+		</div>
+				
 		<!-- 스토리 추가 모달 -->
 		<div class="modal fade" id="modal_create_story" tabindex="-1" role="dialog" aria-labelledby="modal_create_story" aria-hidden="true">
 			<div class="modal-dialog" role="document">
@@ -239,7 +275,6 @@
 			</div>
 		</div>
 		<script>
-		
 		<!-- 태그 -->
 		$(document).ready(function() {
 		    $('#uploadForm').submit(function(event) {
@@ -294,7 +329,7 @@
 			        formData.append('upfile', selectedFile);
 			        formData.append('feedWriter', $('[name="feedWriter"]').val());
 			        formData.append('feedContent', $('#post_text').val());
-			        formData.append('feedLocation', $('#location').val());
+			        formData.append('feedLocation', $('#feedLocation').val());
 			        formData.append('tags',$('#tags').val());
 			        
 				<!-- 게시글 등록 ajax -->
@@ -316,7 +351,7 @@
 			        });
 			    });
 			});
-		 
+		 		
 		 	function loadAllLikes() {
 			    $('.con').each(function() {
 			        var feedNo = $(this).data('feed-no');
@@ -434,7 +469,7 @@
 			        		str += '<div class="modal-body">';
 			        	    str += '    <div id="feed_detail_replyList">';
 			        	    str += '        <p><strong>' + reply.userId + ':</strong> ' + reply.reContent;
-			        	    str += '            <button class="reply-like-button" onclick="toggleReplyLike(' + reply.replyNo + ', \'' + userId + '\')">';
+			        	    str += '            <button class="reply-like-button" onclick="toggleReplyLike(' + reply.replyNo + ', \'' + reply.userId + '\')">';
 			        	    str += '                <i class="reply-heart-icon far fa-heart"></i>';
 			        	    str += '            </button>';
 			        	    str += '            <span class="reply-like-count" id="reply-like-count-' + reply.replyNo + '"></span>';
@@ -445,7 +480,6 @@
 			         }
 			         
 			         $('#feed_detail_replyList').html(str);
-			         
 			         
 					 var reHtml = "";			        
 					 reHtml += '<div>';
@@ -531,39 +565,44 @@
 					var feed = response.list[i];
 					 /*str += '<div class="conA">';*/
 						str += '    <div class="con" data-feed-no="' + feed.feedNo + '">';
-						str += '        <div class="title">';
-						str += '            <img src="" alt="" class="img">';
-						str += '            <p>' + feed.feedWriter + '</p>'; // 작성자 예시
-						str += '        </div>';
-						str += '        <img src="' + feed.changeName + '" alt="" class="con_img">'; // 이미지 예시
-						str += '        <div class="logos">';
-						str += '            <div class="logos_left">';
-						str += '            <button id="likeButton' + feed.feedNo + '" class="like-button" data-feed-no="' + feed.feedNo + '" data-user-id="' + '${loginUser.userId}' + '" onclick="toggleLike(' + feed.feedNo + ', \'' + '${loginUser.userId}' + '\')">';
-						str += '                <i class="heart-icon far fa-heart" style="font-size: 30px; color: #ff5a5f;"></i>';
-						str += '            </button>';
-						str += '                <img src="resources/chat.png" class="logo_img" onclick="detailView('+feed.feedNo+')" >';
-						str += '                <img src="resources/direct.png" alt="" class="logo_img">';
-						str += '            </div>';
-						str += '            <div class="logos_right">';
-						str += '                <img src="" alt="" class="logo_img">';
-						str += '            </div>';
-						str += '        </div>';
-						str += '        <div class="content">';
-						str += '               <p><b>좋아요 <span class="like-count" data-feed-no="'+feed.feedNo+'">'+feed.likeCount+'</span>개</b></p>';
-						str += '            <p>' + feed.feedContent + '</p>';
-						str += '            <div id="replyList'+feed.feedNo+'"></div>'; // 댓글 리스트를 표시할 부분
-										  // 태그 추가 부분
-						                if (feed.tags && feed.tags.length > 0) {
-						                    str += '            <p>';
-						                    for (var j = 0; j < feed.tags.length; j++) {
-						                        str += '<a href="selectTag.fe?tagContent=' + encodeURIComponent(feed.tags[j]) + '">#' + feed.tags[j] + '</a> ';
-						                    }
-						                    str += '            </p>';
-						                }
-						str += '            <input type="text" name="reContent" id="reContent'+feed.feedNo+'" placeholder="댓글을 입력해주세요..">';
-						str += '            <label><button onclick="insertReply('+feed.feedNo+')">등록</button></label>';
-						str += '        </div>';
-						str += '    </div>';
+		                str += '        <div class="title">';
+		                str += '            <img src="'+feed.profileChangeName+'" alt="" class="img">';
+		                str += '            <div class="info">';
+		                str += '                <span class="username">' + feed.feedWriter + '</span>';
+		                str += '                <p class="location" onclick="showMap(\'' + feed.feedLocation + '\')">' + feed.feedLocation + '</p>';
+		                str += '            </div>';
+		                str += '        </div>';
+		                str += '        <img src="' + feed.changeName + '" alt="" class="con_img">';
+		                str += '        <div class="logos">';
+		                str += '            <div class="logos_left">';
+		                str += '                <button id="likeButton' + feed.feedNo + '" class="like-button" data-feed-no="' + feed.feedNo + '" data-user-id="' + '${loginUser.userId}' + '" onclick="toggleLike(' + feed.feedNo + ', \'' + '${loginUser.userId}' + '\')">';
+		                str += '                    <i class="heart-icon far fa-heart" style="font-size: 30px; color: #ff5a5f;"></i>';
+		                str += '                </button>';
+		                str += '                <img src="resources/chat.png" class="logo_img" onclick="detailView(' + feed.feedNo + ')" >';
+		                str += '                <img src="resources/direct.png" alt="" class="logo_img">';
+		                str += '            </div>';
+		                str += '            <div class="logos_right">';
+		                str += '                <img src="" alt="" class="logo_img">';
+		                str += '            </div>';
+		                str += '        </div>';
+		                str += '        <div class="content">';
+		                str += '            <p><b>좋아요 <span class="like-count" data-feed-no="' + feed.feedNo + '">' + feed.likeCount + '</span>개</b></p>';
+		                str += '            <p id="feedContent' + feed.feedNo + '" class="feed-content">' + feed.feedContent + '</p>';
+		                str += '            <button id="moreButton' + feed.feedNo + '" class="more-button" onclick="showFullContent(' + feed.feedNo + ')" style="display: none;">더보기</button>';
+		                str += '            <div id="fullContent' + feed.feedNo + '" class="full-content" style="display: none;">' + feed.feedContent + '</div>';
+		                str += '            <div id="replyList' + feed.feedNo + '"></div>';
+		                // 태그 추가 부분
+		                if (feed.tags && feed.tags.length > 0) {
+		                    str += '            <p>';
+		                    for (var j = 0; j < feed.tags.length; j++) {
+		                        str += '<a href="selectTag.fe?tagContent=' + encodeURIComponent(feed.tags[j]) + '">#' + feed.tags[j] + '</a> ';
+		                    }
+		                    str += '            </p>';
+		                }
+		                str += '            <input type="text" name="reContent" id="reContent' + feed.feedNo + '" placeholder="댓글을 입력해주세요..">';
+		                str += '            <label><button onclick="insertReply(' + feed.feedNo + ')">등록</button></label>';
+		                str += '        </div>';
+		                str += '    </div>';
 	                    /*str += '</div>';*/
 	                    
 	                    replyList(feed.feedNo);
@@ -572,7 +611,8 @@
 					 if (currentPage >= response.pi.maxPage) {
 		                    $(window).unbind('scroll'); // 스크롤 이벤트 해제
 		                }
-					 loadAllLikes();
+					 loadAllLikes(); //좋아요 함수
+					 applyContent(); // 게시글 더보기 적용
 		          },
 		          error: function() {
 		          	alert('게시물 로딩에 실패했습니다.');
@@ -592,19 +632,13 @@
 		        success : function(result){
 		            var str = "";
 		            if(result.rList.length > 0){
-		                for (var i = 0; i < result.rList.length; i++){
-		                    var reply = result.rList[i];
+		                    var reply = result.rList[0];
 		                    str += '<div class="comment">';
-		                    str += '    <img src="프로필_이미지_URL" alt="프로필 사진">';
 		                    str += '    <p><strong class="username">' + reply.userId + ':</strong> ' + reply.reContent + '</p>';
-		                    str += '    <button class="reply-like-button" onclick="toggleReplyLike(' + reply.replyNo + ', \'' + userId + '\')">';
-		                    str += '        <i class="reply-heart-icon far fa-heart"></i>';
-		                    str += '    </button>';
-		                    str += '    <span class="reply-like-count" id="reply-like-count-' + reply.replyNo + '"></span>';
+		                    str += '    <button class="reply-like-button" onclick="toggleReplyLike(' + reply.replyNo + ', \'' + reply.userId + '\')">';
 		                    str += '</div>';
-		                }
 		            }
-		            $("#feed_detail_replyList").html(str); // 댓글 리스트를 해당 게시물 div에 추가
+		            $("#replyList" + feedNo).html(str); // 댓글 리스트를 해당 게시물 div에 추가
 		        },
 		        error : function(){
 		            console.log("통신오류");
@@ -613,8 +647,6 @@
 		};
 			
 			<!-- 댓글 입력 -->
-			
-				
 			function insertReply(feedNo){
 				var reContent =$("#reContent" + feedNo).val();
 				
@@ -682,36 +714,36 @@
 		
 		<!-- 좋아요 상태 확인 -->
 		<script>
-		function loadLikeStatus(feedNo, userId) {
-		    $.ajax({
-		        url: "likeStatus.fe",
-		        type: "get",
-		        data: {
-		            feedNo: feedNo,
-		            userId: userId
-		        },
-		        success: function(response) {
-		            var likeButton = $("#likeButton" + feedNo);
-		            var heartIcon = likeButton.find(".heart-icon");
-		            var likeCountElement = $(".like-count[data-feed-no='" + feedNo + "']");
-
-		            if (response.status === "liked") {
-		                likeButton.addClass("liked");
-		                heartIcon.removeClass("far fa-heart");
-		                heartIcon.addClass("fas fa-heart");
-		            } else {
-		                likeButton.removeClass("liked");
-		                heartIcon.removeClass("fas fa-heart");
-		                heartIcon.addClass("far fa-heart");
-		            }
-
-		            likeCountElement.text(response.likeCount);
-		        },
-		        error: function() {
-		            alert("게시물 정보를 가져오는데 실패했습니다.");
-		        }
-		    });
-		}
+				function loadLikeStatus(feedNo, userId) {
+				    $.ajax({
+				        url: "likeStatus.fe",
+				        type: "get",
+				        data: {
+				            feedNo: feedNo,
+				            userId: userId
+				        },
+				        success: function(response) {
+				            var likeButton = $("#likeButton" + feedNo);
+				            var heartIcon = likeButton.find(".heart-icon");
+				            var likeCountElement = $(".like-count[data-feed-no='" + feedNo + "']");
+		
+				            if (response.status === "liked") {
+				                likeButton.addClass("liked");
+				                heartIcon.removeClass("far fa-heart");
+				                heartIcon.addClass("fas fa-heart");
+				            } else {
+				                likeButton.removeClass("liked");
+				                heartIcon.removeClass("fas fa-heart");
+				                heartIcon.addClass("far fa-heart");
+				            }
+		
+				            likeCountElement.text(response.likeCount);
+				        },
+				        error: function() {
+				            alert("게시물 정보를 가져오는데 실패했습니다.");
+				        }
+				    });
+				}
 
 	            function toggleLike(feedNo, userId) {
 	                $.ajax({
@@ -869,8 +901,118 @@
 				        }
 				    });
 				}
-	        
 		</script>
+		
+		<script>
+			 //주소 검색하는 함수
+		    function searchAddress(){
+		    	new daum.Postcode({
+		            oncomplete: function(data) {
+		                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+		                // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+		                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+		                var addr = ''; // 주소 변수
+		                var extraAddr = ''; // 참고항목 변수
+
+		                //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+		                if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+		                    addr = data.roadAddress;
+		                } else { // 사용자가 지번 주소를 선택했을 경우(J)
+		                    addr = data.jibunAddress;
+		                }
+
+		                // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+		                if(data.userSelectedType === 'R'){
+		                    // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+		                    // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+		                    if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+		                        extraAddr += data.bname;
+		                    }
+		                    // 건물명이 있고, 공동주택일 경우 추가한다.
+		                    if(data.buildingName !== '' && data.apartment === 'Y'){
+		                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+		                    }
+		                    // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+		                    if(extraAddr !== ''){
+		                        extraAddr = ' (' + extraAddr + ')';
+		                    }
+		                    // 조합된 참고항목을 해당 필드에 넣는다.
+		                    document.getElementById("feedLocation").value = extraAddr;
+		                
+		                } else {
+		                    document.getElementById("feedLocation").value = '';
+		                }
+
+		                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+		                document.getElementById('feedLocation').value = data.zonecode;
+		                document.getElementById("feedLocation").value = addr;
+		                // 커서를 상세주소 필드로 이동한다.
+		                document.getElementById("feedLocation").focus();
+		               	
+		            }
+		        }).open();
+		    }
+			 
+		  //지도 여는 함수
+		   window.onload = function () {
+	        function showMap(feedLocation) {
+	            // 모달을 엽니다.
+	            $('#mapModal').modal('show');
+	
+	            var mapContainer = document.getElementById('map');
+	            var mapOption = {
+	                center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+	                level: 3 // 지도의 확대 레벨
+	            };
+	
+	            var map = new kakao.maps.Map(mapContainer, mapOption);
+	
+	            var geocoder = new kakao.maps.services.Geocoder();
+	
+	            geocoder.addressSearch(feedLocation, function (result, status) {
+	                if (status === kakao.maps.services.Status.OK) {
+	                    var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+	                    var marker = new kakao.maps.Marker({
+	                        map: map,
+	                        position: coords
+	                    });
+	
+	                    map.setCenter(coords);
+	
+	                    // 모달이 완전히 열린 후에 지도 크기를 조정합니다.
+	                    $('#mapModal').on('shown.bs.modal', function () {
+	                        map.relayout();
+	                        map.setCenter(coords);
+	                    });
+	                }
+	            });
+	        }
+	        window.showMap = showMap;
+	    };
+	    
+	    	//게시글 더보기 눌렀을 때 보여주는 함수
+			function applyContent() {
+			    $(".feed-content").each(function() {
+			        var content = $(this).text();
+			        if (content.length > 30) { // 원하는 글자 수로 변경
+			            var shortContent = content.substring(0, 30) + '...';
+			            var feedNo = $(this).attr('id').replace('feedContent', '');
+			            $(this).html(shortContent);
+			            $("#moreButton" + feedNo).show();
+			        }
+			    });
+			}
+	    
+		    //게시글 더보기 누르면 댓글 보여줌
+		    function showFullContent(feedNo) {
+		        $("#feedContent" + feedNo).hide();
+		        $("#moreButton" + feedNo).hide();
+		        $("#fullContent" + feedNo).show();
+		    }
+		</script>			
+			 
+			 
 		
 		
 		<script>

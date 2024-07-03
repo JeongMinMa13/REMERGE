@@ -76,9 +76,14 @@ header {
 	padding-right: 250px;
 }
 
-.profile p {
-	margin: 5px 15px;
-	font-size: 20px;
+.title .info {
+    display: flex;
+    flex-direction: column;
+}
+
+.title .username {
+    font-weight: bold;
+    margin-left: 10px;
 }
 
 .con_wrap {
@@ -112,6 +117,13 @@ header {
 	margin-left: 10px;
     font-size: 16px;
     font-weight: bold;;
+}
+
+.title .location {
+    font-size: 12px;
+    margin-left: 10px;
+    color: gray;
+    display: inline-block;
 }
 
 .con_img {
@@ -434,21 +446,27 @@ header {
     color: #ff5a5f;
 }
 
+.modal-lg {
+    max-width: 800px;
+}
+
 /* 썸네일 스타일 */
 .thumbnail-container {
-    text-align: center;
-    margin-bottom: 20px;
+    max-width: 300px;
+    margin: auto;
 }
 
 .thumbnail {
-    max-width: 100%;
+    width: 100%;
     height: auto;
-    border-radius: 5px;
-    margin-top: 10px;
+    border-radius: 10px;
+    object-fit: cover;
 }
 #thumbnailFeed{
 	display:none;
 }
+
+
 /* 스토리 미리 보기 칸  */
 #thumbnailContainer{
 	display:none;
@@ -492,6 +510,8 @@ header {
 .reply-heart-icon.liked {
     color: #ff5a5f; 
 }
+
+
 
 
 </style>
