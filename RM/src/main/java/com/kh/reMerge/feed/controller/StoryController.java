@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpSession;
 
@@ -67,9 +68,18 @@ public class StoryController {
 	//피드페이지에서 스토리 조회하기
 	@ResponseBody
 	@PostMapping(value="selectStory.fe",produces="application/json;charset=UTF-8")
-	public ArrayList<Story> selectStory(String userId){
+	public HashMap<String, Object> selectStory(String userId){
 		
-		return storyService.selectStory(userId);
+		ArrayList<Story> storyList = storyService.selectStory(userId);
+		for(Story s : storyList) {
+			System.out.println(s);
+		}
+		ArrayList<History> historyList = storyService.selectHistory(userId);
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("story", storyList);
+		map.put("history",historyList);
+		
+		return map;
 	}
 	
 	//스토리 시청 기록 넣기
@@ -80,7 +90,6 @@ public class StoryController {
 		ArrayList<History> list = storyService.selectHistory(history.getUserId());//아이디로 시청기록 조회해와서
 		for(History h : list) {
 			if(h.getStoryNo()==history.getStoryNo()) {//시청 기록 중복 제거
-				System.out.println("중복 됨");
 				duplCheck=true;
 			}
 		}

@@ -363,7 +363,7 @@
 	    var history = []; //스토리 시청 기록을 사용하기 위한 전역 변수
 
 		$(function(){
-			$.ajax({
+			/* $.ajax({
 				url:"selectHistory.fe",
 				type:"post",
 				data:{
@@ -371,12 +371,11 @@
 				},
 				success:function(history){
 					history=history;
-					/* console.log(history); */
 				},
 				error:function(){
 					console.log("통신 실패");
 				}
-			});
+			}); */
 			
 			$.ajax({
 				url:"selectStory.fe",
