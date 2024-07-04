@@ -45,11 +45,22 @@
 		WHERE USER_ID IN (SELECT TO_USER
                   FROM FOLLOWLIST
                   WHERE FROM_USER = #{userId})
+        AND STATUS='Y'    
+        ORDER BY userId      
 	</select>
 	
 	<select id="selectShareSchedule" parameterType="string" resultMap="scheduleResultSet">
 		SELECT SCHEDULE_NO,TITLE,START_DATE,END_DATE,USER_ID
 		FROM SCHEDULE
 		WHERE USER_ID =#{userId}
+	</select>
+	
+	<select id="followListCount" parameterType="string" resultType="_int">
+		SELECT COUNT(*)
+		FROM USERS
+		WHERE USER_ID IN (SELECT TO_USER
+                  FROM FOLLOWLIST
+                  WHERE FROM_USER = #{userId})
+        AND STATUS='Y'          
 	</select>
 </mapper>
