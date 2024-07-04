@@ -79,6 +79,8 @@ header {
     
 .con_wrap {
 	display: flex;
+	width: 40%;
+	
 	justify-content: center;
 	align-items: flex-start;
 }
@@ -456,6 +458,48 @@ header {
 .feedBlock::before {content:''; position:absolute; top:0; left:0; bottom:0; right:0; background-color:#000; opacity:0;}
 .feedBlock:hover::before{opacity:0.3;}
 .feedBlock img {width:100%; height:100%;}
+
+/*다크모드*/
+
+/*토글*/
+ #toggle{
+    display: inline-flex;
+    padding: 5px;
+    border-radius: 1.5em;
+    background-color: #82d8ff;
+}
+#toggle i{
+    font-size: 1.5em;
+    padding: 5px;
+    background-color: #fff;
+    color: #666;
+}
+#light-mode{
+    border-radius: 50% 0 0 50%;
+}
+#dark-mode{
+    border-radius: 0 50% 50% 0;
+}
+#toggle input{
+    display: none;
+}
+#toggle input[type=radio]:checked + label > i {
+    background-color: #82d8ff;
+    color: #fff;
+    transition: all 0.3s ease-in-out;
+}
+
+/*배경 변경*/
+body{
+	color: #000;
+	background-color: #fff;
+}
+
+body[data-theme='dark']{
+	color: #fff;
+	background-color: #000;
+
+}
 
 </style>
 </head>
