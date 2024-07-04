@@ -8,10 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kh.reMerge.calendar.model.service.CalendarService;
 import com.kh.reMerge.calendar.model.vo.Schedule;
+import com.kh.reMerge.common.model.vo.FollowListPageInfo;
+import com.kh.reMerge.common.template.Pagination;
 import com.kh.reMerge.user.model.vo.User;
 
 
@@ -85,10 +88,16 @@ import com.kh.reMerge.user.model.vo.User;
 		
 		//캘린더 팔로우 리스트 페이지로 이동
 		@GetMapping("followList.sc")
-		public String followList(String userId,HttpSession session) {
+		public String followList(String userId,@RequestParam(value="currentPage",defaultValue="1")int currentPage,HttpSession session) {
 			
-			ArrayList<User> followList = cs.followList(userId);
+			int listCount = cs.followListCount(userId);
+			int pageLimit=10;
+			int userLimit=10;
+			
+			FollowListPageInfo fpi=Pagination.getFollowListPageInfo(listCount, currentPage, pageLimit, userLimit);
+			ArrayList<User> followList = cs.followList(userId,fpi);
 			session.setAttribute("followList", followList);
+			session.setAttribute("fpi", fpi);
 			
 			return "/calendar/calendarFollowList";
 		}

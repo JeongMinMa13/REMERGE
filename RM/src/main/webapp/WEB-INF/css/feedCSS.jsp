@@ -31,13 +31,13 @@ header {
 	justify-content: center; /* 가운데 정렬 */
 	align-items: flex-start; /* 맨 위 정렬 */
 	flex-wrap: wrap; /* 스토리가 넘칠 경우 여러 줄로 배치 */
-	position: fixed; /* 페이지 스크롤과 상관없이 고정 */
+	position: absolute; 
 	top: 0; /* 화면 맨 위에 고정 */
 	left: 50%; /* 가운데 정렬을 위한 위치 조정 */
 	transform: translateX(-50%); /* 가운데 정렬을 위한 위치 조정 */
 	padding: 10px; /* 내부 패딩 추가 */
 	z-index: 1000; /* 다른 요소 위에 표시되도록 z-index 설정 */
-	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+	background-color: white;
 }
 .story {
 	display: flex;

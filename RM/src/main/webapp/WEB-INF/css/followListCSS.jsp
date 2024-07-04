@@ -42,6 +42,9 @@
 .followListContent ul li p .memo {
 	color:##737373;
 }
+#pagingArea{
+	align-content: center;
+}
 </style>
 </head>
 <body>
