@@ -20,7 +20,7 @@
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=91ad4af1e5f058ed4f88efab8357dc34&libraries=services,clusterer"></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 </head>
-<body>
+<body data-theme="light">
 	<%@include file="../user/loginHeader.jsp"%>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <div class="body">
@@ -38,11 +38,11 @@
 		    <div class="container">
 		        <div class="profile-header">
 		        <c:choose>
-		         	<c:when test="${user.profileChangeName eq null}">
+		         	<c:when test="${loginUser.profileChangeName eq null}">
 		         		<img id="profile" src="resources/unknown.jpg">
 		         	</c:when>
 		         	<c:otherwise>
-		         		<img id="profile" src="${user.profileChangeName}">
+		         		<img id="profile" src="${loginUser.profileChangeName}">
 		         	</c:otherwise>
 		        </c:choose>
 		            <div class="profile-info">
@@ -162,14 +162,7 @@
 		                <div class="modal-details flex-fill d-flex flex-column">
 		                    <div class="modal-header">
 		                        <div class="d-flex align-items-center">
-		                        	<c:choose>
-                               			 <c:when test="${user.profileChangeName eq null}">
                                     		<img src="resources/unknown.jpg" id="feed_user_img" class="rounded-circle" alt="프로필 사진">
-                               			 </c:when>
-                               			 <c:otherwise>
-                                    		<img src="${user.profileChangeName}" id="feed_user_img" class="rounded-circle" alt="프로필 사진">
-                               			 </c:otherwise>
-                           			 </c:choose>
 		                            <div class="ml-2">
 		                                <span class="username" id="feed_userId">사용자 이름</span>
 		                                <div id="feed_location" class="text-muted" style="font-size: 12px;">위치 정보</div>
@@ -289,18 +282,18 @@
 		<!-- 게시물 등록 스크립트 -->
 		 <!--썸네일 만들기-->
 		 $(document).ready(function() {
-			feedList();
+			feedList(1);
 			loadAllLikes();
 			
 			$(window).scroll(function() {
-	            if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+	            if ($(window).scrollTop() + $(window).height() >= $(document).height() - 100) {
 	                // 현재 페이지 수를 가져와서 다음 페이지를 로드합니다.
 	                const currentPage = Math.ceil($('.con').length / 6) + 1; // 예시: 현재 보여지는 게시물 갯수로 대체
 	                feedList(currentPage);
 	            }
 	        });
 			 
-	
+		
 			    const fileInput = document.getElementById('file');
 			    const thumbnail = document.getElementById('thumbnail');
 			    const secondThumbnail = document.querySelector('#modal_second #selectedThumbnail'); // 두 번째 모달 썸네일
@@ -461,6 +454,12 @@
 			         $('#feed_location').text(result.f.feedLocation); 
 			         $('#feed_detail_content').text(result.f.feedContent);
 			         
+			         if (result.f.userProfile && result.f.userProfile.profileChangeName) {
+			                $('#feed_user_img').attr('src', result.f.userProfile.profileChangeName);
+			            } else {
+			                $('#feed_user_img').attr('src', 'resources/unknown.jpg');
+			            }
+			         
 			         loadLikeStatusDetail(result.f.feedNo, userId); //디테일 게시글 좋아요 유저
 			         
 			         var str = "";
@@ -560,13 +559,19 @@
 				  dataType: 'json',
 				  data:{currentPage:currentPage},
 				  success : function(response){
+					  console.log(currentPage);
 					 var str = "";
 				for (var i = 0; i < response.list.length; i++){
 					var feed = response.list[i];
+					var userProfile = feed.userProfile;
 					 /*str += '<div class="conA">';*/
 						str += '    <div class="con" data-feed-no="' + feed.feedNo + '">';
 		                str += '        <div class="title">';
-		                str += '            <img src="'+feed.profileChangeName+'" alt="" class="img">';
+		                				if (userProfile && userProfile.profileChangeName) {
+		                str += '            <img src="'+userProfile.profileChangeName+'" alt="" class="img">';
+		                				}else{
+		                str += '        <img src="resources/unknown.jpg" alt="" class="img">';
+		                				}
 		                str += '            <div class="info">';
 		                str += '                <span class="username">' + feed.feedWriter + '</span>';
 		                str += '                <p class="location" onclick="showMap(\'' + feed.feedLocation + '\')">' + feed.feedLocation + '</p>';
@@ -1038,5 +1043,7 @@
 		 });
 
 	</script>
+	
+	
 </body>
 </html>

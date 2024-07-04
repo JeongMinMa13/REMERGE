@@ -9,6 +9,8 @@ import com.kh.reMerge.feed.model.vo.FeedLike;
 import com.kh.reMerge.feed.model.vo.Reply;
 import com.kh.reMerge.feed.model.vo.ReplyLike;
 import com.kh.reMerge.feed.model.vo.Tag;
+import com.kh.reMerge.user.model.vo.FollowList;
+import com.kh.reMerge.user.model.vo.User;
 
 
 public interface FeedService {
@@ -79,6 +81,14 @@ public interface FeedService {
 	//좋아요 수 조회
 	int countReplyLikes(int replyNo);
 	
+	//User 프로필 가져오기
+	User getUserProfile(String userId);
+	
+	//팔로우 리스트 가져오기
+	List<FollowList> getFollowList(String userId);
+	
+	//팔로우 반별
+	boolean isFollowing(String fromUser, String toUser);
 	
 	
 	
