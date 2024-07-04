@@ -71,9 +71,6 @@ public class StoryController {
 	public HashMap<String, Object> selectStory(String userId){
 		
 		ArrayList<Story> storyList = storyService.selectStory(userId);
-		for(Story s : storyList) {
-			System.out.println(s);
-		}
 		ArrayList<History> historyList = storyService.selectHistory(userId);
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("story", storyList);
