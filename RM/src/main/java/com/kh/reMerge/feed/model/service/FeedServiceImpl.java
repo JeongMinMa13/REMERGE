@@ -14,6 +14,8 @@ import com.kh.reMerge.feed.model.vo.FeedLike;
 import com.kh.reMerge.feed.model.vo.Reply;
 import com.kh.reMerge.feed.model.vo.ReplyLike;
 import com.kh.reMerge.feed.model.vo.Tag;
+import com.kh.reMerge.user.model.vo.FollowList;
+import com.kh.reMerge.user.model.vo.User;
 
 @Service
 public class FeedServiceImpl implements FeedService {
@@ -123,7 +125,7 @@ public class FeedServiceImpl implements FeedService {
 
 	@Override
 	public int selectFeedNo() {
-		// TODO Auto-generated method stub
+		
 		return feedDao.selectFeedNo(sqlSession);
 	}
 
@@ -162,6 +164,28 @@ public class FeedServiceImpl implements FeedService {
 		
 		return feedDao.countReplyLikes(sqlSession,replyNo);
 	}
+	
+	//프로필 사진 가져오기
+	@Override
+	public User getUserProfile(String userId) {
+		
+		return feedDao.getUserProfile(sqlSession,userId);
+	}
+	
+	//팔로우 리스트 가져오기
+	@Override
+	public List<FollowList> getFollowList(String userId) {
+
+		return feedDao.getFollowList(sqlSession,userId);
+	}
+
+	@Override
+	public boolean isFollowing(String fromUser, String toUser) {
+		
+		return feedDao.isFollowing(sqlSession,fromUser,toUser);
+	}
+
+	
 
 
 

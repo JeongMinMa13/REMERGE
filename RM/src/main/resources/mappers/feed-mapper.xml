@@ -21,7 +21,7 @@
 			<result column="FEED_LOCATION" property="feedLocation"/>
 		 
 		</resultMap>
-	
+		
 	<insert id="insertFeed" parameterType="Feed">
 	    INSERT INTO FEED(FEED_NO
 	    				,FEED_CONTENT
@@ -191,6 +191,25 @@
         SELECT COUNT(*)
         FROM REPLY_LIKE
         WHERE REPLY_NO = #{replyNo}
+    </select>
+    
+    <select id="getUserProfile" parameterType="String" resultType="User">
+    	SELECT USER_ID userId, PROFILE_PATH profilePath, PROFILE_ORIGINNAME profileOriginName, PROFILE_CHANGENAME profileChangeName
+   		FROM USERS
+    	WHERE USER_ID = #{feedWriter}
+    </select>
+    
+    <select id="getFollowList" parameterType="String" resultType="FollowList">
+   	 	SELECT TO_USER toUser, FROM_USER fromUser
+  		FROM FOLLOWLIST
+  		WHERE FROM_USER = #{userId}
+    </select>
+    
+    <select id="isFollowing" parameterType="map" resultType="_int">
+    	SELECT COUNT(*)
+    	FROM FOLLOWLIST
+    	WHERE FROM_USER = #{userId}
+    	AND TO_USER = #{toUser}
     </select>
 	
 	
