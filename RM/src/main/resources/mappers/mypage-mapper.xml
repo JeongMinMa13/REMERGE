@@ -11,49 +11,56 @@
 		<result column="EMAIL" property="email" />
 		<result column="JOINDATE" property="joinDate" />
 		<result column="PROFILE_PATH" property="profilePath" />
-		<result column="PROFILE_ORIGINNAME" property="profileOriginName"/>
-		<result column="PROFILE_CHANGEPATH" property="profileChangePath"/>
+		<result column="PROFILE_ORIGINNAME"
+			property="profileOriginName" />
+		<result column="PROFILE_CHANGEPATH"
+			property="profileChangePath" />
 		<result column="STATUS" property="status" />
 		<result column="SHOP_BRANDCHEK" property="shopBrandChek" />
 		<result column="USER_MEMO" property="userMemo" />
-		<result column="PROFILE_ORIGINNAME"	property="profileOriginName" />
-		<result column="PROFILE_CHANGENAME"	property="profileChangeName" />
+		<result column="PROFILE_ORIGINNAME"
+			property="profileOriginName" />
+		<result column="PROFILE_CHANGENAME"
+			property="profileChangeName" />
 	</resultMap>
-	
+
 	<resultMap type="FollowList" id="followResultSet">
 		<result column="TO_USER" property="toUser" />
 		<result column="FROM_USER" property="fromUser" />
 	</resultMap>
-	
+
 	<resultMap type="Feed" id="feedResultSet">
-			<result column="FEED_NO" property="feedNo"/>
-			<result column="FEED_CONTENT" property="feedContent"/>
-			<result column="FEED_WRITER" property="feedWriter"/>
-			<result column="CREATE_DATE" property="createDate"/>
-			<result column="ORIGIN_NAME" property="originName"/>
-			<result column="CHANGE_NAME" property="changeName"/>
-			<result column="STATUS" property="status"/>
-			<result column="FEED_LOCATION" property="feedLocation"/>
-		</resultMap>
-	
+		<result column="FEED_NO" property="feedNo" />
+		<result column="FEED_CONTENT" property="feedContent" />
+		<result column="FEED_WRITER" property="feedWriter" />
+		<result column="CREATE_DATE" property="createDate" />
+		<result column="ORIGIN_NAME" property="originName" />
+		<result column="CHANGE_NAME" property="changeName" />
+		<result column="STATUS" property="status" />
+		<result column="FEED_LOCATION" property="feedLocation" />
+	</resultMap>
+
 	<select id="loginUser" resultMap="userResultSet">
 		SELECT *
 		FROM USERS
-		WHERE USER_ID = #{userId}
+		WHERE USER_ID
+		= #{userId}
 		AND
 		STATUS = 'Y'
 	</select>
 
-	
+
 
 	<update id="updateUser" parameterType="User">
 		UPDATE USERS
-		SET EMAIL=#{email}
+		SET
+		EMAIL=#{email}
 		,USER_MEMO =#{userMemo}
 		,PROFILE_ORIGINNAME=#{profileOriginName}
 		,PROFILE_CHANGENAME=#{profileChangeName}
 		WHERE USER_ID=#{userId}
-		AND STATUS='Y'
+		AND
+		STATUS='Y'
 	</update>
 
 	<update id="updatePwd" parameterType="User">
@@ -75,43 +82,84 @@
 
 	<update id="updateProfile" parameterType="User">
 		UPDATE USERS
-		SET PROFILE_ORIGINNAME=#{profileOriginName}
-		,PROFILE_CHANGENAME	=#{profileChangeName}
+		SET
+		PROFILE_ORIGINNAME=#{profileOriginName}
+		,PROFILE_CHANGENAME
+		=#{profileChangeName}
 		WHERE USER_ID = #{userId}
 		AND STATUS = 'Y'
 	</update>
-	
-	<select id="countFollowing" resultType="_int" parameterType="string">
+
+	<select id="countFollowing" resultType="_int"
+		parameterType="string">
 		SELECT COUNT (TO_USER)
 		FROM FOLLOWLIST
-		WHERE FROM_USER= #{fromUser}
+		WHERE FROM_USER=
+		#{fromUser}
 	</select>
-	
-	<select id="countFollower" resultType="_int" parameterType="string">
+
+	<select id="countFollower" resultType="_int"
+		parameterType="string">
 		SELECT COUNT (FROM_USER)
 		FROM FOLLOWLIST
-		WHERE TO_USER= #{toUser}
-	</select>
-	
- 	<select id="countFeed" resultType="_int" parameterType="string">
-		  SELECT COUNT (*)
-   		 FROM FEED
-    	WHERE FEED_WRITER= #{feedWriter}
-	</select>
-	
-	<select id="followingList" resultType="FollowList" parameterType="string">
-	SELECT TO_USER
-	FROM FOLLOWLIST
-	WHERE FROM_USER = #{fromUser}
+		WHERE TO_USER=
+		#{toUser}
 	</select>
 
-	
+	<select id="countFeed" resultType="_int" parameterType="string">
+		SELECT
+		COUNT (*)
+		FROM FEED
+		WHERE FEED_WRITER= #{feedWriter}
+	</select>
 
+	<select id="followingList" resultType="User"
+		parameterType="string">
+		SELECT USER_ID userId,PROFILE_PATH profilePath,
+		PROFILE_ORIGINNAME profileOriginName, PROFILE_CHANGENAME
+		profileChangeName
+		FROM USERS
+		WHERE USER_ID IN (SELECT TO_USER
+		FROM
+		FOLLOWLIST
+		WHERE FROM_USER = #{userId})
+	</select>
 
+	<select id="followerList" resultType="User"
+		parameterType="string">
+		SELECT USER_ID userId,PROFILE_PATH profilePath,
+		PROFILE_ORIGINNAME profileOriginName, PROFILE_CHANGENAME
+		profileChangeName
+		FROM USERS
+		WHERE USER_ID IN (SELECT FROM_USER
+		FROM
+		FOLLOWLIST
+		WHERE TO_USER = #{userId})
+	</select>
 
+	<select id="myFeedlist" resultMap="feedResultSet">
+		SELECT FEED_NO
+		,FEED_CONTENT
+		,FEED_WRITER
+		,CREATE_DATE
+		,CHANGE_NAME
+		,FEED_LOCATION
+		FROM FEED F
+		JOIN
+		USERS U ON (FEED_WRITER=USER_ID)
+		WHERE
+		USER_ID=#{userId}
+		AND F.STATUS='Y'
+		ORDER BY CREATE_DATE DESC
+	</select>
 
-
-
+	<select id="myFeedlike" resultMap="feedResultSet">
+		SELECT
+		FL.FEED_NO,FL.USER_ID,F.CHANGE_NAME
+		FROM FEED_LIKE FL
+		INNER JOIN FEED F ON FL.FEED_NO = F.FEED_NO
+		WHERE FL.USER_ID = #{userId}
+	</select>
 
 
 </mapper>

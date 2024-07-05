@@ -6,6 +6,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kh.reMerge.feed.model.vo.Feed;
 import com.kh.reMerge.user.model.dao.MypageDao;
 import com.kh.reMerge.user.model.vo.FollowList;
 import com.kh.reMerge.user.model.vo.User;
@@ -66,10 +67,34 @@ public class MyPageServiceImpl implements MyPageService {
 	}
 
 	@Override
-	public ArrayList<FollowList> followingList(String toUser) {
+	public ArrayList<User> followingList(String userId) {
 		
-		return mypageDao.followingList(sqlSession,toUser);
+		return mypageDao.followingList(sqlSession,userId);
+		
 	}
+
+	@Override
+	public ArrayList<User> followerList(String userId) {
+		
+		return mypageDao.followerList(sqlSession,userId);
+	}
+
+	@Override
+	public ArrayList<Feed> myFeedlist(String userId) {
+		
+		return mypageDao.myFeedlist(sqlSession,userId);
+	}
+
+	@Override
+	public ArrayList<Feed> myFeedlike(String userId) {
+		
+		return mypageDao.myFeedlike(sqlSession,userId);
+	}
+	
+	
+
+	
+
 
 
 	

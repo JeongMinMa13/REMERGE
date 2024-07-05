@@ -109,12 +109,17 @@ header {
 .searchUserResult ul li {
 	display: flex;
     gap: 10px;
+    margin-top: 16px;
 }
 .searchUserResult ul li .profileImage {
 	width: 44px;
     height: 44px;
     overflow: hidden;
     border-radius: 100%;
+}
+.searchUserResult ul li .profileImage img{
+	widgh: 100%;
+	height: 100%;
 }
 .searchUserResult ul li button {
 	background-color: #ffffff;

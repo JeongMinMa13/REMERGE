@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.kh.reMerge.feed.model.vo.Feed;
 import com.kh.reMerge.user.model.vo.FollowList;
 import com.kh.reMerge.user.model.vo.User;
 
@@ -47,10 +48,29 @@ public class MypageDao {
 		return sqlSession.selectOne("mypageMapper.countFeed",feedWriter);
 	}
 
-	public ArrayList<FollowList> followingList(SqlSessionTemplate sqlSession,String toUser) {
+	public ArrayList<User> followingList(SqlSessionTemplate sqlSession,String userId) {
 		
-		return (ArrayList)sqlSession.selectList("mypageMapper.followingList",toUser);
+		return (ArrayList)sqlSession.selectList("mypageMapper.followingList",userId);
 	}
+
+	public ArrayList<User> followerList(SqlSessionTemplate sqlSession, String userId) {
+		
+		return (ArrayList)sqlSession.selectList("mypageMapper.followerList",userId);
+	}
+
+
+
+	public ArrayList<Feed> myFeedlist(SqlSessionTemplate sqlSession, String userId) {
+	
+		return (ArrayList)sqlSession.selectList("mypageMapper.myFeedlist",userId);
+	}
+
+	public ArrayList<Feed> myFeedlike(SqlSessionTemplate sqlSession, String userId) {
+		
+		return (ArrayList)sqlSession.selectList("mypageMapper.myFeedlike",userId);
+	}
+
+
 
 	
 	

@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -17,10 +15,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.kh.reMerge.feed.model.vo.Feed;
 import com.kh.reMerge.user.model.service.MyPageService;
 import com.kh.reMerge.user.model.service.UserService;
 import com.kh.reMerge.user.model.vo.FollowList;
@@ -47,8 +45,8 @@ public class MyPageController {
 		int followingCount = mypageService.countFollowing(userId);
 		int followerCount = mypageService.countFollower(userId);
 		int feedCount = mypageService.countFeed(userId);
-		ArrayList<FollowList> followingList = mypageService.followingList(userId);
-		
+		ArrayList<Feed> myFeedlist = mypageService.myFeedlist(userId);
+		ArrayList<Feed> myFeedlike = mypageService.myFeedlike(userId);
 		
 		User u = userService.selectUser(userId);// 선택된 유저 정보 조회
 		FollowList followList = new FollowList(userId, myId);// 팔로우 정보 조회하기 위해 담기
@@ -63,7 +61,11 @@ public class MyPageController {
 		session.setAttribute("followingCount", followingCount);
 		session.setAttribute("followerCount", followerCount);
 		session.setAttribute("feedCount", feedCount);
-		session.setAttribute("followingList", followingList);
+		session.setAttribute("myFeedlist", myFeedlist);
+		session.setAttribute("myFeedlike", myFeedlike);
+		
+		System.out.println(myFeedlist);
+		
 
 		return "myPage/myPage";
 
@@ -234,20 +236,37 @@ public class MyPageController {
 			return "myPage/myPage";
 		}
 	}
+	//팔로잉 목록
+	@ResponseBody
+	@GetMapping("followingList.us")
+	public ArrayList<User> followingList(String userId,HttpSession session){
+		ArrayList<User> followingList=mypageService.followingList(userId);
+		session.setAttribute("followingList", followingList);
+		
+		 for (User user : followingList) {
+			 
+		    }
 	
-//	//팔로잉 목록 조회
-//	@ResponseBody
-//	@RequestMapping(value="follwingList.us")
-//	public String followingList(Model model,String userId){
-//		
-//		ArrayList<FollowList> followingList = mypageService.followingList(userId);
-//		model.addAttribute("followingList",followingList);
-//		
-//		
-//		
-//		return "myPage/myPage";
-//		
-//	}
+		return followingList;
+		
+	}
+	//팔로워 목록
+	@ResponseBody
+	@GetMapping("followerList.us")
+	public ArrayList<User> followerList(String userId,HttpSession session){
+		ArrayList<User> followerList=mypageService.followerList(userId);
+		session.setAttribute("followerList", followerList);
+		
+		for (User user : followerList) {
+	        
+	    }
+		
+		return followerList;
+		
+	}
+	
+
+	
 
 
 }
