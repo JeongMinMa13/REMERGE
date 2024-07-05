@@ -6,30 +6,11 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script><!-- jquery CDN -->
-<style type="text/css">
-	.festivalTitle{
-		background-color: black;
-		color:white;
-		text-align: center;
-		font-size: 30px;
-	}
-	.festivalContent{
-		padding-top: 50px; 
-	}
-	.festivalBox li{
-		margin: 3px;
-		border: 1px solid black;
-	}
-	
-	.festivalBox li:hover{
-		cursor:pointer;
-		background-color: gray;
-	}
-</style>
+<jsp:include page="/WEB-INF/css/festivalCSS.jsp"></jsp:include>
 </head>
 <body>
 	<%@ include file="../user/loginHeader.jsp" %>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 	<div class="outer">
 		<div class="festivalTitle">
 			축제 리스트 
@@ -37,8 +18,26 @@
 		<div class="festivalContent">
 			<div id="openDataResult"></div>
 		</div>
-		<button id="prevPage">이전</button>
-		<button id="nextPage">다음</button>
+		<div class="buttons">
+			<button id="prevPage">이전</button>
+			<button id="nextPage">다음</button>
+		</div>
+		
+		<!-- 공유하기 버튼 클릭시 보여지는 모달 -->
+		<div class="modal fade" id="shareFestival" tabindex="-1" role="dialog" aria-labelledby="shareFestivalTitle" aria-hidden="true">
+		    <div class="modal-dialog" role="document">
+		        <div class="modal-content">
+		            <div class="modal-header">
+		                <h5 class="modal-title" id="shareFestivalTitle">공유하기</h5>
+		                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		                    <span aria-hidden="true">&times;</span>
+		                </button>
+		            </div>
+		            <div class="modal-body">
+		            </div>
+		        </div>
+		    </div>
+		</div>
 	</div>
 	
 	<script type="text/javascript">
@@ -74,6 +73,7 @@
 							}else{
 								str+="<button onclick='deRecommend(event,"+JSON.stringify(item)+");'>"+recStr+"</button>";
 							}
+							str+="<botton onclick='shareFestival("+JSON.stringify(item)+");'><img src='resources/shareIcon.png'></button>"
 							str+="</li>";
 						}
 						str+="</ul>";
@@ -87,7 +87,7 @@
 				});
 			}
 			paging(pageNo);
-			
+			//1 페이지 일때 이전 버튼 막기
 			function updateButton(pageNo) {
                 if (pageNo === 1) {
                     $("#prevPage").attr("disabled", true);
@@ -96,6 +96,7 @@
                 }
             }
 			
+			//데이터 이전 버튼 
 			$("#prevPage").click(function() {
 		        if (pageNo > 1) {
 			    	pageNo--;
@@ -103,7 +104,8 @@
 			    
 			    }
 			 });
-	
+			 
+			 //데이터 다음버튼 
 			 $("#nextPage").click(function() {
 			 	pageNo++;
 			 	/* console.log(pageNo); */
@@ -121,24 +123,25 @@
                 return count;
 	         }
 			 
+             //추천 누른 유저 비교하여 비추천 으로 바꾸기 
 			 function getRecStr(festivalName){
 				 var recStr='추천';
 				 <c:forEach var="recommendUser" items="${userList}">
                  if (festivalName === "${recommendUser.festivalName}"&& ${recommendUser.userId eq loginUser.userId} ) {
-                     //추천 누른 유저 비교하여 비추천 으로 바꾸기 
                      //console.log("통과");
                      recStr = '추천 취소';
                  }
             	 </c:forEach>
             	 return recStr;
 			 }
-		});
+		});//$(function 닫기 
 	
 		function naverPage(data){
 			//console.log(data.homepageUrl); 
 			location.href="https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=0&ie=utf8&query="+encodeURIComponent(data.fstvlNm); 
 		}
 		
+		//추천하기
 		function recommend(e,festival){
 			e.preventDefault();
 			e.stopPropagation();
@@ -164,6 +167,7 @@
 			
 		}
 		
+		//추천 취소
 		function deRecommend(e,festival){
 			e.preventDefault();
 			e.stopPropagation();
@@ -188,6 +192,30 @@
 			});
 			
 		}
+		//모달 보여주기
+		function shareFestival(data){
+			//console.log(data.fstvlNm);
+			$("#shareFestival").modal('show');
+			var shareButtonHtml="";
+			shareButtonHtml+="<div id='shareChat' onclick='shareChat("+JSON.stringify(data)+");'><img src='resources/chat.png'>DM</div>";
+			shareButtonHtml+="<div id='shareCopy' onclick='shareCopy("+JSON.stringify(data)+");'><img src='resources/copyIcon.png'>복사하기</div>";
+			$(".modal-body").html(shareButtonHtml);
+			
+		}
+		function shareChat(data){
+			//console.log(data);
+			alert("메세지 기능 구현 후 구현될 서비스입니당 ^^* ");
+		}
+		
+		function shareCopy(data){
+			navigator.clipboard.writeText("https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=0&ie=utf8&query="+encodeURIComponent(data.fstvlNm)).then(
+					  () => {
+					    // 클립보드에 write이 성공했을 때 불리는 핸들러
+					    alert("복사되었습니다.");
+					  }
+					);
+		}
+		
 	</script>
 
 </body>
