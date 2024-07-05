@@ -292,7 +292,7 @@
 			loadAllLikes();
 			
 			$(window).scroll(function() {
-	            if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+	            if ($(window).scrollTop() == $(document).height() - $(window).height()-1000) {
 	                // 현재 페이지 수를 가져와서 다음 페이지를 로드합니다.
 	                const currentPage = Math.ceil($('.con').length / 6) + 1; // 예시: 현재 보여지는 게시물 갯수로 대체
 	                feedList(currentPage);
