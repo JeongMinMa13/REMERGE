@@ -142,6 +142,14 @@ header {
 	color:#737373;
 }
 
+.badge {
+    margin-left: 5px;
+    padding: 0.5em;
+    border-radius: 50%;
+    background-color: red;
+    color: white;
+    width: 25px;
+}
 </style>
 </head>
 <body>
