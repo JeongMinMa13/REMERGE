@@ -24,10 +24,11 @@
 	</beans:bean>
 	
 	<beans:bean id="messageServer" class="com.kh.reMerge.message.server.MessageServer"/>
+	<beans:bean id="echoHandler" class="com.kh.reMerge.message.server.WebSocketHandler"/>
 	
 	<websocket:handlers allowed-origins="http://localhost:8888/reMerge,http://192.168.50.30:8888/reMerge">
 		<websocket:mapping handler="messageServer" path="/dm"/>
-		
+		<websocket:mapping handler="echoHandler" path="/echo-ws" />
 		<websocket:handshake-interceptors>
 			<beans:bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor"/>
 		</websocket:handshake-interceptors>

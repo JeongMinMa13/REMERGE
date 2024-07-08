@@ -9,6 +9,87 @@
 <jsp:include page="/WEB-INF/css/headerCSS.jsp"></jsp:include>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script><!-- jquery CDN -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"><!-- bootstrapCSS -->
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script>
+var socket; // 전역변수 설정
+var displayedNotifications = new Set(); // 표시된 알림을 추적하는 집합
+
+$(document).ready(function() {
+    Notification.requestPermission().then(function(permission) {  // 알림 허용
+        if (permission === 'granted') {
+            console.log('알림 권한이 허용되었습니다.');
+        } else {
+            console.log('알림 권한 설정에 실패했습니다.');
+        }
+    });
+    
+    connectWebSocket(); // 페이지가 로드 시 웹소켓 연결
+    
+    function connectWebSocket() {
+        var sessionId = localStorage.getItem('sessionId'); // 세션 ID 로드
+		console.log("세션아이디"+sessionId);
+        if (sessionId) {
+            socket = new SockJS("<c:url value='/echo-ws'/>?sessionId=" + sessionId);
+        } else {
+            socket = new SockJS("<c:url value='/echo-ws'/>");
+        }
+        socket.onerror = function(e) {
+            console.log("웹소켓 핸들러 못들어옴 : "+e);
+        };
+        socket.onmessage = function(event) {
+            try {
+                var data = JSON.parse(event.data);
+
+                if (data.type === 'notification') {
+                    showNotification(data);
+                } else if (data.type === 'unreadMessageCount') {
+                    updateUnreadMessageCount(data.count);
+                } else {
+                    console.error('예기치 않은 데이터 형식:', data);
+                }
+            } catch (error) {
+                console.error('JSON 파싱 실패 :', event.data);
+            }
+        };
+    }
+});
+
+function showNotification(data) {
+    if (Notification.permission === 'granted') {
+        var fromUserId = data.fromUserId; // sendId
+        var notificationMessage = data.content; // Content
+
+        var displayedNotifications = JSON.parse(localStorage.getItem('displayedNotifications')) || [];
+
+        if (!displayedNotifications.includes(notificationMessage)) {
+            var notification = new Notification(fromUserId, {
+                body: notificationMessage
+            });
+
+            notification.onclick = function(event) {
+                event.preventDefault();
+                location.href = "${pageContext.request.contextPath}/message/dm";
+            };
+
+            setTimeout(notification.close.bind(notification), 3000);
+            displayedNotifications.push(notificationMessage);
+
+            localStorage.setItem('displayedNotifications', JSON.stringify(displayedNotifications));
+        } else {
+            console.log('이미 표시된 알림 : ', notificationMessage);
+        }
+    } else {
+        console.log('알림 권한이 없습니다.');
+    }
+}
+
+function updateUnreadMessageCount(count) {
+    console.log('안 읽은 메시지 개수:'+ count);
+    var countSpan = document.getElementById('unreadMessageCount');
+    countSpan.textContent = count > 0 ? count : '';
+}
+
+</script>
 </head>
 <body>
 	<c:if test="${not empty alertMsg}">
@@ -28,13 +109,13 @@
                     <li><div class="menu-item" id="search" onclick="searchDisplay();"><img src="${pageContext.request.contextPath}/resources/search.png">검색</div></li>
                     <li><div class="menu-item" id="explore"><img src="${pageContext.request.contextPath}/resources/explore.png">탐색</div></li>
                     <li><div class="menu-item" id="messages"><img src="${pageContext.request.contextPath}/resources/messages.png"><a href="/reMerge/message/dm">메시지</a></div></li>
-                    <li><div class="menu-item" id="notifications"><img src="${pageContext.request.contextPath}/resources/notifications.png">알림</div></li>
+                    <li><div class="menu-item" id="notifications"><img src="${pageContext.request.contextPath}/resources/notifications.png">알림
+                     <span id="unreadMessageCount" class="badge bg-danger"></span>
+                    </div></li>
                     <li><div class="menu-item" id="create"><img src="${pageContext.request.contextPath}/resources/create.png">만들기</div></li>
                     <li><div class="menu-item" id="store"><img src="${pageContext.request.contextPath}/resources/store.png">스토어</div></li>
-                    <li><div class="menu-item" id="profile"><a href="myPage.us?userId=${loginUser.userId}"><img src="resources/unknown.jpg">프로필</a></div></li>
+                    <li><div class="menu-item" id="profile"><a href="myPage.us?userId=${loginUser.userId}"><img src="${pageContext.request.contextPath}/resources/unknown.jpg">프로필</a></div></li>
                     <li><div class="menu-item" id="calendarIcon"><a href="calendar.sc"><img src="${pageContext.request.contextPath}/resources/calendaricon.png">캘린더</a></div></li>
-                    <li><div class="menu-item" id="festivalIcon"><a href="festival.fs"><img src="${pageContext.request.contextPath}/resources/festivalIcon.png">축제</a></div></li>
-                    <li><div class="menu-item"><div id="toggle"><input type="radio" name="toggle" id="toggle-radio-light" checked><label for="toggle-radio-light"><i id="light-mode" class="fas fa-sun"></i></label><input type="radio" name="toggle" id="toggle-radio-dark"><label for="toggle-radio-dark"><i id="dark-mode" class="fas fa-moon"></i></label></div> </div></li>
                 </ul>
             </nav>
         </div>
@@ -106,18 +187,10 @@
 	    				html += "<ul>";
 	    				for(var i=0;i<data.length;i++){
 	    					html+="<li class='searchResult' onclick='profileUser("+JSON.stringify(data[i])+");'>";//해당하는 div 클릭시 data를 매개변수로 보내 클릭시 아이디값 알수 있게 하기
-	    					if(data[i].profileChangeName==null){
-		    					html+="<span class='profileImage'><img src='resources/unknown.jpg'></span>";
-		    				}else{
-		    					html+="<span class='profileImage'><img src='"+data[i].profileChangeName+"'></span>";
-		    				}
+		    				html+="<span class='profileImage'><img src='"+data[i].profilePath+"'></span>";
 		    				html+="<p>";
 		    				html+="<strong class='userId'>"+data[i].userId+"</strong>";
-		    				if(data[i].userMemo==null){
-		    					html+="<span class='memo'></span>";
-		    				}else{
-			    				html+="<span class='memo'>"+data[i].userMemo+"</span>";
-		    				}
+		    				html+="<span class='email'>"+data[i].email+"</span>";
 		    				html+="</p>";
 		    				html+="</li>";
 	    				}
@@ -177,18 +250,10 @@
     				html += "<ul>";
     				for(var i=0;i<data.length;i++){
     					html+="<li class='searchResult' onclick='profileUser("+JSON.stringify(data[i])+");'>";//해당하는 div 클릭시 data를 매개변수로 보내 클릭시 아이디값 알수 있게 하기
-	    				if(data[i].profileChangeName==null){
-	    					html+="<span class='profileImage'><img src='resources/unknown.jpg'></span>";
-	    				}else{
-	    					html+="<span class='profileImage'><img src='"+data[i].profileChangeName+"'></span>";
-	    				}
+	    				html+="<span class='profileImage'><img src='"+data[i].profilePath+"'></span>";
 	    				html+="<p>";
 	    				html+="<strong class='userId'>"+data[i].userId+"</strong>";
-	    				if(data[i].userMemo==null){
-	    					html+="<span class='memo'></span>";
-	    				}else{
-		    				html+="<span class='memo'>"+data[i].userMemo+"</span>";
-	    				}
+	    				html+="<span class='email'>"+data[i].userMemo+"</span>";
 	    				html+="</p>";
 	    				html+="<button onclick='deleteSearchHistory(event,"+JSON.stringify(data[i])+");'>x</button>";
 	    				html+="</li>";
@@ -213,7 +278,7 @@
     				searchUser:data.userId
     			},
     			success:function(data){
-    				
+    				console.log(data);
     				$(e.target).closest('li').hide();//x 버튼 눌렸을때 해당 기록 지워주기(부모 li요소 숨기기)
     			},
     			error:function(){
@@ -222,22 +287,6 @@
     		});
     	}
     	
-    </script>
-    
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('toggle').addEventListener('click', e => {
-            const lightMode = document.getElementById('light-mode');
-            const darkMode = document.getElementById('dark-mode');
-
-            if (e.target === lightMode) {
-                document.body.setAttribute('data-theme', 'light');
-            } else if (e.target === darkMode) {
-                document.body.setAttribute('data-theme', 'dark');
-            }
-        });
-    });
-    
     </script>
      <h2>${loginUser.userId}</h2>
 	<a href="logout.us">로그아웃</a>
