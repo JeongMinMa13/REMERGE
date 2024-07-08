@@ -54,9 +54,15 @@ header {
 	align-items: center;
 	padding: 10px 20px;
 }
-.menu-item a {display:block; cursor: pointer;
+.menu-item a {
+	display:block; 
+	cursor: pointer;
 	font-size: 16px;
-	font-weight: 500; width:100%;}
+	font-weight: 500; 
+	width:100%;
+	text-decoration: none;
+	color: black;
+}
 .menu-item img {
 	width: 24px;
 	height: 24px;
@@ -109,12 +115,17 @@ header {
 .searchUserResult ul li {
 	display: flex;
     gap: 10px;
+    margin-top: 16px;
 }
 .searchUserResult ul li .profileImage {
 	width: 44px;
     height: 44px;
     overflow: hidden;
     border-radius: 100%;
+}
+.searchUserResult ul li .profileImage img{
+	widgh: 100%;
+	height: 100%;
 }
 .searchUserResult ul li button {
 	background-color: #ffffff;

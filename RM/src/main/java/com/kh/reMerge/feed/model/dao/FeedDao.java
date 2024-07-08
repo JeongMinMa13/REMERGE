@@ -16,6 +16,8 @@ import com.kh.reMerge.feed.model.vo.FeedLike;
 import com.kh.reMerge.feed.model.vo.Reply;
 import com.kh.reMerge.feed.model.vo.ReplyLike;
 import com.kh.reMerge.feed.model.vo.Tag;
+import com.kh.reMerge.user.model.vo.FollowList;
+import com.kh.reMerge.user.model.vo.User;
 
 @Repository
 public class FeedDao {
@@ -57,7 +59,11 @@ public class FeedDao {
 
 	public Feed selectFeed(SqlSessionTemplate sqlSession, int feedNo) {
 		
-		return sqlSession.selectOne("feedMapper.selectFeed",feedNo);
+		Feed feed = sqlSession.selectOne("feedMapper.selectFeed", feedNo);
+		User userProfile = sqlSession.selectOne("feedMapper.getUserProfile", feed.getFeedWriter());
+		feed.setUserProfile(userProfile);
+		
+		return feed;
 	}
 
 	public int insertLike(SqlSessionTemplate sqlSession, FeedLike fl) {
@@ -156,6 +162,29 @@ public class FeedDao {
 	public int countReplyLikes(SqlSessionTemplate sqlSession, int replyNo) {
 		
 		return sqlSession.selectOne("feedMapper.countReplyLikes", replyNo);
+	}
+
+	public ArrayList<User> selectUser(SqlSessionTemplate sqlSession, String userId) {
+
+		return (ArrayList)sqlSession.selectList("feedMapper.selectUser",userId);
+	}
+
+	public User getUserProfile(SqlSessionTemplate sqlSession, String userId) {
+		
+		return sqlSession.selectOne("feedMapper.getUserProfile", userId);
+	}
+
+	public List<FollowList> getFollowList(SqlSessionTemplate sqlSession, String userId) {
+		
+		return sqlSession.selectList("feedMapper.getFollowList",userId);
+	}
+
+	public boolean isFollowing(SqlSessionTemplate sqlSession, String fromUser, String toUser) {
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("fromUser", fromUser);
+		paramMap.put("toUser", toUser);
+		int count = sqlSession.selectOne("feedMapper.isFollowing",paramMap);
+		return count > 0;
 	}
 
 

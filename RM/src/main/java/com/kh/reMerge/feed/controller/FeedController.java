@@ -32,6 +32,9 @@ import com.kh.reMerge.feed.model.vo.FeedLike;
 import com.kh.reMerge.feed.model.vo.Reply;
 import com.kh.reMerge.feed.model.vo.ReplyLike;
 import com.kh.reMerge.feed.model.vo.Tag;
+import com.kh.reMerge.user.model.service.UserService;
+import com.kh.reMerge.user.model.vo.FollowList;
+import com.kh.reMerge.user.model.vo.User;
 
 import oracle.jdbc.proxy.annotation.Post;
 
@@ -41,6 +44,7 @@ public class FeedController {
 	
 	@Autowired
 	private FeedService feedService;
+	
 	
 	//메인페이지
 	@GetMapping("feed.fe")
@@ -64,13 +68,15 @@ public class FeedController {
 		  for (Feed feed : list) {
 		        List<String> tags = feedService.getTagsByFeedNo(feed.getFeedNo());
 		        feed.setTags(tags);
+		        
+		        User userProfile = feedService.getUserProfile(feed.getFeedWriter()); // 사용자 프로필 정보 가져오기
+		        feed.setUserProfile(userProfile);
+		        
 		    }
-		
-		
+		  
 		Map<String, Object> result = new HashMap<>();
 		result.put("pi", pi);
 		result.put("list", list);
-		
 		
 		return result;
 	}
@@ -165,7 +171,6 @@ public class FeedController {
 	@ResponseBody
 	@PostMapping("insertReply.fe")
 	public int insertReply(Reply r) {
-		System.out.println(r);
 		int result = feedService.insertReply(r);
 		
 		return result;
