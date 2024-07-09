@@ -54,9 +54,15 @@ header {
 	align-items: center;
 	padding: 10px 20px;
 }
-.menu-item a {display:block; cursor: pointer;
+.menu-item a {
+	display:block; 
+	cursor: pointer;
 	font-size: 16px;
-	font-weight: 500; width:100%;}
+	font-weight: 500; 
+	width:100%;
+	text-decoration: none;
+	color: black;
+}
 .menu-item img {
 	width: 24px;
 	height: 24px;
@@ -136,6 +142,14 @@ header {
 	color:#737373;
 }
 
+.badge {
+    margin-left: 5px;
+    padding: 0.5em;
+    border-radius: 50%;
+    background-color: red;
+    color: white;
+    width: 25px;
+}
 </style>
 </head>
 <body>

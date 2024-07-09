@@ -41,7 +41,7 @@ public class FestivalController {
 		String url="http://api.data.go.kr/openapi/tn_pubr_public_cltur_fstvl_api";
 		url+="?serviceKey="+serviceKey;
 		url+="&pageNo="+pageNo;
-		url+="&numOfRows=10";
+		url+="&numOfRows=9";
 		url+="&type=json";
 		URL requestUrl = new URL(url);
 		HttpURLConnection urlCon = (HttpURLConnection)requestUrl.openConnection();
