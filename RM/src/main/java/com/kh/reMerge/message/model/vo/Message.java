@@ -2,12 +2,15 @@ package com.kh.reMerge.message.model.vo;
 
 import java.sql.Date;
 
+
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Message {
 	private int messageNo;			//	MESSAGE_NO NUMBER PRIMARY KEY,
 	private int messageRoomNo;			//    MESSAGEROOM_NO NUMBER NOT NULL,
