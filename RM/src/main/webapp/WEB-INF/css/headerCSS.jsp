@@ -54,9 +54,15 @@ header {
 	align-items: center;
 	padding: 10px 20px;
 }
-.menu-item a {display:block; cursor: pointer;
+.menu-item a {
+	display:block; 
+	cursor: pointer;
 	font-size: 16px;
-	font-weight: 500; width:100%;}
+	font-weight: 500; 
+	width:100%;
+	text-decoration: none;
+	color: black;
+}
 .menu-item img {
 	width: 24px;
 	height: 24px;

@@ -4,7 +4,7 @@
 <html>
 <head>
 <link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"
+	ef="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"
 	rel="stylesheet"
 	integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We"
 	crossorigin="anonymous">
@@ -32,11 +32,19 @@
 	cursor: pointer;
 	text-align: center;
 }
-
  .feedLike {
 	display: none;
 }
-
+ .feedBlockImg {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+ .feedBlockImg {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
 </style>
 </head>
 <body>
@@ -52,25 +60,26 @@
 					<c:when test="${user.profileChangeName eq null }">
 						<img id="profile" src="resources/unknown.jpg" width="100"
 							height="100">
-                    &nbsp; ${user.userId } &nbsp; &nbsp; &nbsp; 게시물 ${feedCount } &nbsp;
-                    <button onclick="following();" type="button" data-bs-toggle="modal"
+                    &nbsp; <b>${user.userId }</b> &nbsp; &nbsp; &nbsp; 게시물 <b>${feedCount}</b> &nbsp;
+                    <button class="btn btn-light" onclick="following();" type="button" data-bs-toggle="modal"
 							data-bs-target="#followingModal">팔로잉</button>
 							
-                    ${followingCount } <button onclick="follower();" type="button" data-bs-toggle="modal" data-bs-target="#followerModal">팔로워</button> ${followerCount } &nbsp; &nbsp;
+                   <b> ${followingCount }</b> <button class="btn btn-light" onclick="follower();" type="button" data-bs-toggle="modal" data-bs-target="#followerModal">팔로워</button> <b>${followerCount }</b> &nbsp; &nbsp;
                 </c:when>
 					<c:otherwise>
 						<img style="border-radius: 70%" id="profile"
 							src="${user.profileChangeName }" width="100" height="100">
-                    &nbsp; ${user.userId } &nbsp; &nbsp; &nbsp; 게시물 ${feedCount } &nbsp;
-                   <button onclick="following();" type="button" data-bs-toggle="modal"
+							
+                    &nbsp; ${user.userId } &nbsp; &nbsp; &nbsp;<b> ${feedCount }</b> 게시물  &nbsp;
+                   <button class="btn btn-light" onclick="following();" type="button" data-bs-toggle="modal"
 							data-bs-target="#followingModal">팔로잉</button>
-                    ${followingCount } 팔로워 <button onclick="follower();" type="button" data-bs-toggle="modal" data-bs-target="#followerModal">팔로워</button> ${followerCount } &nbsp; &nbsp;
+                  <b>  ${followingCount }</b> 팔로워 <button class="btn btn-light" onclick="follower();" type="button" data-bs-toggle="modal" data-bs-target="#followerModal">팔로워</button><b> ${followerCount }</b> &nbsp; &nbsp;
                 </c:otherwise>
 				</c:choose>
 				<!-- null 아닐때 -->
 				<c:if test="${loginUser.userId eq user.userId }">
 					<a href="updatePage.us" class="button-link">프로필 편집</a>
-					<a href="updatePage.us" class="button-link">보관된 스토리 보기</a>
+					<a href="storyArchive.us?userId=${loginUser.userId}" class="button-link">보관된 스토리 보기</a>
 				</c:if>
 				<c:if test="${loginUser.userId ne user.userId }">
 					<c:choose>
@@ -88,6 +97,7 @@
 		</div>
 		<br>
 		<br>
+		<hr>
 		<div class="container">
 				<div align="center">
 					<a id="appsLink" href="#"><img src="resources/apps.png" width="20" id="apps"></a>
@@ -98,9 +108,8 @@
 				</div>
 			
 				<div align="center">
-					<a href="myPageSave.us?userId=${user.userId}"><img src="resources/bookmark.png" width="20" id="bookmark"></a>
+					<a id="bookmarkLink" href="#"><img src="resources/bookmark.png" width="20" id="bookmark"></a>
 				</div>
-		<hr>
 		</div>
 		<div class="feedList">
 		<c:choose>
@@ -140,7 +149,7 @@
 	
 	
 	<!-- 팔로잉 목록 모달 -->
-	<div class="modal fade" id="followingModal" tabindex="-1" 
+	<div class="modal fade" id="followingModal" tabindex="-1"
 		aria-labelledby="followingModalLabel" aria-hidden="true">
 		
 		
@@ -304,12 +313,19 @@
 	<script>
 	$(document).ready(function() {
 		$("#appsLink").click(function(e) {
+			   var newImageUrl = "resources/bapps.png";
+		        $("#apps").attr("src", newImageUrl);
+		        var newImageUrl = "resources/heart.png";
+		        $("#heart").attr("src", newImageUrl);
 			e.preventDefault();
 			$(".feedList").show();
 			$(".feedLike").hide();
 		});
-
 		$("#heartLink").click(function(e) {
+			 var originalImageUrl = "resources/apps.png";
+			    $("#apps").attr("src", originalImageUrl);	
+			   var newImageUrl = "resources/bheart.png";
+		        $("#heart").attr("src", newImageUrl);
 			e.preventDefault();
 			$(".feedList").hide();
 			$(".feedLike").show();
