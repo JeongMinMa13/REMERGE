@@ -150,7 +150,7 @@ header {
     position: fixed;
     top: 100px;
     right: 200px;
-    width: 300px; /* 원하는 너비로 조정 */
+    width: 400px; /* 원하는 너비로 조정 */
     background-color: white;
     border: 1px solid #DBDBDB;
     border-radius: 10px;
@@ -190,7 +190,6 @@ header {
 	text-decoration: none;
 }
 .suggestion {
-	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	margin-bottom: 15px;
@@ -203,33 +202,33 @@ header {
 }
 .suggestion .suggestion-info {
 	display: flex;
-	align-items: center;
-	flex-grow: 1;
+    align-items: center;
+    margin-bottom: 15px;
 }
 .suggestion .suggestion-info .name {
 	font-weight: bold;
 	font-size: 14px;
+	margin-right: 10px; /* 이름과 버튼 사이 간격 추가 */
 }
-.suggestion .suggestion-info .subtext {
-	font-size: 12px;
-	color: #8E8E8E;
-}
+
 .follow-btn {
-	padding: 5px 10px;
-	border: none;
-	background-color: #0095F6;
-	color: white;
-	border-radius: 4px;
-	font-size: 14px;
-	cursor: pointer;
+	padding: 5px 15px;
+    border: 1px solid #0095F6;
+    background-color: white;
+    color: #0095F6;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-left: auto;
 }
 .follow-btn:hover {
-	background-color: #007BB5;
+	background-color: #0095F6;
+    color: white;
 }
 <!--모달-->
 .modal-content {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     width: 90%;
     max-width: 100%;
     border-radius: 10px;
@@ -239,9 +238,9 @@ header {
 .modal-body {
     padding: 0;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     width: 100%;
-    height: 90vh; /* 모달의 높이를 늘림 */
+    height: auto; /* 모달의 높이를 자동으로 조정 */
 }
 .modal-image {
     flex: 1;
@@ -289,10 +288,29 @@ header {
 }
 .modal-footer {
     display: flex;
-    flex-direction: column;
+    justify-content: flex-end;
     border-top: 1px solid #DBDBDB;
     padding: 10px 20px;
 }
+
+/* 숨겨진 파일 입력 */
+
+.custom-file-label {
+    cursor: pointer;
+    color: blue; /* 원하는 색상으로 변경 */
+    text-decoration: underline;
+}
+.form-control-file.d-none {
+    display: none;
+}
+
+/* 이미지 미리보기 */
+#thumbnailFeed img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
 .like-button, .reply-like-button {
     background: none;
     border: none;
@@ -428,6 +446,7 @@ header {
     padding: 0;
     margin-left: 10px;
     cursor: pointer;
+    
 }
 .reply-like-button:focus {
     outline: none;
@@ -435,6 +454,7 @@ header {
 .reply-heart-icon {
     font-size: 16px;
     color: #black;
+    margin-left: auto;
 }
 .reply-heart-icon.liked {
     color: #FF5A5F;
@@ -459,46 +479,8 @@ header {
 .feedBlock:hover::before{opacity:0.3;}
 .feedBlock img {width:100%; height:100%;}
 
-/*다크모드*/
-
-/*토글*/
- #toggle{
-    display: inline-flex;
-    padding: 5px;
-    border-radius: 1.5em;
-    background-color: #82d8ff;
-}
-#toggle i{
-    font-size: 1.5em;
-    padding: 5px;
-    background-color: #fff;
-    color: #666;
-}
-#light-mode{
-    border-radius: 50% 0 0 50%;
-}
-#dark-mode{
-    border-radius: 0 50% 50% 0;
-}
-#toggle input{
-    display: none;
-}
-#toggle input[type=radio]:checked + label > i {
-    background-color: #82d8ff;
-    color: #fff;
-    transition: all 0.3s ease-in-out;
-}
-
-/*배경 변경*/
-body{
-	color: #000;
-	background-color: #fff;
-}
-
-body[data-theme='dark']{
-	color: #fff;
-	background-color: #000;
-
+.saveButton{
+display: none;
 }
 
 </style>

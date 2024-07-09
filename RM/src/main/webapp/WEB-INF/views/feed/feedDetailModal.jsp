@@ -22,7 +22,7 @@
 		                <div class="modal-details flex-fill d-flex flex-column">
 		                    <div class="modal-header">
 		                        <div class="d-flex align-items-center">
-		                            <img src="" id="feed_user_img" class="rounded-circle" alt="프로필 사진" style="width: 40px; height: 40px;">
+                                    		<img src="resources/unknown.jpg" id="feed_user_img" class="rounded-circle" alt="프로필 사진">
 		                            <div class="ml-2">
 		                                <span class="username" id="feed_userId">사용자 이름</span>
 		                                <div id="feed_location" class="text-muted" style="font-size: 12px;">위치 정보</div>
@@ -58,7 +58,9 @@
 
 	<script type="text/javascript">
 	
+	<!-- 게시글 detail 불러오기 -->
 	function detailView(feedNo){
+		var userId = '${loginUser.userId}';
 		$('#modal_detail_feed').modal('show');
 		$.ajax({
 			url : "detail.fe",
@@ -72,14 +74,28 @@
 		         $('#feed_userId').text(result.f.feedWriter);
 		         $('#feed_location').text(result.f.feedLocation); 
 		         $('#feed_detail_content').text(result.f.feedContent);
+		         
+		         if (result.f.userProfile && result.f.userProfile.profileChangeName) {
+		                $('#feed_user_img').attr('src', result.f.userProfile.profileChangeName);
+		            } else {
+		                $('#feed_user_img').attr('src', 'resources/unknown.jpg');
+		            }
+		         
+		         loadLikeStatusDetail(result.f.feedNo, userId); //디테일 게시글 좋아요 유저
+		         
 		         var str = "";
 		         for(var i = 0; i<result.rList.length; i++){
 		        	 var reply = result.rList[i];
-		                str += '<div class="modal-body">';
-		                str += '    <div id="feed_detail_replyList">';
-		                str += '        <p><strong>' + reply.userId + ':</strong> ' + reply.reContent + '</p>';
-		                str += '    </div>';
-		                str += '</div>';
+		        		str += '<div class="modal-body">';
+		        	    str += '    <div id="feed_detail_replyList">';
+		        	    str += '        <p><strong>' + reply.userId + ':</strong> ' + reply.reContent;
+		        	    str += '            <button class="reply-like-button" onclick="toggleReplyLike(' + reply.replyNo + ', \'' + reply.userId + '\')">';
+		        	    str += '                <i class="reply-heart-icon far fa-heart"></i>';
+		        	    str += '            </button>';
+		        	    str += '            <span class="reply-like-count" id="reply-like-count-' + reply.replyNo + '"></span>';
+		        	    str += '        </p>';
+		        	    str += '    </div>';
+		        	    str += '</div>';
 
 		         }
 		         
@@ -95,6 +111,15 @@
 		         console.log("content",content);
 		         $('.form-group').html(reHtml);
 		         
+		         $("#likeButtonDetail").off("click").on("click", function() {
+		                toggleLikeDetail(result.f.feedNo, userId);
+		            });
+		         
+		         // 댓글 좋아요 상태 로드
+		            for (var i = 0; i < result.rList.length; i++) {
+		                var reply = result.rList[i];
+		                loadReplyLikeStatus(reply.replyNo, userId);
+		            }
 		         
 			},
 			error : function(){
@@ -104,27 +129,26 @@
 	}
 	
 	function replyList(feedNo){
-		$.ajax({
-			url : "replyList.fe",
-			data : {
-				feedNo : feedNo
-			},
-			success : function(result){
-				var str = "";
-				if(result.rList.length > 0){
-	                var reply = result.rList[0]; // 가장 최근 댓글 하나만 가져옴
-	                str += '<div class="reply">';
-	                str += '<p><strong>' + reply.userId + ':</strong> ' + reply.reContent + '</p>';
-	                str += '</div>';
+	    $.ajax({
+	        url : "replyList.fe",
+	        data : {
+	            feedNo : feedNo
+	        },
+	        success : function(result){
+	            var str = "";
+	            if(result.rList.length > 0){
+	                    var reply = result.rList[0];
+	                    str += '<div class="comment">';
+	                    str += '    <p><strong class="username">' + reply.userId + ':</strong> ' + reply.reContent + '</p>';
+	                    str += '    <button class="reply-like-button" onclick="toggleReplyLike(' + reply.replyNo + ', \'' + reply.userId + '\')">';
+	                    str += '</div>';
 	            }
-				  $("#replyList" + feedNo).html(str); // 댓글 리스트를 해당 게시물 div에 추가
-				  
-			},
-			error : function(){
-				console.log("통신오류");
-			}
-			
-		});
+	            $("#replyList" + feedNo).html(str); // 댓글 리스트를 해당 게시물 div에 추가
+	        },
+	        error : function(){
+	            console.log("통신오류");
+	        }
+	    });
 	};
 	
 	<!-- 두번째 댓글 입력 -->
@@ -157,6 +181,197 @@
 			}
 		});
 	};
+	
+	 // 디테일 모달 좋아요 상태 로드
+    function loadLikeStatusDetail(feedNo, userId) {
+        $.ajax({
+            url: "likeStatus.fe",
+            type: "get",
+            data: {
+                feedNo: feedNo,
+                userId: userId
+            },
+            success: function(response) {
+                var likeButton = $("#likeButtonDetail");
+                var heartIcon = likeButton.find(".heart-icon");
+                var likeCountElement = $("#likeCountDetail");
+
+                if (response.status === "liked") {
+                    likeButton.addClass("liked");
+                    heartIcon.removeClass("far fa-heart");
+                    heartIcon.addClass("fas fa-heart");
+                } else {
+                    likeButton.removeClass("liked");
+                    heartIcon.removeClass("fas fa-heart");
+                    heartIcon.addClass("far fa-heart");
+                }
+
+                likeCountElement.text(response.likeCount);
+            },
+            error: function() {
+                alert("실패.");
+            }
+        });
+    }
+ 
+ // 디테일 모달 좋아요 토글
+    function toggleLikeDetail(feedNo, userId) {
+        $.ajax({
+            url: "feedLike.fe",
+            type: "post",
+            data: {
+                feedNo: feedNo,
+                userId: userId
+            },
+            success: function(response) {
+                var likeButton = $("#likeButtonDetail");
+                var heartIcon = likeButton.find(".heart-icon");
+
+                if (response.status === "liked") {
+                    likeButton.addClass("liked");
+                    heartIcon.removeClass("far fa-heart");
+                    heartIcon.addClass("fas fa-heart");
+                } else {
+                    likeButton.removeClass("liked");
+                    heartIcon.removeClass("fas fa-heart");
+                    heartIcon.addClass("far fa-heart");
+                }
+
+                $("#likeCountDetail").text(response.likeCount);
+            },
+            error: function() {
+                alert("좋아요 실패");
+            }
+        });
+    }
+ 
+  //댓글 좋아요 
+    function toggleReplyLike(replyNo, userId) {
+		    $.ajax({
+		        url: 'replyLike.fe',
+		        type: 'post',
+		        data: {
+		            replyNo: replyNo,
+		            userId: userId
+		        },
+		        success: function(response) {
+		            var likeButton = $('.reply-like-button[onclick="toggleReplyLike(' + replyNo + ', \'' + userId + '\')"]');
+		            var heartIcon = likeButton.find('.reply-heart-icon');
+		            var likeCountElement = likeButton.siblings('.reply-like-count');
+		
+		            if (response.status === 'liked') {
+		                likeButton.addClass('liked');
+		                heartIcon.removeClass('far fa-heart');
+		                heartIcon.addClass('fas fa-heart');
+		            } else {
+		                likeButton.removeClass('liked');
+		                heartIcon.removeClass('fas fa-heart');
+		                heartIcon.addClass('far fa-heart');
+		            }
+		
+		            likeCountElement.text(response.likeCount);
+		        },
+		        error: function() {
+		            alert('댓글 좋아요 처리에 실패했습니다.');
+		        }
+		    });
+		}
+	        
+	// 댓글 좋아요 상태 로드 함수 (필요 시 호출)
+	function loadReplyLikeStatus(replyNo, userId) {
+		    $.ajax({
+		        url: 'replyLikeStatus.fe',
+		        type: 'get',
+		        data: {
+		            replyNo: replyNo,
+		            userId: userId
+		        },
+		        success: function(response) {
+		            var likeButton = $('.reply-like-button[onclick="toggleReplyLike(' + replyNo + ', \'' + userId + '\')"]');
+		            var heartIcon = likeButton.find('.reply-heart-icon');
+		            var likeCountElement = likeButton.siblings('.reply-like-count');
+		
+		            if (response.status === 'liked') {
+		                likeButton.addClass('liked');
+		                heartIcon.removeClass('far fa-heart');
+		                heartIcon.addClass('fas fa-heart');
+		            } else {
+		                likeButton.removeClass('liked');
+		                heartIcon.removeClass('fas fa-heart');
+		                heartIcon.addClass('far fa-heart');
+		            }
+		
+		            likeCountElement.text(response.likeCount);
+		        },
+		        error: function() {
+		            alert('댓글 좋아요 상태를 가져오는데 실패했습니다.');
+		        }
+		    });
+		}
+	
+	function loadLikeStatus(feedNo, userId) {
+	    $.ajax({
+	        url: "likeStatus.fe",
+	        type: "get",
+	        data: {
+	            feedNo: feedNo,
+	            userId: userId
+	        },
+	        success: function(response) {
+	            var likeButton = $("#likeButton" + feedNo);
+	            var heartIcon = likeButton.find(".heart-icon");
+	            var likeCountElement = $(".like-count[data-feed-no='" + feedNo + "']");
+
+	            if (response.status === "liked") {
+	                likeButton.addClass("liked");
+	                heartIcon.removeClass("far fa-heart");
+	                heartIcon.addClass("fas fa-heart");
+	            } else {
+	                likeButton.removeClass("liked");
+	                heartIcon.removeClass("fas fa-heart");
+	                heartIcon.addClass("far fa-heart");
+	            }
+
+	            likeCountElement.text(response.likeCount);
+	        },
+	        error: function() {
+	            alert("게시물 정보를 가져오는데 실패했습니다.");
+	        }
+	    });
+	}
+
+    function toggleLike(feedNo, userId) {
+        $.ajax({
+            url: "feedLike.fe",
+            type: "post",
+            data: {
+                feedNo: feedNo,
+                userId: userId
+            },
+            success: function(response) {
+                var likeButton = $("#likeButton" + feedNo);
+                var heartIcon = likeButton.find(".heart-icon");
+
+                if (response.status === "liked") {
+                    likeButton.addClass("liked");
+                    heartIcon.removeClass("far fa-heart");
+                    heartIcon.addClass("fas fa-heart");
+                } else {
+                    likeButton.removeClass("liked");
+                    heartIcon.removeClass("fas fa-heart");
+                    heartIcon.addClass("far fa-heart");
+                }
+
+                $(".like-count[data-feed-no='" + feedNo + "']").text(response.likeCount);
+            },
+            error: function() {
+                alert("좋아요 실패");
+            }
+        });
+    }
+	
+	
+	
 	</script>
 </body>
 </html>
