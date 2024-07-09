@@ -6,6 +6,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.kh.reMerge.feed.model.vo.Feed;
+import com.kh.reMerge.feed.model.vo.Story;
 import com.kh.reMerge.user.model.vo.FollowList;
 import com.kh.reMerge.user.model.vo.User;
 
@@ -68,6 +69,16 @@ public class MypageDao {
 	public ArrayList<Feed> myFeedlike(SqlSessionTemplate sqlSession, String userId) {
 		
 		return (ArrayList)sqlSession.selectList("mypageMapper.myFeedlike",userId);
+	}
+	
+	public ArrayList<Feed> myFeedsave(SqlSessionTemplate sqlSession, String userId) {
+		
+		return (ArrayList)sqlSession.selectList("mypageMapper.myFeedsave",userId);
+	}
+
+	public ArrayList<Story> storyArchive(SqlSessionTemplate sqlSession, String userId) {
+		
+		return (ArrayList)sqlSession.selectList("mypageMapper.storyArchive",userId);
 	}
 
 

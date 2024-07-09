@@ -39,6 +39,15 @@
 		<result column="STATUS" property="status" />
 		<result column="FEED_LOCATION" property="feedLocation" />
 	</resultMap>
+	
+	<resultMap type="Story" id="storyResultSet">
+		<result column="STORY_NO" property="storyNo"/>
+		<result column="USER_ID" property="userId"/>
+		<result column="STORY_CONTENT" property="storyContent"/>
+		<result column="ORIGIN_NAME" property="originName"/>
+		<result column="CHANGE_NAME" property="changeName"/>
+		<result column="CREATE_DATE" property="createDate"/>
+	</resultMap>
 
 	<select id="loginUser" resultMap="userResultSet">
 		SELECT *
@@ -157,9 +166,15 @@
 		SELECT
 		FL.FEED_NO,FL.USER_ID,F.CHANGE_NAME
 		FROM FEED_LIKE FL
-		INNER JOIN FEED F ON FL.FEED_NO = F.FEED_NO
+		INNER JOIN FEED F
+		ON FL.FEED_NO = F.FEED_NO
 		WHERE FL.USER_ID = #{userId}
+		ORDER BY
+		CREATE_DATE DESC
 	</select>
+	
+
+
 
 
 </mapper>

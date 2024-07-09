@@ -34,6 +34,7 @@
                     <li><div class="menu-item" id="profile"><a href="myPage.us?userId=${loginUser.userId}"><img src="${pageContext.request.contextPath}/resources/unknown.jpg">프로필</a></div></li>
                     <li><div class="menu-item" id="calendarIcon"><a href="calendar.sc"><img src="${pageContext.request.contextPath}/resources/calendaricon.png">캘린더</a></div></li>
                     <li><div class="menu-item" id="festivalIcon"><a href="festival.fs"><img src="${pageContext.request.contextPath}/resources/festivalIcon.png">축제</a></div></li>
+                    <li><div class="menu-item"><div id="toggle"><input type="radio" name="toggle" id="toggle-radio-light" checked><label for="toggle-radio-light"><i id="light-mode" class="fas fa-sun"></i></label><input type="radio" name="toggle" id="toggle-radio-dark"><label for="toggle-radio-dark"><i id="dark-mode" class="fas fa-moon"></i></label></div> </div></li>
                 </ul>
             </nav>
         </div>

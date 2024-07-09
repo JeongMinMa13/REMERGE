@@ -7,7 +7,9 @@
 <title>Insert title here</title>
 </head>
 <body>
-<%@include file="/WEB-INF/views/myPage/myPage.jsp"%>
-
+	<h1 align="center">보관된 스토리 보기</h1>
+	<div>
+		
+	</div>
 </body>
 </html>

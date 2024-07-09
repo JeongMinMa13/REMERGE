@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kh.reMerge.feed.model.vo.Feed;
+import com.kh.reMerge.feed.model.vo.Story;
 import com.kh.reMerge.user.model.dao.MypageDao;
 import com.kh.reMerge.user.model.vo.FollowList;
 import com.kh.reMerge.user.model.vo.User;
@@ -90,6 +91,19 @@ public class MyPageServiceImpl implements MyPageService {
 		
 		return mypageDao.myFeedlike(sqlSession,userId);
 	}
+
+	@Override
+	public ArrayList<Feed> myFeedsave(String userId) {
+		// TODO Auto-generated method stub
+		return mypageDao.myFeedsave(sqlSession,userId);
+		
+	}
+	@Override
+	public ArrayList<Story> storyArchive(String userId) {
+		
+		return mypageDao.storyArchive(sqlSession,userId);
+	}
+
 	
 	
 

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.reMerge.feed.model.vo.Feed;
+import com.kh.reMerge.feed.model.vo.Story;
 import com.kh.reMerge.user.model.service.MyPageService;
 import com.kh.reMerge.user.model.service.UserService;
 import com.kh.reMerge.user.model.vo.FollowList;
@@ -47,6 +48,7 @@ public class MyPageController {
 		int feedCount = mypageService.countFeed(userId);
 		ArrayList<Feed> myFeedlist = mypageService.myFeedlist(userId);
 		ArrayList<Feed> myFeedlike = mypageService.myFeedlike(userId);
+		//ArrayList<Feed> myFeedsave = mypageService.myFeedsave(userId);
 		
 		User u = userService.selectUser(userId);// 선택된 유저 정보 조회
 		FollowList followList = new FollowList(userId, myId);// 팔로우 정보 조회하기 위해 담기
@@ -265,6 +267,15 @@ public class MyPageController {
 		
 	}
 	
+//	@RequestMapping("storyArchive.us")
+//	public String stroyArchive(String userId,HttpSession session) {
+//		
+//		ArrayList<Story> storyArchive = mypageService.storyArchive(userId);
+//		session.setAttribute("storyArchive", storyArchive);
+//
+//		return "myPage/storyArchive";
+//	}
+//	
 
 	
 

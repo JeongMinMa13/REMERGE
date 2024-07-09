@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.springframework.stereotype.Service;
 
 import com.kh.reMerge.feed.model.vo.Feed;
+import com.kh.reMerge.feed.model.vo.Story;
 import com.kh.reMerge.user.model.vo.FollowList;
 import com.kh.reMerge.user.model.vo.User;
 
@@ -31,6 +32,10 @@ public interface MyPageService {
 	ArrayList<Feed> myFeedlist(String userId);
 	//내가 누른 좋아요 조회
 	ArrayList<Feed> myFeedlike(String userId);
+	//내가 저장한 게시물 조회
+	ArrayList<Feed> myFeedsave(String userId);
+	//보관된 내 스토리 조회
+	ArrayList<Story> storyArchive(String userId);
 	
 
 	
