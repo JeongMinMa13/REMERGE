@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.reMerge.common.model.vo.PageInfo;
 import com.kh.reMerge.feed.model.vo.Feed;
+import com.kh.reMerge.feed.model.vo.FeedKeep;
 import com.kh.reMerge.feed.model.vo.FeedLike;
 import com.kh.reMerge.feed.model.vo.Reply;
 import com.kh.reMerge.feed.model.vo.ReplyLike;
@@ -34,15 +35,15 @@ public class FeedDao {
 	}
 	
 	//게시글 목록
-	public ArrayList<Feed> selectList(SqlSessionTemplate sqlSession, PageInfo pi) {
+	public ArrayList<Feed> selectList(SqlSessionTemplate sqlSession, PageInfo pi, String userId) {
 		
-		int limit = pi.getFeedLimit();
+		 int offset = (pi.getCurrentPage() - 1) * pi.getFeedLimit();
+		 RowBounds rowBounds = new RowBounds(offset, pi.getFeedLimit());
+		 Map<String, Object> paramMap = new HashMap<>();
+		 
+		 paramMap.put("userId", userId);
 		
-		int offset = (pi.getCurrentPage()-1) * limit;
-		
-		RowBounds rowBounds = new RowBounds(offset,limit);
-		
-		return (ArrayList)sqlSession.selectList("feedMapper.selectList", null, rowBounds);
+		return (ArrayList)sqlSession.selectList("feedMapper.selectList", paramMap, rowBounds);
 	}
 	
 	//댓글 목록
@@ -185,6 +186,34 @@ public class FeedDao {
 		paramMap.put("toUser", toUser);
 		int count = sqlSession.selectOne("feedMapper.isFollowing",paramMap);
 		return count > 0;
+	}
+
+	public int saveFeed(SqlSessionTemplate sqlSession, FeedKeep feedKeep) {
+		
+		return sqlSession.insert("feedMapper.saveFeed",feedKeep);
+	}
+
+	public int unsaveFeed(SqlSessionTemplate sqlSession, FeedKeep feedKeep) {
+		
+		return sqlSession.delete("feedMapper.unsaveFeed",feedKeep);
+	}
+
+	public int checkFeedSave(SqlSessionTemplate sqlSession, int feedNo, String userId) {
+		Map<String,Object> paramMap = new HashMap<>();
+		paramMap.put("feedNo", feedNo);
+		paramMap.put("userId", userId);
+		
+		return sqlSession.selectOne("feedMapper.checkFeedSave",paramMap);
+	}
+
+
+	public List<User> getRecommend(SqlSessionTemplate sqlSession, String userId, int limit) {
+		Map<String,Object> paramMap = new HashMap<>();
+		paramMap.put("userId", userId);
+		paramMap.put("limit", limit);
+		
+		System.out.println(paramMap);
+		return sqlSession.selectList("feedMapper.getRecommend",paramMap);
 	}
 
 

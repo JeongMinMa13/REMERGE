@@ -27,4 +27,5 @@ public class Feed {
 	private List<String> tags;
 	private User userProfile;
 	private List<FollowList> followList;
+	private List<User> userList;
 }
