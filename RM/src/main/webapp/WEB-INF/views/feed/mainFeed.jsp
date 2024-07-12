@@ -25,15 +25,13 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <div class="outer">
         <!--스토리 목록-->
-        <div class="swiper">
-            <div class="swiper-wrapper storys">
-            	<div class="swiper-slide story" onclick="addStory();">
+        <div class="">
+            <div class="storys">
+            	<div class="story" onclick="addStory();">
 		      		<img class="story_img" src="resources/plusicon.jpeg">
 		      		<span>스토리 추가하기</span>
 		      	</div>
             </div>
-            <div class="swiper-button-prev"></div>
-  			<div class="swiper-button-next"></div>
          </div>   
     <div class="body">
 		   <div class="con_wrap">
@@ -433,19 +431,6 @@
 	    var storiesData = [];
 
 		$(function(){
-			/* $.ajax({
-				url:"selectHistory.fe",
-				type:"post",
-				data:{
-					userId:"${loginUser.userId}"
-				},
-				success:function(history){
-					history=history;
-				},
-				error:function(){
-					console.log("통신 실패");
-				}
-			}); */
 			
 			$.ajax({
 				url:"selectStory.fe",
@@ -468,7 +453,7 @@
 					for(var i=0;i<story.length;i++){
 						if(!processedUserIds.has(story[i].userId)){//저장된 집합에 이름이 있는지 확인
 							
-							html +="<div class='story swiper-slide' onclick='storyView("+i+");'>";
+							html +="<div class='story' onclick='storyView("+i+");'>";
 							html +="<input type='hidden' class='storyNoCheck' value='"+story[i].storyNo+"'>";
 							html +="<img class='story_img' src='"+story[i].changeName+"'>";
 							html +="<span>"+story[i].userId+"</span>";
@@ -804,10 +789,6 @@
 					}
 				});
 			};
-// 			$(document).on("click","#modal_detail_feed label>button",function(){
-				
-// 				console.log($(this).parent().siblings().first().attr("id"));
-// 			});
 			
 			<!-- 두번째 댓글 입력 -->
 			function insertModal(el,feedNo){
@@ -1293,6 +1274,7 @@
 					}
 				});
 			}
+			
 		</script>
 	
 	

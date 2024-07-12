@@ -16,6 +16,7 @@
 			<result column="FEED_WRITER" property="feedWriter"/>
 			<result column="CREATE_DATE" property="createDate"/>
 			<result column="FEED_LOCATION" property="feedLocation"/>
+			<result column="CHANGE_NAME" property="changeName"/>
 		</resultMap>
 		
 	<insert id="insertFeed" parameterType="Feed">
@@ -129,18 +130,32 @@
 	</select>
 
 	<select id="selectTag" parameterType="Tag" resultMap="feedResultSet">
-		SELECT FEED_NO
-		      ,FEED_CONTENT
-		      ,FEED_WRITER
-		      ,CREATE_DATE
-		      ,CHANGE_NAME
-		      ,FEED_LOCATION
-		FROM FEED
-		WHERE STATUS = 'Y'
-        AND FEED_NO IN (SELECT REF_FNO
-                        FROM TAG
-                        WHERE TAG_CONTENT=#{tagContent})
-	 	ORDER BY CREATE_DATE DESC
+		SELECT 
+		    F.FEED_NO,
+		    F.FEED_CONTENT,
+		    F.FEED_WRITER,
+		    F.CREATE_DATE,
+		    MIN(FI.CHANGE_NAME) AS CHANGE_NAME,  
+		    F.FEED_LOCATION
+		FROM 
+		    FEED F
+		JOIN 
+		    FEED_IMG FI ON F.FEED_NO = FI.FEED_NO
+		WHERE 
+		    F.STATUS = 'Y'
+		    AND F.FEED_NO IN (
+		        SELECT REF_FNO
+		        FROM TAG
+		        WHERE TAG_CONTENT = #{tagContent}
+		    )
+		GROUP BY 
+		    F.FEED_NO,
+		    F.FEED_CONTENT,
+		    F.FEED_WRITER,
+		    F.CREATE_DATE,
+		    F.FEED_LOCATION
+		ORDER BY 
+		    F.CREATE_DATE DESC
 	</select>
 	
 	<!-- 게시글 삭제 -->
