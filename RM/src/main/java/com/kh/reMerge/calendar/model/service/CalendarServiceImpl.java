@@ -65,9 +65,9 @@ public class CalendarServiceImpl implements CalendarService {
 	
 	//공유 캘린더 조회
 	@Override
-	public ArrayList<Schedule> selectShareSchedule(String userId) {
+	public ArrayList<Schedule> selectShareSchedule(String[] follower) {
 
-		return calendarDao.selectShareSchedule(sqlSession,userId);
+		return calendarDao.selectShareSchedule(sqlSession,follower);
 	}
 	
 	//팔로우 리스트 페이징 처리를 위한 팔로잉 수 조회
@@ -75,5 +75,12 @@ public class CalendarServiceImpl implements CalendarService {
 	public int followListCount(String userId) {
 
 		return calendarDao.followListCount(sqlSession,userId);
+	}
+	
+	//팔로우 리스트에서 팔로워 검색
+	@Override
+	public ArrayList<User> searchFollower(FollowList followList) {
+
+		return calendarDao.searchFollower(sqlSession,followList);
 	}
 }
