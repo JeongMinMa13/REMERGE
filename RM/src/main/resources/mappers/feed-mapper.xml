@@ -15,23 +15,17 @@
 			<result column="FEED_CONTENT" property="feedContent"/>
 			<result column="FEED_WRITER" property="feedWriter"/>
 			<result column="CREATE_DATE" property="createDate"/>
-			<result column="CHANGE_NAME" property="changeName"/>
 			<result column="FEED_LOCATION" property="feedLocation"/>
-		 
 		</resultMap>
 		
 	<insert id="insertFeed" parameterType="Feed">
 	    INSERT INTO FEED(FEED_NO
 	    				,FEED_CONTENT
 	    				,FEED_WRITER
-	    				,ORIGIN_NAME
-	    				,CHANGE_NAME
 	    				,FEED_LOCATION)
 		    VALUES(SEQ_FNO.NEXTVAL
 		    	   ,#{feedContent}
 		    	   ,#{feedWriter}
-		    	   ,#{originName}
-		    	   ,#{changeName}
 		    	   ,#{feedLocation})
 	</insert>
 	
@@ -44,7 +38,6 @@
            FEED_CONTENT,
            FEED_WRITER,
            CREATE_DATE,
-           CHANGE_NAME,
            FEED_LOCATION
     FROM FEED
     WHERE FEED_WRITER = #{userId}
@@ -83,7 +76,6 @@
 			  ,FEED_CONTENT
 			  ,FEED_WRITER
 			  ,CREATE_DATE
-			  ,CHANGE_NAME
 			  ,FEED_LOCATION
 		FROM FEED
 		WHERE FEED_NO = #{feedNo}
@@ -235,9 +227,9 @@
    	
    <select id="getRecommend" parameterType="map" resultType="User">
  <![CDATA[
-	    SELECT USER_ID userId, PROFILE_CHANGENAME profileChangename, PROFILE_PATH profilePath
+	    SELECT USER_ID userId, PROFILE_CHANGENAME profileChangename, PROFILE_PATH profilePath, JOINDATE joinDate
 	    FROM (
-	        SELECT USER_ID, PROFILE_CHANGENAME,PROFILE_PATH
+	        SELECT USER_ID, PROFILE_CHANGENAME,PROFILE_PATH,JOINDATE
 	        FROM USERS
 	        WHERE USER_ID NOT IN (
 	            SELECT TO_USER 
@@ -249,6 +241,42 @@
 	    WHERE ROWNUM <= #{limit}
     ]]>
    </select>
+   
+   <insert id="followUser" parameterType="FollowList">
+   		INSERT INTO FOLLOWLIST (FROM_USER,TO_USER)
+   		VALUES (#{fromUser}, #{toUser})
+   </insert>
+   
+     <select id="getRecommendList" parameterType="map" resultType="User">
+ <![CDATA[
+	    SELECT USER_ID userId, PROFILE_CHANGENAME profileChangename, PROFILE_PATH profilePath,JOINDATE joinDate
+	    FROM (
+	        SELECT USER_ID, PROFILE_CHANGENAME,PROFILE_PATH,JOINDATE
+	        FROM USERS
+	        WHERE USER_ID NOT IN (
+	            SELECT TO_USER 
+	            FROM FOLLOWLIST 
+	            WHERE FROM_USER = #{userId}
+	        )
+	        ORDER BY dbms_random.value
+	    )
+	    WHERE ROWNUM <= #{limit}
+    ]]>
+   </select>
+   
+   <!-- 사진 여러장 추가 -->
+   <insert id="insertFeedImg" parameterType="FeedImg">
+    INSERT INTO FEED_IMG (IMG_ID, FEED_NO, ORIGIN_NAME, CHANGE_NAME)
+    VALUES (SEQ_INO.NEXTVAL, #{feedNo}, #{originName}, #{changeName})
+   </insert>
+   
+   <!-- 게시글 사진 조회 -->
+   <select id="selectImages" parameterType="_int" resultType="FeedImg">
+   SELECT IMG_ID imgId, FEED_NO feedNo, ORIGIN_NAME originName, CHANGE_NAME changeName
+   FROM FEED_IMG
+   WHERE FEED_NO = #{feedNo}
+   </select>
+   
 	
 	
 	
