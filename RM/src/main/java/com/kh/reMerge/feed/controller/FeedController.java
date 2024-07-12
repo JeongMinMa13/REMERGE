@@ -321,7 +321,7 @@ public class FeedController {
 	@GetMapping("selectTag.fe")
 	public String selectTag(Tag tag, HttpSession session) {
 		ArrayList<Feed> tagList = feedService.selectTag(tag);
-		
+		System.out.println(tagList);
 		session.setAttribute("tagList", tagList);
 		session.setAttribute("tag", tag);
 		
