@@ -18,8 +18,6 @@ public class Feed {
 	private String feedContent;
 	private String feedWriter;
 	private Date createDate;
-	private String originName;
-	private String changeName;
 	private String status;
 	private int likeCount;
 	private String feedLocation;
@@ -28,4 +26,5 @@ public class Feed {
 	private User userProfile;
 	private List<FollowList> followList;
 	private List<User> userList;
+	private List<FeedImg> feedImg;
 }
