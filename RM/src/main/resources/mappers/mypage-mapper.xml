@@ -39,14 +39,14 @@
 		<result column="STATUS" property="status" />
 		<result column="FEED_LOCATION" property="feedLocation" />
 	</resultMap>
-	
+
 	<resultMap type="Story" id="storyResultSet">
-		<result column="STORY_NO" property="storyNo"/>
-		<result column="USER_ID" property="userId"/>
-		<result column="STORY_CONTENT" property="storyContent"/>
-		<result column="ORIGIN_NAME" property="originName"/>
-		<result column="CHANGE_NAME" property="changeName"/>
-		<result column="CREATE_DATE" property="createDate"/>
+		<result column="STORY_NO" property="storyNo" />
+		<result column="USER_ID" property="userId" />
+		<result column="STORY_CONTENT" property="storyContent" />
+		<result column="ORIGIN_NAME" property="originName" />
+		<result column="CHANGE_NAME" property="changeName" />
+		<result column="CREATE_DATE" property="createDate" />
 	</resultMap>
 
 	<select id="loginUser" resultMap="userResultSet">
@@ -172,7 +172,35 @@
 		ORDER BY
 		CREATE_DATE DESC
 	</select>
-	
+
+	<select id="myFeedsave" resultMap="feedResultSet">
+		SELECT
+		FK.FEED_NO,FK.USER_ID,F.CHANGE_NAME
+		FROM FEED_KEEP FK
+		INNER JOIN FEED F
+		ON FK.FEED_NO = F.FEED_NO
+		WHERE FK.USER_ID=#{userId}
+	</select>
+
+	<select id="storyArchive" resultMap="storyResultSet">
+		SELECT
+		USER_ID,STORY_NO,STORY_CONTENT,CHANGE_NAME
+		FROM STORY
+		WHERE
+		USER_ID=#{userId}
+
+	</select>
+
+	<select id="storyDetail" resultMap="storyResultSet" parameterType="_int">
+		SELECT
+		STORY_NO,STORY_CONTENT,CHANGE_NAME
+		FROM STORY
+		WHERE STORY_NO=#{storyNo}
+
+	</select>
+
+
+
 
 
 

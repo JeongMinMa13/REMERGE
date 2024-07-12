@@ -37,6 +37,8 @@ public interface MyPageService {
 	//보관된 내 스토리 조회
 	ArrayList<Story> storyArchive(String userId);
 	
+	Story storyDetail(int storyNo);
+	
 
 	
 	

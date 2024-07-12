@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.kh.reMerge.common.model.vo.PageInfo;
 import com.kh.reMerge.feed.model.dao.FeedDao;
 import com.kh.reMerge.feed.model.vo.Feed;
+import com.kh.reMerge.feed.model.vo.FeedKeep;
 import com.kh.reMerge.feed.model.vo.FeedLike;
 import com.kh.reMerge.feed.model.vo.Reply;
 import com.kh.reMerge.feed.model.vo.ReplyLike;
@@ -37,9 +38,9 @@ public class FeedServiceImpl implements FeedService {
 	}
 
 	@Override
-	public ArrayList<Feed> selectList(PageInfo pi) {
+	public ArrayList<Feed> selectList(PageInfo pi,String userId) {
 		
-		return feedDao.selectList(sqlSession,pi);
+		return feedDao.selectList(sqlSession,pi,userId);
 	}
 
 	@Override
@@ -184,6 +185,32 @@ public class FeedServiceImpl implements FeedService {
 		
 		return feedDao.isFollowing(sqlSession,fromUser,toUser);
 	}
+
+	@Override
+	public int saveFeed(FeedKeep feedKeep) {
+		
+		return feedDao.saveFeed(sqlSession,feedKeep);
+	}
+
+	@Override
+	public int unsaveFeed(FeedKeep feedKeep) {
+		
+		return feedDao.unsaveFeed(sqlSession,feedKeep);
+	}
+
+	@Override
+	public int checkFeedSave(int feedNo, String userId) {
+		
+		return feedDao.checkFeedSave(sqlSession,feedNo,userId);
+	}
+
+	@Override
+	public List<User> getRecommend(String userId, int limit) {
+		System.out.println(limit);
+		return feedDao.getRecommend(sqlSession,userId,limit);
+	}
+
+	
 
 	
 

@@ -104,6 +104,12 @@ public class MyPageServiceImpl implements MyPageService {
 		return mypageDao.storyArchive(sqlSession,userId);
 	}
 
+	@Override
+	public Story storyDetail(int storyNo) {
+		
+		return mypageDao.storyDetail(sqlSession,storyNo);
+	}
+
 	
 	
 

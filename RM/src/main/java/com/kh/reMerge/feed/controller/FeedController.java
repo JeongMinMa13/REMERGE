@@ -28,6 +28,7 @@ import com.kh.reMerge.common.model.vo.PageInfo;
 import com.kh.reMerge.common.template.Pagination;
 import com.kh.reMerge.feed.model.service.FeedService;
 import com.kh.reMerge.feed.model.vo.Feed;
+import com.kh.reMerge.feed.model.vo.FeedKeep;
 import com.kh.reMerge.feed.model.vo.FeedLike;
 import com.kh.reMerge.feed.model.vo.Reply;
 import com.kh.reMerge.feed.model.vo.ReplyLike;
@@ -56,15 +57,13 @@ public class FeedController {
 	//리스트 조회
 	@ResponseBody
 	@PostMapping("feedList.fe")
-	public Map<String, Object> feedlist(@RequestParam(value="currentPage",defaultValue = "1")int currentPage) {
-		
+	public Map<String, Object> feedlist(@RequestParam(value="currentPage",defaultValue = "1")int currentPage,String userId) {
 		int listCount = feedService.listcount();
 		int feedLimit = 5;
 		
 		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, feedLimit);
 		
-		ArrayList<Feed> list = feedService.selectList(pi);
-		
+		ArrayList<Feed> list = feedService.selectList(pi,userId);
 		  for (Feed feed : list) {
 		        List<String> tags = feedService.getTagsByFeedNo(feed.getFeedNo());
 		        feed.setTags(tags);
@@ -333,6 +332,58 @@ public class FeedController {
 	    return result;
 	
 	}
+	
+	//게시물 저장
+	@ResponseBody
+	@PostMapping("saveFeed.fe")
+	public Map<String,Object> saveFeed(@RequestParam int feedNo, @RequestParam String userId){
+		FeedKeep feedKeep = new FeedKeep(feedNo,userId);
+		
+		int saveCheck = feedService.checkFeedSave(feedNo,userId);
+		Map<String,Object> result = new HashMap<>();
+		
+		 if (saveCheck > 0) {
+		        feedService.unsaveFeed(feedKeep);
+		        result.put("status", "unsaved");
+		    } else {
+		        feedService.saveFeed(feedKeep);
+		        result.put("status", "saved");
+		    }
+
+		    return result;
+	}
+	
+	//게시물 저장 상태 확인
+	@ResponseBody
+    @RequestMapping("saveStatus.fe")
+    public Map<String, Object> saveStatus(@RequestParam int feedNo, @RequestParam String userId) {
+        Map<String, Object> result = new HashMap<>();
+        try {
+            int saveCheck = feedService.checkFeedSave(feedNo, userId);
+            result.put("status", saveCheck > 0 ? "saved" : "unsaved");
+        } catch (Exception e) {
+            result.put("error", e.getMessage());
+        }
+        return result;
+	}
+	
+	//팔로우 안 한 리스트 뽑아주기
+	@ResponseBody
+	@RequestMapping("recommend.fe")
+	public List<User> recommend(@RequestParam String userId){
+		
+		System.out.println(userId);
+		List<User> recommend = feedService.getRecommend(userId, 5); //5명만 추천
+		
+		System.out.println(recommend);
+		
+		return recommend;
+	}
+	
+	//팔로우 하기
+
+	
+	
 	
 	
 }

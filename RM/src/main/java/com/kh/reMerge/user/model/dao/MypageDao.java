@@ -81,6 +81,11 @@ public class MypageDao {
 		return (ArrayList)sqlSession.selectList("mypageMapper.storyArchive",userId);
 	}
 
+	public Story storyDetail(SqlSessionTemplate sqlSession, int storyNo) {
+		
+		return sqlSession.selectOne("mypageMapper.storyDetail",storyNo);
+	}
+
 
 
 	

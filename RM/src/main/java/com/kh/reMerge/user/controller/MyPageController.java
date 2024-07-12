@@ -48,7 +48,7 @@ public class MyPageController {
 		int feedCount = mypageService.countFeed(userId);
 		ArrayList<Feed> myFeedlist = mypageService.myFeedlist(userId);
 		ArrayList<Feed> myFeedlike = mypageService.myFeedlike(userId);
-		//ArrayList<Feed> myFeedsave = mypageService.myFeedsave(userId);
+		ArrayList<Feed> myFeedsave = mypageService.myFeedsave(userId);
 		
 		User u = userService.selectUser(userId);// 선택된 유저 정보 조회
 		FollowList followList = new FollowList(userId, myId);// 팔로우 정보 조회하기 위해 담기
@@ -65,8 +65,9 @@ public class MyPageController {
 		session.setAttribute("feedCount", feedCount);
 		session.setAttribute("myFeedlist", myFeedlist);
 		session.setAttribute("myFeedlike", myFeedlike);
+		session.setAttribute("myFeedsave", myFeedsave);
 		
-		System.out.println(myFeedlist);
+		
 		
 
 		return "myPage/myPage";
@@ -245,9 +246,7 @@ public class MyPageController {
 		ArrayList<User> followingList=mypageService.followingList(userId);
 		session.setAttribute("followingList", followingList);
 		
-		 for (User user : followingList) {
-			 
-		    }
+		
 	
 		return followingList;
 		
@@ -259,23 +258,34 @@ public class MyPageController {
 		ArrayList<User> followerList=mypageService.followerList(userId);
 		session.setAttribute("followerList", followerList);
 		
-		for (User user : followerList) {
-	        
-	    }
 		
 		return followerList;
 		
 	}
 	
-//	@RequestMapping("storyArchive.us")
-//	public String stroyArchive(String userId,HttpSession session) {
-//		
-//		ArrayList<Story> storyArchive = mypageService.storyArchive(userId);
-//		session.setAttribute("storyArchive", storyArchive);
-//
-//		return "myPage/storyArchive";
-//	}
-//	
+	@GetMapping("storyArchive.us")
+	public String stroyArchive(String userId,HttpSession session) {
+		
+		ArrayList<Story> storyArchive = mypageService.storyArchive(userId);
+		session.setAttribute("storyArchive", storyArchive);
+		
+
+		return "myPage/storyArchive";
+	}
+	
+	@ResponseBody
+	@PostMapping("storyDetail.us")
+	public Story storyDetail (int storyNo){
+		
+		Story story = mypageService.storyDetail(storyNo);
+		
+		
+		return story;
+		
+	}
+	
+	
+	
 
 	
 
