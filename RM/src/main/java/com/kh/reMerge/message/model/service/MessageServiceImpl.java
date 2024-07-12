@@ -1,15 +1,11 @@
 package com.kh.reMerge.message.model.service;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.reMerge.message.model.dao.MessageDao;
 import com.kh.reMerge.message.model.vo.Message;
@@ -43,6 +39,35 @@ public class MessageServiceImpl implements MessageService {
         int messageRoomNo = messageDao.createChatRoom(sqlSession, sendId, receiveId);
         return messageRoomNo;
     }
-
     
+    @Override
+    public void markAsRead(int chatRoomNo, String receiveId) {
+        messageDao.markAsRead(sqlSession, chatRoomNo, receiveId);
+    }
+
+	@Override
+	public void markAsUnRead(int chatRoomNo, String userId) {
+		 messageDao.markAsUnRead(sqlSession, chatRoomNo, userId);
+	}
+
+	@Override
+	public ArrayList<Integer> getChatRoomNumbers(String userId) {
+		return messageDao.getChatRoomNumbers(sqlSession, userId);
+	}
+
+	@Override
+	public ArrayList<String> getNotificationsForUser(String userId) {
+		return messageDao.getNotificationsForUser(sqlSession, userId);
+	}
+
+	@Override
+	public int getUnreadMessageCount(String userId) {
+		return messageDao.getUnreadMessageCount(sqlSession, userId);
+	}
+
+	@Override
+	public int saveFile(Message message) {
+		return messageDao.saveFile(sqlSession, message);
+	}
+
 }

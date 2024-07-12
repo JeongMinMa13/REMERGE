@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.kh.reMerge.common.model.vo.PageInfo;
 import com.kh.reMerge.feed.model.vo.Feed;
+import com.kh.reMerge.feed.model.vo.FeedKeep;
 import com.kh.reMerge.feed.model.vo.FeedLike;
 import com.kh.reMerge.feed.model.vo.Reply;
 import com.kh.reMerge.feed.model.vo.ReplyLike;
@@ -22,7 +23,7 @@ public interface FeedService {
 	int insertFeed(Feed f);
 	
 	//게시글 목록 
-	ArrayList<Feed> selectList(PageInfo pi);
+	ArrayList<Feed> selectList(PageInfo pi,String userId);
 	
 	//댓글 목록조회
 	ArrayList<Reply> replyList(int feedNo);
@@ -89,6 +90,18 @@ public interface FeedService {
 	
 	//팔로우 반별
 	boolean isFollowing(String fromUser, String toUser);
+	
+	//게시글 저장
+	int saveFeed(FeedKeep feedKeep);
+	
+	//게시글 저장 취소
+	int unsaveFeed(FeedKeep feedKeep);
+	
+	//게시글 상태 확인
+	int checkFeedSave(int feedNo, String userId);
+	
+	//회원 추천
+	List<User> getRecommend(String userId, int limit);
 	
 	
 	

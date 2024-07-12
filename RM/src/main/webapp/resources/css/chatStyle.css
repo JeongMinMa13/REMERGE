@@ -1,8 +1,8 @@
 @charset "UTF-8";
-.outer {
-    display: flex;
-    height: 100vh;
-}
+	.outer {
+	    display: flex;
+	    height: 100vh;
+	}
 	.table-container {
 	    flex: 1;
 	    position: relative;
@@ -76,6 +76,10 @@
 	    font-size: 20px;
 	}
 	
+	#selfie {
+	    width: 60px;
+	    height: 60px;
+	}
 	#selfie {
 	    width: 60px;
 	    height: 60px;

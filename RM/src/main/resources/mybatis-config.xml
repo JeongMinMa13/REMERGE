@@ -22,6 +22,7 @@
 		<typeAlias type="com.kh.reMerge.feed.model.vo.Tag" alias="Tag"/>
 		<typeAlias type="com.kh.reMerge.feed.model.vo.ReplyLike" alias="ReplyLike"/>
 		<typeAlias type="com.kh.reMerge.festival.model.vo.Recommend" alias="Recommend"/>
+		<typeAlias type="com.kh.reMerge.feed.model.vo.FeedKeep" alias="FeedKeep"/>
 		
  	</typeAliases>
  	

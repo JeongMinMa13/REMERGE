@@ -55,39 +55,10 @@
 		            </div>
 		        </div>
 		        <div class="suggestions-header">
-		            <span>인기 팔로워</span>
+		            <span>회원님을 위한 추천</span>
 		            <a href="#">모두보기</a>
 		        </div>
-		        <div class="suggestion">
-		            <div class="suggestion-info">
-		                <img src="" alt="Profile Picture">
-		                <div>
-		                    <div class="name">junhyung_ing</div>
-		                    <div class="subtext">신준형</div>
-		                </div>
-		            </div>
-		            <button class="follow-btn">팔로우</button>
-		        </div>
-		        <div class="suggestion">
-		            <div class="suggestion-info">
-		                <img src="" alt="Profile Picture">
-		                <div>
-		                    <div class="name">junhyung_ing</div>
-		                    <div class="subtext">신준형</div>
-		                </div>
-		            </div>
-		            <button class="follow-btn">팔로우</button>
-		        </div>
-		        <div class="suggestion">
-		            <div class="suggestion-info">
-		                <img src="" alt="Profile Picture">
-		                <div>
-		                    <div class="name">junhyung_ing</div>
-		                    <div class="subtext">신준형</div>
-		                </div>
-		            </div>
-		            <button class="follow-btn">팔로우</button>
-		        </div>
+		        <div class="suggestion" id="suggestion"></div>
 		    </div>
 		</div>
 	</div>
@@ -102,10 +73,10 @@
 		                    <span aria-hidden="true">&times;</span>
 		                </button>
 		            </div>
-		            <div class="modal-body">
-		                <div class="form-group">
-		                    <label for="file">이미지 선택</label>
-		                    <input type="file" class="form-control-file" id="file" name="upfile">
+		            <div class="modal-body d-flex justify-content-center align-items-center">
+		                <div class="form-group text-center">
+		                    <label for="file" class="custom-file-label">이미지 선택</label>
+		                    <input type="file" class="form-control-file d-none" id="file" name="upfile">
 		                </div>
 		                <div id="thumbnailFeed" class="text-center mt-3">
 		                    <img id="thumbnail" class="thumbnail img-fluid" src="#" alt="Thumbnail">
@@ -571,57 +542,59 @@
 				  url: 'feedList.fe',
 				  type: 'POST',
 				  dataType: 'json',
-				  data:{currentPage:currentPage},
+				  data:{
+					  currentPage:currentPage,
+					  userId:"${loginUser.userId}"						  
+				  },
 				  success : function(response){
-					  console.log(currentPage);
-					 var str = "";
-				for (var i = 0; i < response.list.length; i++){
-					var feed = response.list[i];
-					var userProfile = feed.userProfile;
-					 /*str += '<div class="conA">';*/
-						str += '    <div class="con" data-feed-no="' + feed.feedNo + '">';
-		                str += '        <div class="title">';
-		                				if (userProfile && userProfile.profileChangeName) {
-		                str += '            <img src="'+userProfile.profileChangeName+'" alt="" class="img">';
-		                				}else{
-		                str += '        <img src="resources/unknown.jpg" alt="" class="img">';
-		                				}
-		                str += '            <div class="info">';
-		                str += '                <span class="username">' + feed.feedWriter + '</span>';
-		                str += '                <p class="location" onclick="showMap(\'' + feed.feedLocation + '\')">' + feed.feedLocation + '</p>';
-		                str += '            </div>';
-		                str += '        </div>';
-		                str += '        <img src="' + feed.changeName + '" alt="" class="con_img">';
-		                str += '        <div class="logos">';
-		                str += '            <div class="logos_left">';
-		                str += '                <button id="likeButton' + feed.feedNo + '" class="like-button" data-feed-no="' + feed.feedNo + '" data-user-id="' + '${loginUser.userId}' + '" onclick="toggleLike(' + feed.feedNo + ', \'' + '${loginUser.userId}' + '\')">';
-		                str += '                    <i class="heart-icon far fa-heart" style="font-size: 30px; color: #ff5a5f;"></i>';
-		                str += '                </button>';
-		                str += '                <img src="resources/chat.png" class="logo_img" onclick="detailView(' + feed.feedNo + ')" >';
-		                str += '                <img src="resources/direct.png" alt="" class="logo_img">';
-		                str += '            </div>';
-		                str += '            <div class="logos_right">';
-		                str += '                <img src="" alt="" class="logo_img">';
-		                str += '            </div>';
-		                str += '        </div>';
-		                str += '        <div class="content">';
-		                str += '            <p><b>좋아요 <span class="like-count" data-feed-no="' + feed.feedNo + '">' + feed.likeCount + '</span>개</b></p>';
-		                str += '            <p id="feedContent' + feed.feedNo + '" class="feed-content">' + feed.feedContent + '</p>';
-		                str += '            <button id="moreButton' + feed.feedNo + '" class="more-button" onclick="showFullContent(' + feed.feedNo + ')" style="display: none;">더보기</button>';
-		                str += '            <div id="fullContent' + feed.feedNo + '" class="full-content" style="display: none;">' + feed.feedContent + '</div>';
-		                str += '            <div id="replyList' + feed.feedNo + '"></div>';
-		                // 태그 추가 부분
-		                if (feed.tags && feed.tags.length > 0) {
-		                    str += '            <p>';
-		                    for (var j = 0; j < feed.tags.length; j++) {
-		                        str += '<a href="selectTag.fe?tagContent=' + encodeURIComponent(feed.tags[j]) + '">#' + feed.tags[j] + '</a> ';
+					 	var str = "";
+		                for (var i = 0; i < response.list.length; i++) {
+		                    var feed = response.list[i];
+		                    var userProfile = feed.userProfile;
+		                    str += '<div class="con" data-feed-no="' + feed.feedNo + '">';
+		                    str += '    <div class="title">';
+		                    if (userProfile && userProfile.profileChangeName) {
+		                        str += '        <img src="' + userProfile.profileChangeName + '" class="img">';
+		                    } else {
+		                        str += '        <img src="resources/unknown.jpg" class="img">';
 		                    }
-		                    str += '            </p>';
-		                }
-		                str += '            <input type="text" name="reContent" id="reContent' + feed.feedNo + '" placeholder="댓글을 입력해주세요..">';
-		                str += '            <label><button onclick="insertReply(' + feed.feedNo + ')">등록</button></label>';
-		                str += '        </div>';
-		                str += '    </div>';
+		                    str += '        <div class="info">';
+		                    str += '            <span class="username">' + feed.feedWriter + '</span>';
+		                    str += '            <p class="location" onclick="showMap(\'' + feed.feedLocation + '\')">' + feed.feedLocation + '</p>';
+		                    str += '        </div>';
+		                    str += '    </div>';
+		                    str += '    <img src="' + feed.changeName + '" alt="" class="con_img">';
+		                    str += '    <div class="logos">';
+		                    str += '        <div class="logos_left">';
+		                    str += '            <button id="likeButton' + feed.feedNo + '" class="like-button" data-feed-no="' + feed.feedNo + '" data-user-id="' + '${loginUser.userId}' + '" onclick="toggleLike(' + feed.feedNo + ', \'' + '${loginUser.userId}' + '\')">';
+		                    str += '                <i class="heart-icon far fa-heart" style="font-size: 30px; color: #ff5a5f;"></i>';
+		                    str += '            </button>';
+		                    str += '            <img src="resources/chat.png" class="logo_img" onclick="detailView(' + feed.feedNo + ')" >';
+		                    str += '            <img src="resources/direct.png" alt="" class="logo_img">';
+		                    str += '        </div>';
+		                    str += '        <div class="logos_right">';
+		                    str += '            <button id="saveButton' + feed.feedNo + '" class="save-button" data-feed-no="' + feed.feedNo + '" onclick="saveFeed(' + feed.feedNo + ')">';
+		                    str += '                <i class="save-icon far fa-bookmark" style="font-size: 30px;"></i>';
+		                    str += '            </button>';
+		                    str += '        </div>';
+		                    str += '    </div>';
+		                    str += '    <div class="content">';
+		                    str += '        <p><b>좋아요 <span class="like-count" data-feed-no="' + feed.feedNo + '">' + feed.likeCount + '</span>개</b></p>';
+		                    str += '        <p id="feedContent' + feed.feedNo + '" class="feed-content">' + feed.feedContent + '</p>';
+		                    str += '        <button id="moreButton' + feed.feedNo + '" class="more-button" onclick="showFullContent(' + feed.feedNo + ')" style="display: none;">더보기</button>';
+		                    str += '        <div id="fullContent' + feed.feedNo + '" class="full-content" style="display: none;">' + feed.feedContent + '</div>';
+		                    str += '        <div id="replyList' + feed.feedNo + '"></div>';
+		                    if (feed.tags && feed.tags.length > 0) {
+		                        str += '        <p>';
+		                        for (var j = 0; j < feed.tags.length; j++) {
+		                            str += '<a href="selectTag.fe?tagContent=' + encodeURIComponent(feed.tags[j]) + '">#' + feed.tags[j] + '</a> ';
+		                        }
+		                        str += '        </p>';
+		                    }
+		                    str += '        <input type="text" name="reContent" id="reContent' + feed.feedNo + '" placeholder="댓글을 입력해주세요..">';
+		                    str += '        <label><button onclick="insertReply(' + feed.feedNo + ')">등록</button></label>';
+		                    str += '    </div>';
+		                    str += '</div>';
 	                    /*str += '</div>';*/
 	                    
 	                    replyList(feed.feedNo);
@@ -631,6 +604,7 @@
 		                    $(window).unbind('scroll'); // 스크롤 이벤트 해제
 		                }
 					 loadAllLikes(); //좋아요 함수
+					 loadAllSaves(); // 저장 상태 로드
 					 applyContent(); // 게시글 더보기 적용
 		          },
 		          error: function() {
@@ -1067,6 +1041,117 @@
 		    spaceBetween : 2, 
 		})
 	</script>
+	
+	<!-- 게시글 저장 함수 -->
+		<script>
+		 // 게시글 저장 함수
+	    function saveFeed(feedNo) {
+	        $.ajax({
+	            url: 'saveFeed.fe',
+	            type: 'POST',
+	            data: {
+	                feedNo: feedNo,
+	                userId: "${loginUser.userId}"
+	            },
+	            success: function(response) {
+	                if (response.status === "saved") {
+	                    $('#saveButton' + feedNo + ' .save-icon').removeClass('far').addClass('fas');
+	                } else {
+	                    $('#saveButton' + feedNo + ' .save-icon').removeClass('fas').addClass('far');
+	                }
+	            },
+	            error: function() {
+	                alert('저장 요청에 실패했습니다.');
+	            }
+	        });
+	    }
+	
+	    // 게시글 저장 상태 로드 함수
+	    function loadAllSaves() {
+	        $(".con").each(function() {
+	            var feedNo = $(this).data("feed-no");
+	            $.ajax({
+	                url: 'saveStatus.fe',
+	                type: 'GET',
+	                data: {
+	                    feedNo: feedNo,
+	                    userId: "${loginUser.userId}"
+	                },
+	                success: function(response) {
+	                    if (response.status === "saved") {
+	                        $('#saveButton' + feedNo + ' .save-icon').removeClass('far').addClass('fas');
+	                    }
+	                }
+	            });
+	        });
+	    }
+	
+	    $(document).ready(function() {
+	        loadAllSaves(); // 저장 상태 로드
+	    });
+		</script>
+		
+		<!-- 팔로우 안 된 사람 리스트 5명 -->
+		<script>
+		 $(document).ready(function() {
+			 loadRecommend();
+
+		        function loadRecommend() {
+		            $.ajax({
+		                url: 'recommend.fe',
+		                type: 'GET',
+		                data: {
+		                    userId: "${loginUser.userId}"
+		                },
+		                success: function(users) {
+		                    var suggestionsHtml = '';
+						for(var i=0; i<users.length; i++){
+							var user = users[i];
+							suggestionsHtml += 
+								 '<div class="suggestion-info">' +
+		                            (user.profileChangeName ? 
+		                                '<img src="' + user.profileChangeName + '" alt="Profile Picture">' : 
+		                                '<img src="resources/unknown.jpg" alt="Profile Picture">') +
+		                            '<div>' +
+		                                '<div class="recommendName">' + user.userId + '</div>' +
+		                            '</div>' +
+		                            '<div class="follow-btn" onclick="follow()">팔로우</div>' +
+		                        '</div>';
+		                    }
+		                    $('#suggestion').html(suggestionsHtml);
+		                },
+		                error: function() {
+		                    console.log('통신 실패');
+		                }
+		            });
+		        }
+		    });
+		</script>
+		
+		<!-- 회원 추천 팔로우 -->
+		<script>
+			function follow(){
+				$.ajax({
+					url: 'follow.fe',
+					type: 'get',
+					data: {
+						fromUser:"${loginUser.userId}",
+						toUser:"${user.userId}"
+					},
+					success: function(result){
+						if(result>0){
+							alert('팔로우 성공');
+						}else{
+							alert('팔로우 실패');
+						}
+						window.location.reload();//결과 확인 누르면 새로 고침
+					},
+					error: function(){
+						console.log('통신실패');
+					}
+				});
+			}
+		</script>
 	
 	
 </body>
