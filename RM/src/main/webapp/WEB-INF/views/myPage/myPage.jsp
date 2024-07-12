@@ -137,10 +137,10 @@
 		
 		<div class="feedLike">
 		<c:choose>
-				<c:when test="${empty myFeedlike }">
+				 <c:when test="${empty myFeedlike }">
 					<div>좋아요한 게시물이 없습니다.</div>						
 				</c:when>
-				<c:otherwise>
+				<c:otherwise> 
 						<div class="feedBox" style="width:1500px; height:450px;" >
 							<c:forEach var="f" items="${myFeedlike }">
 								<div class="feedBlock" onclick="detailView(${f.feedNo});">
@@ -148,7 +148,7 @@
 								</div>
 							</c:forEach>		
 						</div>
-				</c:otherwise>
+				 </c:otherwise> 
 			</c:choose>
 		</div>
 		

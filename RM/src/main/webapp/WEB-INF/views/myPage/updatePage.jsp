@@ -65,7 +65,7 @@
                     <label for="delete" class="deletebtn"style="color: red;" >사진 삭제</label>
                     <input type="submit" id="delete" class="form-control-file border" name="delete" style="display: none;">
                     <br>
-                    <button type="submit" class="btn btn-link">완료</button>
+                    <button type="submit">완료</button>
                    
                    </form>
                 </div> 

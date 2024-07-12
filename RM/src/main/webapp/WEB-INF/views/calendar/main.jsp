@@ -132,7 +132,7 @@
             	    shareCalendar: {
             	      text: '공유 캘린더',
             	      click: function() {
-            	        location.href='followList.sc?userId=${loginUser.userId}';
+            	        location.href='followList.sc';
             	      }
             	   }
             	},

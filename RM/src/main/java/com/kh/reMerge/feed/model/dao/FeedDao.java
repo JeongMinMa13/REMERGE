@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.reMerge.common.model.vo.PageInfo;
 import com.kh.reMerge.feed.model.vo.Feed;
+import com.kh.reMerge.feed.model.vo.FeedImg;
 import com.kh.reMerge.feed.model.vo.FeedKeep;
 import com.kh.reMerge.feed.model.vo.FeedLike;
 import com.kh.reMerge.feed.model.vo.Reply;
@@ -212,8 +213,30 @@ public class FeedDao {
 		paramMap.put("userId", userId);
 		paramMap.put("limit", limit);
 		
-		System.out.println(paramMap);
 		return sqlSession.selectList("feedMapper.getRecommend",paramMap);
+	}
+
+	public int followUser(SqlSessionTemplate sqlSession, FollowList followList) {
+		
+		return sqlSession.insert("feedMapper.followUser",followList);
+	}
+
+	public List<User> getRecommendList(SqlSessionTemplate sqlSession, String userId, int limit) {
+		Map<String,Object> paramMap = new HashMap<>();
+		paramMap.put("userId", userId);
+		paramMap.put("limit", limit);
+		
+		return sqlSession.selectList("feedMapper.getRecommendList",paramMap);
+	}
+
+	public int insertFeedImg(SqlSessionTemplate sqlSession, FeedImg feedImage) {
+		
+		return sqlSession.insert("feedMapper.insertFeedImg",feedImage);
+	}
+
+	public ArrayList<FeedImg> selectImages(SqlSessionTemplate sqlSession, int feedNo) {
+		
+		return (ArrayList)sqlSession.selectList("feedMapper.selectImages",feedNo);
 	}
 
 

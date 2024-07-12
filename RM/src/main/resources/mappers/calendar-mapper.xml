@@ -63,4 +63,14 @@
                   WHERE FROM_USER = #{userId})
         AND STATUS='Y'          
 	</select>
+	
+	<select id="searchFollower" parameterType="FollowList" resultType="User">
+		SELECT USER_ID userId, USER_MEMO userMemo, PROFILE_PATH profilePath, PROFILE_ORIGINNAME profileOriginName, PROFILE_CHANGENAME profileChangeName
+		FROM USERS
+		WHERE USER_ID IN (SELECT TO_USER
+                  FROM FOLLOWLIST
+                  WHERE FROM_USER = #{fromUser}
+                  AND TO_USER LIKE '%'||#{toUser}||'%')
+        AND STATUS='Y'
+	</select>
 </mapper>

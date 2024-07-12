@@ -34,9 +34,8 @@
 		<result column="FEED_CONTENT" property="feedContent" />
 		<result column="FEED_WRITER" property="feedWriter" />
 		<result column="CREATE_DATE" property="createDate" />
-		<result column="ORIGIN_NAME" property="originName" />
-		<result column="CHANGE_NAME" property="changeName" />
 		<result column="STATUS" property="status" />
+		<result column="CHANGE_NAME" property="changeName" />
 		<result column="FEED_LOCATION" property="feedLocation" />
 	</resultMap>
 
@@ -48,6 +47,10 @@
 		<result column="CHANGE_NAME" property="changeName" />
 		<result column="CREATE_DATE" property="createDate" />
 	</resultMap>
+
+
+
+
 
 	<select id="loginUser" resultMap="userResultSet">
 		SELECT *
@@ -147,38 +150,82 @@
 	</select>
 
 	<select id="myFeedlist" resultMap="feedResultSet">
-		SELECT FEED_NO
-		,FEED_CONTENT
-		,FEED_WRITER
-		,CREATE_DATE
-		,FEED_LOCATION
-		FROM FEED F
+		SELECT
+		F.FEED_NO,
+		F.FEED_CONTENT,
+		F.FEED_WRITER,
+		F.CREATE_DATE,
+		MIN(FI.CHANGE_NAME) AS CHANGE_NAME,
+		F.FEED_LOCATION
+		FROM
+		FEED F
 		JOIN
-		USERS U ON (FEED_WRITER=USER_ID)
+		FEED_IMG FI ON F.FEED_NO = FI.FEED_NO
 		WHERE
-		USER_ID=#{userId}
-		AND F.STATUS='Y'
-		ORDER BY CREATE_DATE DESC
+		F.STATUS = 'Y'
+		AND F.FEED_WRITER = #{userId}
+		GROUP BY
+		F.FEED_NO,
+		F.FEED_CONTENT,
+		F.FEED_WRITER,
+		F.CREATE_DATE,
+		F.FEED_LOCATION
+		ORDER BY
+		F.CREATE_DATE DESC
 	</select>
 
 	<select id="myFeedlike" resultMap="feedResultSet">
 		SELECT
-		FL.FEED_NO,FL.USER_ID,F.CHANGE_NAME
-		FROM FEED_LIKE FL
-		INNER JOIN FEED F
-		ON FL.FEED_NO = F.FEED_NO
-		WHERE FL.USER_ID = #{userId}
+		F.FEED_NO,
+		F.FEED_CONTENT,
+		F.FEED_WRITER,
+		F.CREATE_DATE,
+		MIN(FI.CHANGE_NAME) AS CHANGE_NAME,
+		F.FEED_LOCATION
+		FROM
+		FEED F
+		JOIN
+		FEED_IMG FI ON F.FEED_NO = FI.FEED_NO
+		JOIN
+		FEED_LIKE FL ON F.FEED_NO = FL.FEED_NO
+		WHERE
+		F.STATUS = 'Y'
+		AND F.FEED_WRITER = #{userId}
+		GROUP BY
+		F.FEED_NO,
+		F.FEED_CONTENT,
+		F.FEED_WRITER,
+		F.CREATE_DATE,
+		F.FEED_LOCATION
 		ORDER BY
-		CREATE_DATE DESC
+		F.CREATE_DATE DESC
 	</select>
 
 	<select id="myFeedsave" resultMap="feedResultSet">
 		SELECT
-		FK.FEED_NO,FK.USER_ID,F.CHANGE_NAME
-		FROM FEED_KEEP FK
-		INNER JOIN FEED F
-		ON FK.FEED_NO = F.FEED_NO
-		WHERE FK.USER_ID=#{userId}
+		F.FEED_NO,
+		F.FEED_CONTENT,
+		F.FEED_WRITER,
+		F.CREATE_DATE,
+		MIN(FI.CHANGE_NAME) AS CHANGE_NAME,
+		F.FEED_LOCATION
+		FROM
+		FEED F
+		JOIN
+		FEED_IMG FI ON F.FEED_NO = FI.FEED_NO
+		JOIN
+		FEED_KEEP FK ON F.FEED_NO = FK.FEED_NO
+		WHERE
+		F.STATUS = 'Y'
+		AND F.FEED_WRITER = #{userId}
+		GROUP BY
+		F.FEED_NO,
+		F.FEED_CONTENT,
+		F.FEED_WRITER,
+		F.CREATE_DATE,
+		F.FEED_LOCATION
+		ORDER BY
+		F.CREATE_DATE DESC
 	</select>
 
 	<select id="storyArchive" resultMap="storyResultSet">
@@ -190,11 +237,13 @@
 
 	</select>
 
-	<select id="storyDetail" resultMap="storyResultSet" parameterType="_int">
+	<select id="storyDetail" resultMap="storyResultSet"
+		parameterType="_int">
 		SELECT
 		STORY_NO,STORY_CONTENT,CHANGE_NAME
 		FROM STORY
-		WHERE STORY_NO=#{storyNo}
+		WHERE
+		STORY_NO=#{storyNo}
 
 	</select>
 
