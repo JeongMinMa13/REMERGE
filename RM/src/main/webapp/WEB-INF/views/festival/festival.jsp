@@ -68,12 +68,14 @@
 							if(recommendCount > 0){
                                 str += "<div class='countRecommend'>추천 수 : " + recommendCount + "</div>";
                             }
-							if(recStr === '추천'){
-								str+="<button onclick='recommend(event,"+JSON.stringify(item)+");'>"+recStr+"</button>";
-							}else{
-								str+="<button onclick='deRecommend(event,"+JSON.stringify(item)+");'>"+recStr+"</button>";
+							if(${not empty loginUser}){
+								if(recStr === '추천'){
+									str+="<button onclick='recommend(event,"+JSON.stringify(item)+");'>"+recStr+"</button>";
+								}else{
+									str+="<button onclick='deRecommend(event,"+JSON.stringify(item)+");'>"+recStr+"</button>";
+								}
+								str+="<botton onclick='shareFestival("+JSON.stringify(item)+");'><img src='resources/shareIcon.png'></button>"
 							}
-							str+="<botton onclick='shareFestival("+JSON.stringify(item)+");'><img src='resources/shareIcon.png'></button>"
 							str+="</li>";
 						}
 						str+="</ul>";

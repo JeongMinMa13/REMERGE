@@ -20,18 +20,22 @@
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=91ad4af1e5f058ed4f88efab8357dc34&libraries=services,clusterer"></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 </head>
-<body data-theme="light">
+<body>
 	<%@include file="../user/loginHeader.jsp"%>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<div class="outer">
-    <div class="body">
+    <div class="outer">
         <!--스토리 목록-->
-            <div class="storys">
-            	<div class="story" onclick="addStory();">
+        <div class="swiper">
+            <div class="swiper-wrapper storys">
+            	<div class="swiper-slide story" onclick="addStory();">
 		      		<img class="story_img" src="resources/plusicon.jpeg">
 		      		<span>스토리 추가하기</span>
 		      	</div>
             </div>
+            <div class="swiper-button-prev"></div>
+  			<div class="swiper-button-next"></div>
+         </div>   
+    <div class="body">
 		   <div class="con_wrap">
 		    <div class="conA">
 		        <!-- 게시글 목록 영역 -->
@@ -464,7 +468,7 @@
 					for(var i=0;i<story.length;i++){
 						if(!processedUserIds.has(story[i].userId)){//저장된 집합에 이름이 있는지 확인
 							
-							html +="<div class='story' onclick='storyView("+i+");'>";
+							html +="<div class='story swiper-slide' onclick='storyView("+i+");'>";
 							html +="<input type='hidden' class='storyNoCheck' value='"+story[i].storyNo+"'>";
 							html +="<img class='story_img' src='"+story[i].changeName+"'>";
 							html +="<span>"+story[i].userId+"</span>";
@@ -1170,6 +1174,13 @@
 			
 			location.reload();
 		}
+		
+		new Swiper('.swiper', {
+		    // 다양한 옵션 설정, 
+		    // 아래에서 설명하는 옵션들은 해당 위치에 들어갑니다!!
+		    slidesPerView : 8,
+		    spaceBetween : 2, 
+		})
 	</script>
 	
 	<!-- 게시글 저장 함수 -->
