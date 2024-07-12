@@ -21,6 +21,7 @@ public class Feed {
 	private String status;
 	private int likeCount;
 	private String feedLocation;
+	private String changeName;
 	
 	private List<String> tags;
 	private User userProfile;

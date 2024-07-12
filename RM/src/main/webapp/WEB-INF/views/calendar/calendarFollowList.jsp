@@ -40,7 +40,7 @@
 			
 		    $(window).scroll(function() {
 		        // 문서 전체 높이 - 윈도우 높이 <= 현재 스크롤 위치 
-		        if ($(window).scrollTop() + $(window).height() >= $(document).height() - 100) {
+		        if ($(window).scrollTop() + $(window).height() >= $(document).height() - 1000) {
 		            if (!isLoading) {
 		                isLoading = true;
 		                loadFollowList(++currentPage);
