@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.kh.reMerge.calendar.model.vo.Schedule;
 import com.kh.reMerge.common.model.vo.FollowListPageInfo;
+import com.kh.reMerge.user.model.vo.FollowList;
 import com.kh.reMerge.user.model.vo.User;
 
 public interface CalendarService {
@@ -27,9 +28,12 @@ public interface CalendarService {
 	ArrayList<User> followList(String userId, FollowListPageInfo fpi);
 	
 	//공유 캘린더 조회
-	ArrayList<Schedule> selectShareSchedule(String userId);
+	ArrayList<Schedule> selectShareSchedule(String[] follower);
 
 	//팔로우 리스트 페이징 처리를 위한 팔로잉 수 조회
 	int followListCount(String userId);
+
+	//팔로우 리스트에서 검색
+	ArrayList<User> searchFollower(FollowList followList);
 
 }

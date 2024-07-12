@@ -1,6 +1,10 @@
 package com.kh.reMerge.calendar.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
@@ -15,6 +19,7 @@ import com.kh.reMerge.calendar.model.service.CalendarService;
 import com.kh.reMerge.calendar.model.vo.Schedule;
 import com.kh.reMerge.common.model.vo.FollowListPageInfo;
 import com.kh.reMerge.common.template.Pagination;
+import com.kh.reMerge.user.model.vo.FollowList;
 import com.kh.reMerge.user.model.vo.User;
 
 
@@ -88,28 +93,51 @@ import com.kh.reMerge.user.model.vo.User;
 		
 		//캘린더 팔로우 리스트 페이지로 이동
 		@GetMapping("followList.sc")
-		public String followList(String userId,@RequestParam(value="currentPage",defaultValue="1")int currentPage,HttpSession session) {
-			
-			int listCount = cs.followListCount(userId);
-			int pageLimit=10;
-			int userLimit=10;
-			
-			FollowListPageInfo fpi=Pagination.getFollowListPageInfo(listCount, currentPage, pageLimit, userLimit);
-			ArrayList<User> followList = cs.followList(userId,fpi);
-			session.setAttribute("followList", followList);
-			session.setAttribute("fpi", fpi);
+		public String followList() {
 			
 			return "/calendar/calendarFollowList";
 		}
 		
-		//공유 캘린더 버튼 눌렸을때 팔로우된 유저 스케줄 조회해서 페이지 이동
-		@GetMapping("shareCalendar.sc")
-		public String shareCalendar(String userId,HttpSession session) {
+		//무한스크롤로 팔로우 리스트 조회하기
+		@ResponseBody
+		@PostMapping(value = "selectFollowList.sc", produces = "application/json;charset=UTF-8")
+		public HashMap<String, Object> selectFollowList(String userId, @RequestParam(value = "currentPage", defaultValue = "1") int currentPage) {
+		    int listCount = cs.followListCount(userId);
+		    int pageLimit = 10;
+		    int userLimit = 10; 
+
+		    FollowListPageInfo fpi = Pagination.getFollowListPageInfo(listCount, currentPage, pageLimit, userLimit);
+		    ArrayList<User> followList = cs.followList(userId, fpi);
+		    HashMap<String, Object> map = new HashMap<>();
+		    map.put("fpi", fpi);
+		    map.put("followList", followList);
+		    return map;
+		}
+		
+		
+		@PostMapping("shareCalendar.sc")
+		public String shareCalendar(String chooseFollow,HttpSession session) {
+//			System.out.println(chooseFollow);
+			String[] follower = chooseFollow.split(",");
+			 // HashSet을 사용하여 중복 제거
+	        Set<String> uniqueFollowerSet = new HashSet<>(Arrays.asList(follower));
+	        
+	        // HashSet을 배열로 변환
+	        String[] uniqueFollower = uniqueFollowerSet.toArray(new String[0]);
 			
-			ArrayList<Schedule> list = cs.selectShareSchedule(userId);
+			ArrayList<Schedule> list = cs.selectShareSchedule(uniqueFollower);
+//			System.out.println(list);
 			session.setAttribute("list", list);
-			
 			return "/calendar/shareCalendar";
 		}
+		
+		//공유 캘린더 팔로우 리스트 목록에서 검색 
+		@ResponseBody
+		@GetMapping("searchFollower.sc")
+		public ArrayList<User> searchFollower(FollowList followList){
+			
+			return cs.searchFollower(followList);
+		}
+		
 		
 }

@@ -23,16 +23,14 @@ header {
 	justify-content: center; /* 가운데 정렬 */
 	align-items: flex-start; /* 맨 위 정렬 */
 	padding: 20px;
-	overflow-y: auto; /* 스토리 영역이 넘칠 경우 스크롤 가능하도록 */
 }
 .storys {
 	width: 50%; /* 스토리 컨테이너 너비 */
 	display: flex;
 	justify-content: center; /* 가운데 정렬 */
 	align-items: flex-start; /* 맨 위 정렬 */
-	flex-wrap: wrap; /* 스토리가 넘칠 경우 여러 줄로 배치 */
 	position: absolute; 
-	top: 0; /* 화면 맨 위에 고정 */
+	top: 0px; /* 화면 맨 위에 고정 */
 	left: 50%; /* 가운데 정렬을 위한 위치 조정 */
 	transform: translateX(-50%); /* 가운데 정렬을 위한 위치 조정 */
 	padding: 10px; /* 내부 패딩 추가 */

@@ -42,8 +42,8 @@
 .followListContent ul li p .memo {
 	color:##737373;
 }
-#pagingArea{
-	align-content: center;
+#searchFollowResult{
+	border: 1px solid black;
 }
 </style>
 </head>
