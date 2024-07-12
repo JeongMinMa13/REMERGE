@@ -188,10 +188,18 @@ function updateUnreadMessageCount(count) {
 	    				html += "<ul>";
 	    				for(var i=0;i<data.length;i++){
 	    					html+="<li class='searchResult' onclick='profileUser("+JSON.stringify(data[i])+");'>";//해당하는 div 클릭시 data를 매개변수로 보내 클릭시 아이디값 알수 있게 하기
-		    				html+="<span class='profileImage'><img src='"+data[i].profilePath+"'></span>";
+	    					if(data[i].profileChangeName==null){
+		    					html+="<span class='profileImage'><img src='resources/unknown.jpg'></span>";
+		    				}else{
+		    					html+="<span class='profileImage'><img src='"+data[i].profileChangeName+"'></span>";
+		    				}
 		    				html+="<p>";
 		    				html+="<strong class='userId'>"+data[i].userId+"</strong>";
-		    				html+="<span class='email'>"+data[i].email+"</span>";
+		    				if(data[i].userMemo==null){
+		    					html+="<span class='memo'></span>";
+		    				}else{
+			    				html+="<span class='memo'>"+data[i].userMemo+"</span>";
+		    				}
 		    				html+="</p>";
 		    				html+="</li>";
 	    				}
@@ -251,10 +259,18 @@ function updateUnreadMessageCount(count) {
     				html += "<ul>";
     				for(var i=0;i<data.length;i++){
     					html+="<li class='searchResult' onclick='profileUser("+JSON.stringify(data[i])+");'>";//해당하는 div 클릭시 data를 매개변수로 보내 클릭시 아이디값 알수 있게 하기
-	    				html+="<span class='profileImage'><img src='"+data[i].profilePath+"'></span>";
+    					if(data[i].profileChangeName==null){
+	    					html+="<span class='profileImage'><img src='resources/unknown.jpg'></span>";
+	    				}else{
+	    					html+="<span class='profileImage'><img src='"+data[i].profileChangeName+"'></span>";
+	    				}
 	    				html+="<p>";
 	    				html+="<strong class='userId'>"+data[i].userId+"</strong>";
-	    				html+="<span class='email'>"+data[i].userMemo+"</span>";
+	    				if(data[i].userMemo==null){
+	    					html+="<span class='memo'></span>";
+	    				}else{
+		    				html+="<span class='memo'>"+data[i].userMemo+"</span>";
+	    				}
 	    				html+="</p>";
 	    				html+="<button onclick='deleteSearchHistory(event,"+JSON.stringify(data[i])+");'>x</button>";
 	    				html+="</li>";

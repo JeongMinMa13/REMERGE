@@ -571,6 +571,10 @@ h2 {
     display: block;
     position: relative;
 }
+#story_view_img{
+	width: 450px;
+	height: 700px;
+}
 </style>
 </head>
 <body>

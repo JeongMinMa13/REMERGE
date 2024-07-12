@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.kh.reMerge.common.model.vo.PageInfo;
 import com.kh.reMerge.feed.model.dao.FeedDao;
 import com.kh.reMerge.feed.model.vo.Feed;
+import com.kh.reMerge.feed.model.vo.FeedImg;
 import com.kh.reMerge.feed.model.vo.FeedKeep;
 import com.kh.reMerge.feed.model.vo.FeedLike;
 import com.kh.reMerge.feed.model.vo.Reply;
@@ -206,8 +207,32 @@ public class FeedServiceImpl implements FeedService {
 
 	@Override
 	public List<User> getRecommend(String userId, int limit) {
-		System.out.println(limit);
+		
 		return feedDao.getRecommend(sqlSession,userId,limit);
+	}
+
+	@Override
+	public int followUser(FollowList followList) {
+	
+		return feedDao.followUser(sqlSession,followList);
+	}
+
+	@Override
+	public List<User> getRecommendList(String userId, int limit) {
+		
+		return feedDao.getRecommendList(sqlSession,userId,limit);
+	}
+
+	@Override
+	public int insertFeedImg(FeedImg feedImage) {
+		
+		return feedDao.insertFeedImg(sqlSession,feedImage);
+	}
+
+	@Override
+	public ArrayList<FeedImg> selectImages(int feedNo) {
+		
+		return feedDao.selectImages(sqlSession,feedNo);
 	}
 
 	

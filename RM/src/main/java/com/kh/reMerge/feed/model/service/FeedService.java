@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.kh.reMerge.common.model.vo.PageInfo;
 import com.kh.reMerge.feed.model.vo.Feed;
+import com.kh.reMerge.feed.model.vo.FeedImg;
 import com.kh.reMerge.feed.model.vo.FeedKeep;
 import com.kh.reMerge.feed.model.vo.FeedLike;
 import com.kh.reMerge.feed.model.vo.Reply;
@@ -102,6 +103,18 @@ public interface FeedService {
 	
 	//회원 추천
 	List<User> getRecommend(String userId, int limit);
+	
+	//팔로우 하기
+	int followUser(FollowList followList);
+	
+	//회원 추천 리스트
+	List<User> getRecommendList(String userId, int limit);
+	
+	//사진 추가
+	int insertFeedImg(FeedImg feedImage);
+	
+	
+	ArrayList<FeedImg> selectImages(int feedNo);
 	
 	
 	
