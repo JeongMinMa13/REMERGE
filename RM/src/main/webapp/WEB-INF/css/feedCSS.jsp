@@ -85,6 +85,7 @@ header {
 	width: 40%;
 	justify-content: center;
 	align-items: flex-start;
+	margin-right: 200px;
 }
 
 .conA {
@@ -160,8 +161,8 @@ header {
 }
 
 .body .container {
-	position: fixed;
-	top: 100px;
+	position: absolute;
+	top: 150px;
 	right: 200px;
 	width: 400px; /* 원하는 너비로 조정 */
 	background-color: white;

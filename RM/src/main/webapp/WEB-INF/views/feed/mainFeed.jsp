@@ -317,7 +317,6 @@
 		        
 		        new Swiper('#thumbnailsFeedSwiper', {
 		            slidesPerView: 1,
-		            spaceBetween: 10,
 		            centeredSlides: true,
 		            navigation: {
 		                nextEl: '.swiper-button-next',
