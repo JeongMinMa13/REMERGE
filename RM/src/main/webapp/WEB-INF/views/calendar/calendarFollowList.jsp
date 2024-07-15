@@ -40,7 +40,7 @@
 			
 		    $(window).scroll(function() {
 		        // 문서 전체 높이 - 윈도우 높이 <= 현재 스크롤 위치 
-		        if ($(window).scrollTop() + $(window).height() >= $(document).height() - 1000) {
+		        if ($(window).scrollTop() + $(window).height() >= $(document).height() - 100) {
 		            if (!isLoading) {
 		                isLoading = true;
 		                loadFollowList(++currentPage);
@@ -71,7 +71,11 @@
 		                    }
 		                    str += "<p>";
 		                    str += "<strong class='userId'>" + followList[i].userId + "</strong>";
-		                    str += "<span class='memo'>" + followList[i].userMemo + "</span>";
+		                    if(followList[i].userMemo == null){
+			                    str += "<span class='memo'></span>";
+		                    }else{
+		                    	str += "<span class='memo'>" + followList[i].userMemo + "</span>";
+		                    }
 		                    str += "</p>";
 		                    str += "<input type='checkbox' value='" + followList[i].userId + "' name='chooseFollow' onclick='duplCheck(this);'>";
 		                    str += "</li>";
@@ -92,6 +96,15 @@
 		        });
 		    }
 		    
+		    //5개 이상 선택 막기 
+		   	$("#followList").on("click","input[type='checkbox']",function(){
+		   		var count = $("input[type='checkbox']:checked").length;
+		   		//console.log(count);
+		   		if(count>5){
+		   			alert("5개 이하만 선택 가능합니다.");
+		   			$(this).prop("checked", false); // 마지막으로 클릭한 체크박스를 해제
+		   		}
+		   	});
 		});
 		
 	    // 검색 함수 정의
@@ -121,7 +134,11 @@
 		                    }
 		                    searchResult += "<p>";
 		                    searchResult += "<strong class='userId'>" + data[i].userId + "</strong>";
-		                    searchResult += "<span class='memo'>" + data[i].userMemo + "</span>";
+		                    if(data[i].userMemo == null){
+			                    searchResult += "<span class='memo'></span>";
+		                    }else{
+		                    	searchResult += "<span class='memo'>" + data[i].userMemo + "</span>";
+		                    }
 		                    searchResult += "</p>";
 		                    searchResult += "<input type='checkbox' value='" + data[i].userId + "' name='chooseFollow' onclick='duplCheck(this);'>";
 		                    searchResult += "</li>";
@@ -136,12 +153,8 @@
 	            }); 
             }
         }
-	    //5개 이상 선택시 안내 메시지 
-	    function checkCount(element){
-	    	console.log(element);
-	    }
-	    //다니에게 물어볼 두가지 5개 이상 선택시 선택 안되게하기, 중복 선택 막기 
 	    
+	    //중복된 아이디 선택되면 선택된 처리하기 (검색과 팔로우리스트)
 	    function duplCheck(checkbox){
 	    	  // 이름이 "check"인 모든 체크박스를 가져옴
             var checks = $('input[name="chooseFollow"]');

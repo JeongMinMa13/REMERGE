@@ -24,27 +24,18 @@ header {
 	align-items: flex-start; /* 맨 위 정렬 */
 	padding: 20px;
 }
-.swiper{
+.storySwiper{
 	margin-top: -150px;
+	position:relative;
+	overflow:hidden;
+	padding:0 22px;
 }
 .storys {
-	width: 50%; /* 스토리 컨테이너 너비 */
-	display: flex;
-	justify-content: center; /* 가운데 정렬 */
-	align-items: flex-start; /* 맨 위 정렬 */
-	position: absolute;
-	top: 0px; /* 화면 맨 위에 고정 */
-	left: 50%; /* 가운데 정렬을 위한 위치 조정 */
-	transform: translateX(-50%); /* 가운데 정렬을 위한 위치 조d정 */
-	padding: 10px; /* 내부 패딩 추가 */
-	z-index: 1000; /* 다른 요소 위에 표시되도록 z-index 설정 */
+	z-index: 1000; 
 	background-color: white;
 }
-.story {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	margin: 10px;
+.storys .swiper-slide {
+	text-align: center;
 }
 .story_img {
 	width: 60px;
@@ -60,7 +51,12 @@ header {
 	margin-top: 5px;
 	font-size: 12px;
 	text-align: center;
+	display:block;
 }
+
+
+
+
 .profile {
 	display: flex;
 	margin: 10px 0;
@@ -544,7 +540,7 @@ h2 {
     margin-left: 10px; /* ID와 시간 사이의 간격 조정 */
 }
 .swiper-slide {
-    visibility: hidden;
+    /* visibility: hidden; */
 }
 .swiper-slide-active {
     visibility: visible;
