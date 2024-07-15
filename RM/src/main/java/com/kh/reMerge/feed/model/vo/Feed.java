@@ -15,11 +15,14 @@ public class Feed {
 	private String feedContent;
 	private String feedWriter;
 	private Date createDate;
-	private String originName;
-	private String changeName;
 	private String status;
 	private int likeCount;
 	private String feedLocation;
+	private String changeName;
 	private int shopNo;
 	private List<String> tags;
+	private User userProfile;
+	private List<FollowList> followList;
+	private List<User> userList;
+	private List<FeedImg> feedImg;
 }

@@ -2,10 +2,12 @@ package com.kh.reMerge.calendar.model.dao;
 
 import java.util.ArrayList;
 
+import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.kh.reMerge.calendar.model.vo.Schedule;
+import com.kh.reMerge.common.model.vo.FollowListPageInfo;
 import com.kh.reMerge.user.model.vo.FollowList;
 import com.kh.reMerge.user.model.vo.User;
 
@@ -43,15 +45,35 @@ public class CalendarDao {
 	}
 	
 	//팔로우 리스트로 이동하기 위한 팔로우 리스트 조회 
-	public ArrayList<User> followList(SqlSessionTemplate sqlSession, String userId) {
+	public ArrayList<User> followList(SqlSessionTemplate sqlSession, String userId, FollowListPageInfo fpi) {
 		
-		return (ArrayList)sqlSession.selectList("calendarMapper.followList", userId);
+		int limit = fpi.getUserLimit();
+		int offset = (fpi.getCurrentPage()-1)*limit;
+		RowBounds rowBounds = new RowBounds(offset,limit);
+		
+		return (ArrayList)sqlSession.selectList("calendarMapper.followList", userId,rowBounds);
 	}
 
 	//공유 캘린더 조회
-	public ArrayList<Schedule> selectShareSchedule(SqlSessionTemplate sqlSession, String userId) {
+	public ArrayList<Schedule> selectShareSchedule(SqlSessionTemplate sqlSession, String[] follower) {
 
-		return (ArrayList)sqlSession.selectList("calendarMapper.selectShareSchedule", userId);
+		ArrayList<Schedule> list = new ArrayList<>();
+		for (int i = 0; i < follower.length; i++) {
+			list.addAll((ArrayList)sqlSession.selectList("calendarMapper.selectShareSchedule", follower[i]));
+		}
+		return list;
+	}
+
+	//팔로우 리스트 페이징 처리를 위한 팔로잉 수 조회
+	public int followListCount(SqlSessionTemplate sqlSession, String userId) {
+
+		return sqlSession.selectOne("calendarMapper.followListCount", userId);
+	}
+
+	//팔로우 리스트에서 검색
+	public ArrayList<User> searchFollower(SqlSessionTemplate sqlSession, FollowList followList) {
+
+		return (ArrayList)sqlSession.selectList("calendarMapper.searchFollower",followList);
 	}
 
 

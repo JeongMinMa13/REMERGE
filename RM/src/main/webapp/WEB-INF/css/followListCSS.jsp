@@ -21,12 +21,17 @@
 .followListContent ul li {
 	display: flex;
     gap: 10px;
+    margin-top: 16px;
 }
 .followListContent ul li .profileImage {
 	width: 44px;
     height: 44px;
     overflow: hidden;
     border-radius: 100%;
+}
+.followListContent ul li .profileImage img{
+	width: 100%;
+	height: 100%;
 }
 .followListContent ul li p {
     font-size: 14px;
@@ -36,6 +41,9 @@
 }
 .followListContent ul li p .memo {
 	color:##737373;
+}
+#searchFollowResult{
+	border: 1px solid black;
 }
 </style>
 </head>

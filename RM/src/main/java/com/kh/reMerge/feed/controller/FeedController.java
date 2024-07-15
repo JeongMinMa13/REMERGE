@@ -29,10 +29,17 @@ import com.kh.reMerge.common.model.vo.PageInfo;
 import com.kh.reMerge.common.template.Pagination;
 import com.kh.reMerge.feed.model.service.FeedService;
 import com.kh.reMerge.feed.model.vo.Feed;
+import com.kh.reMerge.feed.model.vo.FeedImg;
+import com.kh.reMerge.feed.model.vo.FeedKeep;
 import com.kh.reMerge.feed.model.vo.FeedLike;
 import com.kh.reMerge.feed.model.vo.Reply;
+import com.kh.reMerge.feed.model.vo.ReplyLike;
 import com.kh.reMerge.feed.model.vo.Tag;
+import com.kh.reMerge.user.model.service.UserService;
+import com.kh.reMerge.user.model.vo.FollowList;
+import com.kh.reMerge.user.model.vo.User;
 
+import oracle.jdbc.proxy.annotation.Post;
 
 @Controller
 public class FeedController {
@@ -57,36 +64,88 @@ public class FeedController {
 		
 		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, feedLimit);
 		
-		ArrayList<Feed> list = feedService.selectList(pi);
-		
+		ArrayList<Feed> list = feedService.selectList(pi,userId);
+		long currentTime = System.currentTimeMillis();
+	    Map<Integer, String> timeAgoMap = new HashMap<>();
+	    
 		  for (Feed feed : list) {
 		        List<String> tags = feedService.getTagsByFeedNo(feed.getFeedNo());
 		        feed.setTags(tags);
+		        
+		        User userProfile = feedService.getUserProfile(feed.getFeedWriter()); // 사용자 프로필 정보 가져오기
+		        feed.setUserProfile(userProfile);
+		        
+		        long createTime = feed.getCreateDate().getTime();
+		        long timeDiff = currentTime - createTime;
+		        String timeAgo = calculateTimeAgo(timeDiff);
+		        timeAgoMap.put(feed.getFeedNo(), timeAgo);
+		        
+		        ArrayList<FeedImg> images = feedService.selectImages(feed.getFeedNo());
+		        feed.setFeedImg(images);
 		    }
 		
 		
 		Map<String, Object> result = new HashMap<>();
 		result.put("pi", pi);
 		result.put("list", list);
+		result.put("timeAgoMap", timeAgoMap);
 		
 		
 		return result;
 	}
+	//시간 넣기
+		private String calculateTimeAgo(long timeDiff) {
+			
+			long seconds = timeDiff / 1000;
+			long minutes = seconds / 60;
+			long hours = minutes / 60;
+			long days = hours / 24;
+			long weeks = days / 7;
+			long months = days / 30;
+			long years = days / 365;
+
+			if (years > 0) {
+				return years + "년 전";
+			} else if (months > 0) {
+				return months + "달 전";
+			} else if (weeks > 0) {
+				return weeks + "주 전";
+			} else if (days > 0) {
+				return days + "일 전";
+			} else if (hours > 0) {
+				return hours + "시간 전";
+			} else if (minutes > 0) {
+				return minutes + "분 전";
+			} else {
+				return "방금 전";
+			}
+		}
 	
 	//게시글 넣기
 	@PostMapping("insert.fe")
 	public String insertFeed(Feed f, @RequestPart MultipartFile upfile, HttpSession session, @RequestParam(value="tags", required=false) String tags,
 			@RequestParam(value = "shopNo", required = false) int shopNo) {
-		if (!upfile.getOriginalFilename().equals("")) {
-			String changeName = saveFile(upfile,session);
-			f.setOriginName(upfile.getOriginalFilename());
-			f.setChangeName("resources/uploadFiles/"+changeName);
-		}
 		
 		System.out.println("shopNo넘어오는지" +shopNo);
 		f.setShopNo(shopNo);
 		System.out.println("게시글 작성에 가져가는 정보 : "+f);
 		int result = feedService.insertFeed(f);
+		f.setFeedNo(feedNo);
+		
+		List<FeedImg> feedImg = new ArrayList<>();
+		
+		for (MultipartFile upfile : upfiles) {
+            if (!upfile.getOriginalFilename().equals("")) {
+                String changeName = saveFile(upfile, session);
+                FeedImg feedImage = new FeedImg();
+                feedImage.setFeedNo(feedNo);
+                feedImage.setOriginName(upfile.getOriginalFilename());
+                feedImage.setChangeName("resources/uploadFiles/" + changeName);
+                feedImg.add(feedImage);
+                feedService.insertFeedImg(feedImage);
+            }
+        }
+		
 		
 		if (result > 0) {// 게시글 작성 성공
 			int feedNo = feedService.selectFeedNo();
@@ -167,7 +226,6 @@ public class FeedController {
 	@ResponseBody
 	@PostMapping("insertReply.fe")
 	public int insertReply(Reply r) {
-		System.out.println(r);
 		int result = feedService.insertReply(r);
 		
 		return result;
@@ -177,7 +235,6 @@ public class FeedController {
 	@ResponseBody
 	@PostMapping("insertModal.fe")
 	public int insertModal(Reply r) {
-		System.out.println(r);
 		int result = feedService.insertReply(r);
 		
 		return result;
@@ -189,12 +246,19 @@ public class FeedController {
 	public Map<String, Object> feedDetail(int feedNo){
 		
 		Feed f = feedService.selectFeed(feedNo);
+		long currentTime = System.currentTimeMillis();
+	    long createTime = f.getCreateDate().getTime();
+	    long timeDiff = currentTime - createTime;
+	    String timeAgo = calculateTimeAgo(timeDiff);
 		
 		ArrayList<Reply> rList = feedService.replyList(feedNo);
+		ArrayList<FeedImg> images = feedService.selectImages(feedNo);
+		f.setFeedImg(images);
 		
 		Map<String, Object> result = new HashMap<>();
 	    result.put("f", f);
 	    result.put("rList", rList);
+	    result.put("timeAgo", timeAgo);
 	    
 	    return result;
 		
@@ -213,7 +277,6 @@ public class FeedController {
         Map<String, Object> result = new HashMap<>();
         
         if (likeCheck > 0) {
-        	System.out.println(likeCheck);
             feedService.deleteLike(fl);
             feedService.removeCount(feedNo);
             result.put("status", "unliked");
@@ -262,7 +325,7 @@ public class FeedController {
 	@GetMapping("selectTag.fe")
 	public String selectTag(Tag tag, HttpSession session) {
 		ArrayList<Feed> tagList = feedService.selectTag(tag);
-		
+
 		session.setAttribute("tagList", tagList);
 		session.setAttribute("tag", tag);
 		
@@ -287,6 +350,122 @@ public class FeedController {
 		}
 		return "redirect:feed.fe";
 	}
+	//댓글 좋아요
+		@ResponseBody
+		@PostMapping("replyLike.fe")
+		public Map<String, Object> likeReply(@RequestParam int replyNo, @RequestParam String userId) {
+		    ReplyLike rl = new ReplyLike();
+		    rl.setReplyNo(replyNo);
+		    rl.setUserId(userId);
+
+		    int likeCheck = feedService.checkReplyLike(replyNo, userId);
+		    Map<String, Object> result = new HashMap<>();
+
+		    if (likeCheck > 0) {
+		        feedService.deleteReplyLike(rl);
+		        result.put("status", "unliked");
+		    } else {
+		        feedService.insertReplyLike(rl);
+		        result.put("status", "liked");
+		    }
+
+		    int likeCount = feedService.countReplyLikes(replyNo);
+		    result.put("likeCount", likeCount);
+
+		    return result; 
+		
+		}
+		
+		//댓글 좋아요 상태 확인
+		@ResponseBody
+		@GetMapping("replyLikeStatus.fe")
+		public Map<String,Object> replyLikeStatus(@RequestParam int replyNo, @RequestParam String userId){
+			Map<String, Object> result = new HashMap<>();
+		    try {
+		        int likeCheck = feedService.checkReplyLike(replyNo, userId);
+		        result.put("status", likeCheck > 0 ? "liked" : "unliked"); //좋아요 됐고 안 됐고 반별
+
+		        int likeCount = feedService.likeCount(replyNo);
+		        result.put("likeCount", likeCount);
+		    } catch (Exception e) {
+		        result.put("error", e.getMessage());
+		    }
+		    return result;
+		
+		}
+		
+		//게시물 저장
+		@ResponseBody
+		@PostMapping("saveFeed.fe")
+		public Map<String,Object> saveFeed(@RequestParam int feedNo, @RequestParam String userId){
+			FeedKeep feedKeep = new FeedKeep(feedNo,userId);
+			
+			int saveCheck = feedService.checkFeedSave(feedNo,userId);
+			Map<String,Object> result = new HashMap<>();
+			
+			 if (saveCheck > 0) {
+			        feedService.unsaveFeed(feedKeep);
+			        result.put("status", "unsaved");
+			    } else {
+			        feedService.saveFeed(feedKeep);
+			        result.put("status", "saved");
+			    }
+
+			    return result;
+		}
+		
+		//게시물 저장 상태 확인
+		@ResponseBody
+	    @RequestMapping("saveStatus.fe")
+	    public Map<String, Object> saveStatus(@RequestParam int feedNo, @RequestParam String userId) {
+	        Map<String, Object> result = new HashMap<>();
+	        try {
+	            int saveCheck = feedService.checkFeedSave(feedNo, userId);
+	            result.put("status", saveCheck > 0 ? "saved" : "unsaved");
+	        } catch (Exception e) {
+	            result.put("error", e.getMessage());
+	        }
+	        return result;
+		}
+		
+		//팔로우 안 한 리스트 뽑아주기
+		@ResponseBody
+		@RequestMapping("recommend.fe")
+		public List<User> recommend(@RequestParam String userId){
+			List<User> recommend = feedService.getRecommend(userId, 5); //5명만 추천
+			
+			return recommend;
+		}
+		
+		//팔로우 하기
+		@ResponseBody
+		@RequestMapping("follow.fe")
+		public int follow(FollowList followList) {
+	        int result = feedService.followUser(followList);
+
+	        return result;
+	    }
+		
+		//팔로우 리스트 추천으로 넘어가는 페이지
+		@GetMapping("followDetailList.fe")
+		public String selectFollow(@RequestParam String userId, Model model) {
+			List<User> recommendList = feedService.getRecommendList(userId, 50); // 50명 추천 예시
+	        
+	        long currentTime = System.currentTimeMillis();
+	        Map<String, Long> TimeMap = new HashMap<>();
+	        
+	        for(User user: recommendList) {
+	        	long joinTime = user.getJoinDate().getTime();
+	        	long time = currentTime - joinTime;
+	        	TimeMap.put(user.getUserId(), time);
+	        }
+	        
+	        model.addAttribute("recommendList", recommendList);
+	        model.addAttribute("TimeMap", TimeMap);
+	        
+	        
+			return "/feed/followDetailList";
+		}
 	
 }
 	

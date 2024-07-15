@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.kh.reMerge.calendar.model.dao.CalendarDao;
 import com.kh.reMerge.calendar.model.vo.Schedule;
+import com.kh.reMerge.common.model.vo.FollowListPageInfo;
 import com.kh.reMerge.user.model.vo.FollowList;
 import com.kh.reMerge.user.model.vo.User;
 
@@ -57,15 +58,29 @@ public class CalendarServiceImpl implements CalendarService {
 	
 	//팔로우 리스트로 이동하기 위한 팔로우 리스트 조회 
 	@Override
-	public ArrayList<User> followList(String userId) {
+	public ArrayList<User> followList(String userId,FollowListPageInfo fpi) {
 
-		return calendarDao.followList(sqlSession,userId);
+		return calendarDao.followList(sqlSession,userId,fpi);
 	}
 	
 	//공유 캘린더 조회
 	@Override
-	public ArrayList<Schedule> selectShareSchedule(String userId) {
+	public ArrayList<Schedule> selectShareSchedule(String[] follower) {
 
-		return calendarDao.selectShareSchedule(sqlSession,userId);
+		return calendarDao.selectShareSchedule(sqlSession,follower);
+	}
+	
+	//팔로우 리스트 페이징 처리를 위한 팔로잉 수 조회
+	@Override
+	public int followListCount(String userId) {
+
+		return calendarDao.followListCount(sqlSession,userId);
+	}
+	
+	//팔로우 리스트에서 팔로워 검색
+	@Override
+	public ArrayList<User> searchFollower(FollowList followList) {
+
+		return calendarDao.searchFollower(sqlSession,followList);
 	}
 }

@@ -132,7 +132,7 @@
             	    shareCalendar: {
             	      text: '공유 캘린더',
             	      click: function() {
-            	        location.href='followList.sc?userId=${loginUser.userId}';
+            	        location.href='followList.sc';
             	      }
             	   }
             	},
@@ -191,9 +191,6 @@
                                 // 지도를 생성합니다    
                                 map = new kakao.maps.Map(mapContainer, mapOption); 
 								
-                                function relayout(){
-                                	map.relayout();
-                                }
                                 // 주소-좌표 변환 객체를 생성합니다
                                 var geocoder = new kakao.maps.services.Geocoder();
                                
@@ -328,6 +325,7 @@
                 	success:function(result){
                 		if(result>0){
                 			alert('성공적으로 등록되었습니다.');
+                			location.reload();
                 		}else{
                 			alert('등록 실패, 관리자에게 문의하세요.')
                 		}

@@ -6,7 +6,7 @@ import java.util.List;
 import com.kh.reMerge.message.model.vo.Message;
 
 public interface MessageService {
-    void saveMessage(Message message);
+    int saveMessage(Message message);
     
     List<Message> getChatHistory(int messageRoomNo);
     
@@ -14,5 +14,15 @@ public interface MessageService {
     
     int createChatRoom(String sendId, String receiveId);
     
+    void markAsRead(int messageRoomNo, String receiveId);
     
+	void markAsUnRead(int chatRoomNo, String userId);
+	
+	ArrayList<Integer> getChatRoomNumbers(String userId);
+
+	ArrayList<String> getNotificationsForUser(String userId);
+
+	int getUnreadMessageCount(String userId);
+
+	int saveFile(Message message);
 }

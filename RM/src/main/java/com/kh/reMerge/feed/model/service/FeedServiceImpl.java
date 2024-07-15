@@ -10,9 +10,14 @@ import org.springframework.stereotype.Service;
 import com.kh.reMerge.common.model.vo.PageInfo;
 import com.kh.reMerge.feed.model.dao.FeedDao;
 import com.kh.reMerge.feed.model.vo.Feed;
+import com.kh.reMerge.feed.model.vo.FeedImg;
+import com.kh.reMerge.feed.model.vo.FeedKeep;
 import com.kh.reMerge.feed.model.vo.FeedLike;
 import com.kh.reMerge.feed.model.vo.Reply;
+import com.kh.reMerge.feed.model.vo.ReplyLike;
 import com.kh.reMerge.feed.model.vo.Tag;
+import com.kh.reMerge.user.model.vo.FollowList;
+import com.kh.reMerge.user.model.vo.User;
 
 @Service
 public class FeedServiceImpl implements FeedService {
@@ -34,9 +39,9 @@ public class FeedServiceImpl implements FeedService {
 	}
 
 	@Override
-	public ArrayList<Feed> selectList(PageInfo pi) {
+	public ArrayList<Feed> selectList(PageInfo pi,String userId) {
 		
-		return feedDao.selectList(sqlSession,pi);
+		return feedDao.selectList(sqlSession,pi,userId);
 	}
 
 	@Override
@@ -122,7 +127,7 @@ public class FeedServiceImpl implements FeedService {
 
 	@Override
 	public int selectFeedNo() {
-		// TODO Auto-generated method stub
+		
 		return feedDao.selectFeedNo(sqlSession);
 	}
 
@@ -131,6 +136,108 @@ public class FeedServiceImpl implements FeedService {
 		
 		return feedDao.getTagsByFeedNo(sqlSession,feedNo);
 	}
+	
+	//댓글 좋아요
+	@Override
+	public int insertReplyLike(ReplyLike rl) {
+		
+		return feedDao.insertReplyLike(sqlSession,rl);
+		
+	}
+	
+	//댓글 좋아요 취소
+	@Override
+	public int deleteReplyLike(ReplyLike rl) {
+		
+		return feedDao.deleteReplyLike(sqlSession,rl);
+		
+	}
+	
+	//댓글 좋아요 여부
+	@Override
+	public int checkReplyLike(int replyNo, String userId) {
+		
+		return feedDao.checkReplyLike(sqlSession,replyNo,userId);
+	}
+	
+	//댓글 좋아요 수
+	@Override
+	public int countReplyLikes(int replyNo) {
+		
+		return feedDao.countReplyLikes(sqlSession,replyNo);
+	}
+	
+	//프로필 사진 가져오기
+	@Override
+	public User getUserProfile(String userId) {
+		
+		return feedDao.getUserProfile(sqlSession,userId);
+	}
+	
+	//팔로우 리스트 가져오기
+	@Override
+	public List<FollowList> getFollowList(String userId) {
+
+		return feedDao.getFollowList(sqlSession,userId);
+	}
+
+	@Override
+	public boolean isFollowing(String fromUser, String toUser) {
+		
+		return feedDao.isFollowing(sqlSession,fromUser,toUser);
+	}
+
+	@Override
+	public int saveFeed(FeedKeep feedKeep) {
+		
+		return feedDao.saveFeed(sqlSession,feedKeep);
+	}
+
+	@Override
+	public int unsaveFeed(FeedKeep feedKeep) {
+		
+		return feedDao.unsaveFeed(sqlSession,feedKeep);
+	}
+
+	@Override
+	public int checkFeedSave(int feedNo, String userId) {
+		
+		return feedDao.checkFeedSave(sqlSession,feedNo,userId);
+	}
+
+	@Override
+	public List<User> getRecommend(String userId, int limit) {
+		
+		return feedDao.getRecommend(sqlSession,userId,limit);
+	}
+
+	@Override
+	public int followUser(FollowList followList) {
+	
+		return feedDao.followUser(sqlSession,followList);
+	}
+
+	@Override
+	public List<User> getRecommendList(String userId, int limit) {
+		
+		return feedDao.getRecommendList(sqlSession,userId,limit);
+	}
+
+	@Override
+	public int insertFeedImg(FeedImg feedImage) {
+		
+		return feedDao.insertFeedImg(sqlSession,feedImage);
+	}
+
+	@Override
+	public ArrayList<FeedImg> selectImages(int feedNo) {
+		
+		return feedDao.selectImages(sqlSession,feedNo);
+	}
+
+	
+
+	
 
 
 

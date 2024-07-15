@@ -167,7 +167,6 @@ public class MyPageController {
 			try {
 				//7.경로와 수정 파일명을 합쳐서 파일 업로드 처리하기
 				upfile.transferTo(new File(savePath+profileChangePath));
-				System.out.println(savePath);
 				
 			} catch (IllegalStateException | IOException e) {
 				

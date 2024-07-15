@@ -54,9 +54,15 @@ header {
 	align-items: center;
 	padding: 10px 20px;
 }
-.menu-item a {display:block; cursor: pointer;
+.menu-item a {
+	display:block; 
+	cursor: pointer;
 	font-size: 16px;
-	font-weight: 500; width:100%;}
+	font-weight: 500; 
+	width:100%;
+	text-decoration: none;
+	color: black;
+}
 .menu-item img {
 	width: 24px;
 	height: 24px;
@@ -109,6 +115,7 @@ header {
 .searchUserResult ul li {
 	display: flex;
     gap: 10px;
+    margin-top: 16px;
 }
 .searchUserResult ul li .profileImage {
 	width: 44px;
@@ -116,16 +123,33 @@ header {
     overflow: hidden;
     border-radius: 100%;
 }
+.searchUserResult ul li .profileImage img{
+	widgh: 100%;
+	height: 100%;
+}
+.searchUserResult ul li button {
+	background-color: #ffffff;
+	border: 0px;
+	
+}
 .searchUserResult ul li p {
     font-size: 14px;
 }
 .searchUserResult ul li p .userId {
 	display:block;
 }
-.searchUserResult ul li p .email {
-	color:##737373;
+.searchUserResult ul li p .memo {
+	color:#737373;
 }
 
+.badge {
+    margin-left: 5px;
+    padding: 0.5em;
+    border-radius: 50%;
+    background-color: red;
+    color: white;
+    width: 25px;
+}
 </style>
 </head>
 <body>
