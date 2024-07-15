@@ -101,13 +101,6 @@
 <%@include file="../user/loginHeader.jsp"%>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <div class="outer">
-        <!--스토리 목록-->
-            <div class="storys">
-            	<div class="story" onclick="addStory();">
-		      		<img class="story_img" src="resources/plusicon.jpeg">
-		      		<span>스토리 추가하기</span>
-		      	</div>
-            </div>
     <div class="body">
 		   <div class="con_wrap">
 		    <div class="conA">
