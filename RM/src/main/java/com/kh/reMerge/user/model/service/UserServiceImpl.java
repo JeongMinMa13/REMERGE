@@ -1,6 +1,7 @@
 package com.kh.reMerge.user.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,9 +50,9 @@ public class UserServiceImpl implements UserService {
 
 	//유저 검색
 	@Override
-	public ArrayList<User> searchUser(String searchStr) {
+	public ArrayList<User> searchUser(HashMap<String, String> searchMap) {
 
-		return userDao.searchUser(sqlSession,searchStr);
+		return userDao.searchUser(sqlSession,searchMap);
 	}
 
 	//팔로우 신청

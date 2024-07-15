@@ -49,8 +49,8 @@
 		SELECT * FROM USERS
 	</select>
 	
-	<select id="searchUser" parameterType="string" resultMap="userResultSet">
-		SELECT USER_ID,USER_MEMO,PROFILE_PATH,PROFILE_CHANGENAME, PROFILE_ORIGINNAME FROM USERS WHERE USER_ID LIKE '%'||#{searchStr}||'%'
+	<select id="searchUser" parameterType="hashmap" resultMap="userResultSet">
+		SELECT USER_ID,USER_MEMO,PROFILE_PATH,PROFILE_CHANGENAME, PROFILE_ORIGINNAME FROM USERS WHERE USER_ID LIKE '%'||#{searchStr}||'%' AND USER_ID NOT IN (SELECT USER_ID FROM USERS WHERE USER_ID=#{loginUser})
 	</select>
 	
 	<update id="updateUser" parameterType="User">

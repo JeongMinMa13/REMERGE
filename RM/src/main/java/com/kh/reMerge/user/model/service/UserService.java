@@ -1,6 +1,7 @@
 package com.kh.reMerge.user.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.kh.reMerge.user.model.vo.FollowList;
 import com.kh.reMerge.user.model.vo.SearchHistory;
@@ -19,7 +20,7 @@ public interface UserService {
 	ArrayList<User> getAllUsers();
 	
 	//유저 검색
-	ArrayList<User> searchUser(String searchStr);
+	ArrayList<User> searchUser(HashMap<String, String> searchMap);
 
 	
 	//팔로우 신청
