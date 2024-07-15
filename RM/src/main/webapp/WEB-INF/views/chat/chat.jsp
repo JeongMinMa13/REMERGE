@@ -54,7 +54,7 @@
         </div>
     </div>
 
-    <script>
+<script>
 var socket;
 var currentChatRoom = null;
 var currentChatUserId = null;
@@ -67,13 +67,21 @@ function connect() {
         if (currentChatRoom) {
             joinChatRoom(currentChatRoom);
         }
+        console.log("채팅방 입장 성공")
     };
     socket.onerror = function(e) {
         console.log(e);
     };
     socket.onmessage = function(event) {
         var message = JSON.parse(event.data);
-        appendMessage(message.sendId, message.content);
+        if (message.changeName) {
+            appendImage(message.sendId, message.changeName);
+        } else {
+            appendMessage(message.sendId, message.content);
+        }
+    };
+    socket.onclose = function(event) {
+        console.log("메시지 서버 연결 종료", event);
     };
 }
 
@@ -89,8 +97,6 @@ function loadUserList() {
         url: "/reMerge/userListAjax.us",
         method: "GET",
         success: function(data) {
-            console.log("사용자 리스트 : ", data);
-
             var userListBody = $("#userListBody");
             userListBody.empty();
 
@@ -101,7 +107,9 @@ function loadUserList() {
                 if (user.userId !== loggedInUserId) {
                     userRows += "<tr onclick='loadChat(\"" + user.userId + "\")'>";
                     userRows += "<td><img id='userProfile' src='" + "${pageContext.request.contextPath}/" + user.profilePath + "'></td>";
-                    userRows += "<td rowspan='2'>" + user.userMemo + "</td>";
+                    if (user.userMemo != null) {
+                        userRows += "<td rowspan='2'>" + user.userMemo + "</td>";
+                    }
                     userRows += "</tr>";
                     userRows += "<tr>";
                     userRows += "<td>" + user.userId + "</td>";
@@ -140,9 +148,7 @@ function loadChat(receiveId) {
                         chatArea.empty(); // 기존 채팅 내용 초기화
                         data.forEach(function(message) {
                             appendMessage(message.sendId, message.content, message.changeName);
-                            console.log("로드챗에서 체인지네임 : "+message.changeName);
                         });
-
                         joinChatRoom(messageRoomNo);
                         $("#exit").attr("onclick", "disconnect();");
                     },
@@ -167,7 +173,6 @@ function createNewChatRoom(receiveId) {
         method: "GET",
         data: { receiveId: receiveId },
         success: function(response) {
-            console.log("새로운 채팅방 생성 성공: ", response);
             currentChatRoom = response;
             joinChatRoom(response);
         },
@@ -206,15 +211,13 @@ function sendMessage(receiveId, readCheck) {
         }));
         $("#chat").val(""); // 메시지 전송 후 입력 창 초기화
     } else {
-        console.log("Socket 연결이 아직 열리지 않았습니다.");
+        console.log("소켓 연결 끊긴듯");
     }
 }
 
 function appendMessage(sendId, content, changeName) {
     var chatArea = $("#chatArea");
     var message = $("<div class='message'></div>");
-    var imgElement = $("<img class='message-image'>");
-    
     var isSender = sendId === "${loginUser.userId}";
 
     if (isSender) {
@@ -225,20 +228,22 @@ function appendMessage(sendId, content, changeName) {
 
     var contentElement = $("<p class='message-content'></p>").text(content);
     message.append(contentElement);
-    imgElement = $("<img class='message-image' style='width:100px; height:200px;'>");
-    imgElement.attr("src", changeName);
-    message.append(imgElement);
     
-    // 보낸 메시지와 받은 메시지에 따라 채팅창에 추가
-    if (isSender || sendId === currentChatUserId) {
+    if (changeName) { // 이미지가 있을 경우에만 이미지 요소를 추가
+        var imgElement = $("<img class='message-image' style='width:150px; height:200px;'>");
+        imgElement.attr("src", changeName);
+        message.append(imgElement);
+    }
+    
+    if (isSender || sendId === currentChatUserId) { // 보낸 메시지와 받은 메시지에 따라 채팅창에 추가
         chatArea.append(message);
         chatArea.scrollTop(chatArea[0].scrollHeight);
     }
 }
-function appendImage(sendId, photo) {
+
+function appendImage(sendId, changeName) {
     var chatArea = $("#chatArea");
     var message = $("<div class='message'></div>");
-
     var isSender = sendId === "${loginUser.userId}";
 
     if (isSender) {
@@ -248,16 +253,17 @@ function appendImage(sendId, photo) {
     }
 
     var imgElement = $("<img class='message-image'>");
-    imgElement.attr("src", photo);
+    imgElement.attr("src", changeName);
     imgElement.css({
-        "max-width": "100px",   
+        "max-width": "150px",   
         "max-height": "200px", 
     });
-
     message.append(imgElement);
 
-    chatArea.append(message);
-    chatArea.scrollTop(chatArea[0].scrollHeight);
+    if (isSender || sendId === currentChatUserId) { // 보낸 메시지와 받은 메시지에 따라 채팅창에 추가
+        chatArea.append(message);
+        chatArea.scrollTop(chatArea[0].scrollHeight);
+    }
 }
 
 $(document).ready(function() {
@@ -298,10 +304,8 @@ document.getElementById('fileInput').onchange = function(e) {
         };
 
         socket.send(JSON.stringify(message));
-
         // 채팅창에 이미지 추가
         appendImage("${loginUser.userId}", reader.result);
-        
         // 서버에 이미지 전송 및 저장
         sendImageToServer(file);
     };
@@ -311,10 +315,10 @@ document.getElementById('fileInput').onchange = function(e) {
     }
 };
 
-// 서버에 이미지 전송 및 저장 함수
-function sendImageToServer(file) {
-	var fileInput = document.getElementById("fileInput");
-    var file = fileInput.files[0]; // 첫 번째 파일만 처리
+//서버에 이미지 전송 및 저장 함수
+function sendImageToServer() {
+    var fileInput = document.getElementById("fileInput");
+    var file = fileInput.files[0];
 
     var formData = new FormData();
     formData.append("file", file);
@@ -330,11 +334,23 @@ function sendImageToServer(file) {
         processData: false,
         contentType: false,
         success: function(data) {
+            console.log("이미지 전송 성공, 서버 응답 데이터:", data);
+            // 이미지 전송 성공 후 WebSocket 메시지 전송
+            var message = {
+                messageRoomNo: currentChatRoom,
+                sendId: "${loginUser.userId}",
+                receiveId: currentChatUserId,
+                content: null,
+                changeName: "/reMerge/resources/uploadFiles/" + data, // 서버에서 반환된 변경된 파일 이름을 사용
+                readCheck: 1
+            };
+            socket.send(JSON.stringify(message)); // WebSocket을 통해 메시지 전송
         },
         error: function(error) {
             console.log("파일 전송 실패:", error);
         }
     });
+    connect();
 }
 
 //이모지 모달
