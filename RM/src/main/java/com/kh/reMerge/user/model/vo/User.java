@@ -25,8 +25,4 @@ public class User {
 	private String userMemo;
 	private String profileOriginName;
 	private String profileChangeName;
-	
-	private List<FollowList> FollowList;
-	
-	
 }

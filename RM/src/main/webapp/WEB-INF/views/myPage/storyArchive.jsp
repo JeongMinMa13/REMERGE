@@ -121,7 +121,7 @@
 					storyNo: storyNo
 				},
 				success: function(result) {
-					
+					 alert("스토리 삭제 성공!");
 					location.reload();
 				},
 				error: function() {

@@ -11,13 +11,22 @@
 		<result column="EMAIL" property="email" />
 		<result column="JOINDATE" property="joinDate" />
 		<result column="PROFILE_PATH" property="profilePath" />
-		<result column="PROFILE_ORIGINNAME" property="profileOriginName" />
-		<result column="PROFILE_CHANGEPATH" property="profileChangePath" />
+		<result column="PROFILE_ORIGINNAME"
+			property="profileOriginName" />
+		<result column="PROFILE_CHANGEPATH"
+			property="profileChangePath" />
 		<result column="STATUS" property="status" />
 		<result column="SHOP_BRANDCHEK" property="shopBrandChek" />
 		<result column="USER_MEMO" property="userMemo" />
-		<result column="PROFILE_ORIGINNAME" property="profileOriginName" />
-		<result column="PROFILE_CHANGENAME" property="profileChangeName" />
+		<result column="PROFILE_ORIGINNAME"
+			property="profileOriginName" />
+		<result column="PROFILE_CHANGENAME"
+			property="profileChangeName" />
+	</resultMap>
+
+	<resultMap type="FollowList" id="followResultSet">
+		<result column="TO_USER" property="toUser" />
+		<result column="FROM_USER" property="fromUser" />
 	</resultMap>
 
 	<resultMap type="Feed" id="feedResultSet">
@@ -39,12 +48,17 @@
 		<result column="CREATE_DATE" property="createDate" />
 	</resultMap>
 
+
 	<select id="loginUser" resultMap="userResultSet">
 		SELECT *
 		FROM USERS
-		WHERE USER_ID = #{userId}
-		AND STATUS = 'Y'
+		WHERE USER_ID
+		= #{userId}
+		AND
+		STATUS = 'Y'
 	</select>
+
+
 
 	<update id="updateUser" parameterType="User">
 		UPDATE USERS
@@ -59,7 +73,8 @@
 	</update>
 
 	<update id="updatePwd" parameterType="User">
-		UPDATE USERS SET
+		UPDATE USERS
+		SET
 		USER_PWD=#{userPwd}
 		WHERE USER_ID=#{userId}
 		AND STATUS='Y'
@@ -78,7 +93,8 @@
 		UPDATE USERS
 		SET
 		PROFILE_ORIGINNAME=#{profileOriginName}
-		,PROFILE_CHANGENAME =#{profileChangeName}
+		,PROFILE_CHANGENAME
+		=#{profileChangeName}
 		WHERE USER_ID = #{userId}
 		AND STATUS = 'Y'
 	</update>
@@ -87,14 +103,16 @@
 		parameterType="string">
 		SELECT COUNT (TO_USER)
 		FROM FOLLOWLIST
-		WHERE FROM_USER= #{fromUser}
+		WHERE FROM_USER=
+		#{fromUser}
 	</select>
 
 	<select id="countFollower" resultType="_int"
 		parameterType="string">
 		SELECT COUNT (FROM_USER)
 		FROM FOLLOWLIST
-		WHERE TO_USER= #{toUser}
+		WHERE TO_USER=
+		#{toUser}
 	</select>
 
 	<select id="countFeed" resultType="_int" parameterType="string">
@@ -111,7 +129,8 @@
 		profileChangeName
 		FROM USERS
 		WHERE USER_ID IN (SELECT TO_USER
-		FROM FOLLOWLIST
+		FROM
+		FOLLOWLIST
 		WHERE FROM_USER = #{userId})
 	</select>
 
@@ -128,61 +147,80 @@
 	</select>
 
 	<select id="myFeedlist" resultMap="feedResultSet">
-		SELECT F.FEED_NO,
-			   F.FEED_CONTENT,
-			   F.FEED_WRITER,
-			   F.CREATE_DATE,
-			   MIN(FI.CHANGE_NAME) AS CHANGE_NAME,
-			   F.FEED_LOCATION
-		FROM FEED F
-		JOIN FEED_IMG FI ON F.FEED_NO = FI.FEED_NO
-		WHERE F.STATUS = 'Y'
+		SELECT
+		F.FEED_NO,
+		F.FEED_CONTENT,
+		F.FEED_WRITER,
+		F.CREATE_DATE,
+		MIN(FI.CHANGE_NAME) AS CHANGE_NAME,
+		F.FEED_LOCATION
+		FROM
+		FEED F
+		JOIN
+		FEED_IMG FI ON F.FEED_NO = FI.FEED_NO
+		WHERE
+		F.STATUS = 'Y'
 		AND F.FEED_WRITER = #{userId}
-		GROUP BY F.FEED_NO,
-				 F.FEED_CONTENT,
-				 F.FEED_WRITER,
-				 F.CREATE_DATE,
-				 F.FEED_LOCATION
-		ORDER BY F.CREATE_DATE DESC
+		GROUP BY
+		F.FEED_NO,
+		F.FEED_CONTENT,
+		F.FEED_WRITER,
+		F.CREATE_DATE,
+		F.FEED_LOCATION
+		ORDER BY
+		F.CREATE_DATE DESC
 	</select>
 
 	<select id="myFeedlike" resultMap="feedResultSet">
-		SELECT F.FEED_NO,
-			   F.FEED_CONTENT,
-			   F.FEED_WRITER,
-			   F.CREATE_DATE,
-			   MIN(FI.CHANGE_NAME) AS CHANGE_NAME,
-			   F.FEED_LOCATION
-		FROM FEED F
-		JOIN FEED_IMG FI ON F.FEED_NO = FI.FEED_NO
-		JOIN FEED_LIKE FL ON F.FEED_NO = FL.FEED_NO
-		WHERE F.STATUS = 'Y'
+		SELECT
+		F.FEED_NO,
+		F.FEED_CONTENT,
+		F.FEED_WRITER,
+		F.CREATE_DATE,
+		MIN(FI.CHANGE_NAME) AS CHANGE_NAME,
+		F.FEED_LOCATION
+		FROM
+		FEED F
+		JOIN
+		FEED_IMG FI ON F.FEED_NO = FI.FEED_NO
+		JOIN
+		FEED_LIKE FL ON F.FEED_NO = FL.FEED_NO
+		WHERE
+		F.STATUS = 'Y'
 		AND F.FEED_WRITER = #{userId}
-		GROUP BY F.FEED_NO,
-				 F.FEED_CONTENT,
-				 F.FEED_WRITER,
-				 F.CREATE_DATE,
-				 F.FEED_LOCATION
-		ORDER BY F.CREATE_DATE DESC
+		GROUP BY
+		F.FEED_NO,
+		F.FEED_CONTENT,
+		F.FEED_WRITER,
+		F.CREATE_DATE,
+		F.FEED_LOCATION
+		ORDER BY
+		F.CREATE_DATE DESC
 	</select>
 
 	<select id="myFeedsave" resultMap="feedResultSet">
-		SELECT F.FEED_NO,
-			   F.FEED_CONTENT,
-			   F.FEED_WRITER,
-			   F.CREATE_DATE,
-			   MIN(FI.CHANGE_NAME) AS CHANGE_NAME,
-			   F.FEED_LOCATION
-		FROM FEED F
-		JOIN FEED_IMG FI ON F.FEED_NO = FI.FEED_NO
-		JOIN FEED_KEEP FK ON F.FEED_NO = FK.FEED_NO
-		WHERE F.STATUS = 'Y'
+		SELECT
+		F.FEED_NO,
+		F.FEED_CONTENT,
+		F.FEED_WRITER,
+		F.CREATE_DATE,
+		MIN(FI.CHANGE_NAME) AS CHANGE_NAME,
+		F.FEED_LOCATION
+		FROM
+		FEED F
+		JOIN
+		FEED_IMG FI ON F.FEED_NO = FI.FEED_NO
+		JOIN
+		FEED_KEEP FK ON F.FEED_NO = FK.FEED_NO
+		WHERE
+		F.STATUS = 'Y'
 		AND F.FEED_WRITER = #{userId}
-		GROUP BY F.FEED_NO,
-			 	 F.FEED_CONTENT,
-			 	 F.FEED_WRITER,
-				 F.CREATE_DATE,
-				 F.FEED_LOCATION
+		GROUP BY
+		F.FEED_NO,
+		F.FEED_CONTENT,
+		F.FEED_WRITER,
+		F.CREATE_DATE,
+		F.FEED_LOCATION
 		ORDER BY
 		F.CREATE_DATE DESC
 	</select>
@@ -210,9 +248,6 @@
 		DELETE FROM STORY
 		WHERE STORY_NO =#{storyNo}
 	</delete>
-
-
-
 
 
 </mapper>
