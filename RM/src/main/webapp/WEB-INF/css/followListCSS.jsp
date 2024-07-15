@@ -21,7 +21,7 @@
 .followListContent ul li {
 	display: flex;
     gap: 10px;
-    margin-top: 16px;
+    margin-top: 40px;
 }
 .followListContent ul li .profileImage {
 	width: 44px;

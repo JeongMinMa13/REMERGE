@@ -1,6 +1,7 @@
 package com.kh.reMerge.user.model.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
@@ -14,7 +15,6 @@ public class UserDao {
 
 	public User loginUser(SqlSessionTemplate sqlSession, User u) {
 		User loginUser = sqlSession.selectOne("userMapper.loginUser",u);
-		
 		return loginUser;
 	}
 
@@ -36,9 +36,9 @@ public class UserDao {
 	}
 
 	//유저 검색
-	public ArrayList<User> searchUser(SqlSessionTemplate sqlSession, String searchStr) {
+	public ArrayList<User> searchUser(SqlSessionTemplate sqlSession, HashMap<String, String> searchMap) {
 
-		return (ArrayList)sqlSession.selectList("userMapper.searchUser",searchStr);
+		return (ArrayList)sqlSession.selectList("userMapper.searchUser",searchMap);
 	}
 	
 	//내가 아닌 다른 유저 프로필 보기 위한 조회

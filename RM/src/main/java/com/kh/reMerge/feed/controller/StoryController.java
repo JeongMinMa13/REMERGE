@@ -42,21 +42,21 @@ public class StoryController {
 		int result = storyService.insertStory(story);//필요한 정보 넣어주었으니 실행 시켜 결과값 받기
 		
 		if(result>0) {//입력 됬다면 
-//			Thread updateThread = new Thread() {
-//				public void run() {
-//					try {
+			Thread updateThread = new Thread() {
+				public void run() {
+					try {
 //						Thread.sleep(10*1000);//10초 동안 동작 안하기
-////						Thread.sleep(24*60*60*1000);//24시간 동안 동작 안하기
-//					} catch (InterruptedException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//					int result = storyService.updateStoryStatus(story);
-//					System.out.println("Thread 실행 하여 N으로 수정 결과 "+result);
-//				}
-//			};
-//			updateThread.setDaemon(true);//메인쓰레드가 종료되면 종료될수있도록 종속 시키기
-//			updateThread.start();
+						Thread.sleep(24*60*60*1000);//24시간 동안 동작 안하기
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					int result = storyService.updateStoryStatus(story);
+					//System.out.println("Thread 실행 하여 N으로 수정 결과 "+result);
+				}
+			};
+			updateThread.setDaemon(true);//메인쓰레드가 종료되면 종료될수있도록 종속 시키기
+			updateThread.start();
 			session.setAttribute("alertMsg", "성공적으로 등록되었습니다.");
 			return "redirect:feed.fe";
 		}else {
@@ -91,21 +91,21 @@ public class StoryController {
 			}
 		}
 		if(!duplCheck) {//중복되지 않았다면 
-//			Thread historyThread = new Thread() {
-//				public void run() {
-//					try {
+			Thread historyThread = new Thread() {
+				public void run() {
+					try {
 //						Thread.sleep(10*1000);//10초 동안 동작 안하기
-//					    //Thread.sleep(24*60*60*1000);//24시간 동안 동작 안하기
-//					} catch (InterruptedException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//					int result = storyService.deleteHistory(history);
-//					System.out.println("Thread 실행 하여 history 삭제 결과 "+result);
-//				}
-//			};
-//			historyThread.setDaemon(true);//메인쓰레드가 종료되면 종료될수있도록 종속 시키기
-//			historyThread.start();
+					    Thread.sleep(24*60*60*1000);//24시간 동안 동작 안하기
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					storyService.deleteHistory(history);
+					//System.out.println("Thread 실행 하여 history 삭제 결과 "+result);
+				}
+			};
+			historyThread.setDaemon(true);//메인쓰레드가 종료되면 종료될수있도록 종속 시키기
+			historyThread.start();
 			
 			return storyService.insertHistory(history);
 		}

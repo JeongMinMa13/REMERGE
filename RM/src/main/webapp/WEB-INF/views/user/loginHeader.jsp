@@ -113,10 +113,10 @@ function updateUnreadMessageCount(count) {
                      <span id="unreadMessageCount" class="badge bg-danger"></span>
                     </div></li>
                     <li><div class="menu-item" id="create"><img src="${pageContext.request.contextPath}/resources/create.png">만들기</div></li>
-                    <li><div class="menu-item" id="store"><img src="${pageContext.request.contextPath}/resources/store.png">스토어</div></li>
-                    <li><div class="menu-item" id="profile"><a href="myPage.us?userId=${loginUser.userId}"><img src="${pageContext.request.contextPath}/resources/unknown.jpg">프로필</a></div></li>
-                    <li><div class="menu-item" id="calendarIcon"><a href="calendar.sc"><img src="${pageContext.request.contextPath}/resources/calendaricon.png">캘린더</a></div></li>
-                    <li><div class="menu-item" id="festivalIcon"><a href="festival.fs"><img src="${pageContext.request.contextPath}/resources/festivalIcon.png">축제</a></div></li>
+                    <li><div class="menu-item" id="store"><a href="storeHome.sh"><img src="${pageContext.request.contextPath}/resources/store.png">스토어</a></div></li>
+                    <li><div class="menu-item" id="profile"><a href="${pageContext.request.contextPath}/myPage.us?userId=${loginUser.userId}"><img src="${pageContext.request.contextPath}/resources/unknown.jpg">프로필</a></div></li>
+                    <li><div class="menu-item" id="calendarIcon"><a href="${pageContext.request.contextPath}/calendar.sc"><img src="${pageContext.request.contextPath}/resources/calendaricon.png">캘린더</a></div></li>
+                    <li><div class="menu-item" id="festivalIcon"><a href="${pageContext.request.contextPath}/festival.fs"><img src="${pageContext.request.contextPath}/resources/festivalIcon.png">축제</a></div></li>
                 </ul>
             </nav>
         </div>
@@ -177,7 +177,8 @@ function updateUnreadMessageCount(count) {
 	    			url:"searchUser.us",
 	    			type:"get",
 	    			data:{
-	    				searchStr:searchStr
+	    				searchStr:searchStr,
+	    				loginUser:"${loginUser.userId}"
 	    			},
 	    			success:function(data){
 	    				//console.log(data)// 데이터 확인

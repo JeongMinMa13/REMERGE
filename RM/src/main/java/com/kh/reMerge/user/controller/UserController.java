@@ -212,13 +212,15 @@ public class UserController {
 		    return userService.getAllUsers();
 		}
 		
-		//유저 검색
-		@ResponseBody
-		@GetMapping("searchUser.us")
-		public ArrayList<User> searchUser(String searchStr){
-			
-			return userService.searchUser(searchStr);
-		}
+	//유저 검색
+	@ResponseBody
+	@GetMapping("searchUser.us")
+	public ArrayList<User> searchUser(String searchStr, String loginUser){
+		HashMap<String,String> searchMap = new HashMap<>();
+		searchMap.put("searchStr", searchStr);
+		searchMap.put("loginUser", loginUser);
+		return userService.searchUser(searchMap);
+	}
 		
 	//팔로우 신청
 	@ResponseBody
@@ -247,7 +249,7 @@ public class UserController {
 		u.setEmail(pwForEmail);
 		u.setUserId(userId);
 		
-		int result =userService.accEmail(u);
+		int result = userService.accEmail(u);
 		
 		
 		if(result >0) { //아이디 및 이메일이 일치 할때

@@ -1,6 +1,7 @@
 package com.kh.reMerge.user.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.kh.reMerge.user.model.vo.FollowList;
 import com.kh.reMerge.user.model.vo.SearchHistory;
@@ -13,28 +14,26 @@ public interface UserService {
 	int checkId(String checkId);
 
 	User loginUser(User u);
-
+                                                                   
 
 	// 메시지용 - 중구
 	ArrayList<User> getAllUsers();
 	
 	//유저 검색
-	ArrayList<User> searchUser(String searchStr);
+	ArrayList<User> searchUser(HashMap<String, String> searchMap);
 
 	
 	//팔로우 신청
 	int insertFollow(FollowList followList);
 	
+	//내가 아닌 다른 유저 프로필을 보기 위한 조회
+	User selectUser(String userId);
+	
+	//팔로우 되어있는지 확인하기 위한 조회
+	int selectFollow(FollowList followList);
 	
 	//언팔로우
 	int deleteFollow(FollowList followList);
-	
-	//내가 아닌 유저 정보 조회해오기
-	User selectUser(String userId);
-	
-	//팔로우 목록
-	int selectFollow(FollowList followList);
-
 	
 	//이메일 중복체크
 	int checkEmail(String email);

@@ -33,7 +33,6 @@ public class MyPageController {
 	private BCryptPasswordEncoder bcryptPasswordEncoder;
 
 
-
 //마이페이지로 이동
 	@RequestMapping("myPage.us")
 	public String myPage(String userId, HttpSession session) {
@@ -45,7 +44,6 @@ public class MyPageController {
 		int result = userService.selectFollow(followList);// 팔로우 되어있는지 확인하기 위한 조회
 		if (result > 0) {// 팔로우 되어 있다면 true
 			followFlag = true;
-			
 		}
 		System.out.println("마이페이지에서 찍힌 유저:"+u);
 		session.setAttribute("user", u);

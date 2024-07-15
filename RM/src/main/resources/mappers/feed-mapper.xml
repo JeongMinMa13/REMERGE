@@ -10,24 +10,27 @@
 		WHERE STATUS ='Y'
 	</select>
 	
-	<resultMap type="Feed" id="feedResultSet">
+		<resultMap type="Feed" id="feedResultSet">
 			<id property="feedNo" column="FEED_NO"/>
 			<result column="FEED_CONTENT" property="feedContent"/>
 			<result column="FEED_WRITER" property="feedWriter"/>
 			<result column="CREATE_DATE" property="createDate"/>
 			<result column="FEED_LOCATION" property="feedLocation"/>
 			<result column="CHANGE_NAME" property="changeName"/>
+			<result column="SHOP_NO" property="shopNo"/>
 		</resultMap>
-		
+	
 	<insert id="insertFeed" parameterType="Feed">
 	    INSERT INTO FEED(FEED_NO
 	    				,FEED_CONTENT
 	    				,FEED_WRITER
-	    				,FEED_LOCATION)
+	    				,FEED_LOCATION
+	    				,SHOP_NO)
 		    VALUES(SEQ_FNO.NEXTVAL
 		    	   ,#{feedContent}
 		    	   ,#{feedWriter}
-		    	   ,#{feedLocation})
+		    	   ,#{feedLocation}
+		    	   ,#{shopNo})
 	</insert>
 	
 	<select id="selectFeedNo" resultType="_int">
@@ -39,7 +42,9 @@
            FEED_CONTENT,
            FEED_WRITER,
            CREATE_DATE,
-           FEED_LOCATION
+           FEED_LOCATION,
+           FEED_LOCATION,
+           SHOP_NO
     FROM FEED
     WHERE FEED_WRITER = #{userId}
        OR FEED_WRITER IN (
@@ -79,6 +84,7 @@
 			  ,FEED_WRITER
 			  ,CREATE_DATE
 			  ,FEED_LOCATION
+			  ,SHOP_NO
 		FROM FEED
 		WHERE FEED_NO = #{feedNo}
 		AND STATUS = 'Y'
@@ -343,6 +349,8 @@
     )
  
  </select>
+	
+	
 	
 	
 	
