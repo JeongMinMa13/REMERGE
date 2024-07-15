@@ -57,7 +57,7 @@ public class FeedController {
 	//리스트 조회
 	@ResponseBody
 	@PostMapping("feedList.fe")
-	public Map<String, Object> feedlist(@RequestParam(value="currentPage",defaultValue = "1")int currentPage) {
+	public Map<String, Object> feedlist(@RequestParam(value="currentPage",defaultValue = "1")int currentPage, String userId) {
 		
 		int listCount = feedService.listcount();
 		int feedLimit = 5;
@@ -121,58 +121,52 @@ public class FeedController {
 			}
 		}
 	
-	//게시글 넣기
-	@PostMapping("insert.fe")
-	public String insertFeed(Feed f, @RequestPart MultipartFile upfile, HttpSession session, @RequestParam(value="tags", required=false) String tags,
-			@RequestParam(value = "shopNo", required = false) int shopNo) {
-		
-		System.out.println("shopNo넘어오는지" +shopNo);
-		f.setShopNo(shopNo);
-		System.out.println("게시글 작성에 가져가는 정보 : "+f);
-		int result = feedService.insertFeed(f);
-		f.setFeedNo(feedNo);
-		
-		List<FeedImg> feedImg = new ArrayList<>();
-		
-		for (MultipartFile upfile : upfiles) {
-            if (!upfile.getOriginalFilename().equals("")) {
-                String changeName = saveFile(upfile, session);
-                FeedImg feedImage = new FeedImg();
-                feedImage.setFeedNo(feedNo);
-                feedImage.setOriginName(upfile.getOriginalFilename());
-                feedImage.setChangeName("resources/uploadFiles/" + changeName);
-                feedImg.add(feedImage);
-                feedService.insertFeedImg(feedImage);
-            }
-        }
-		
-		
-		if (result > 0) {// 게시글 작성 성공
-			int feedNo = feedService.selectFeedNo();
-			f.setFeedNo(feedNo);
+		//게시글 넣기
+		@PostMapping("insert.fe")
+		public String insertFeed(Feed f, @RequestPart MultipartFile[] upfiles, HttpSession session, @RequestParam(value="tags", required=false) String tags) {
 			
-			if (tags != null && !tags.isEmpty()) {
-	            String[] tagArray = tags.split(",");
-	            List<Tag> tagList = new ArrayList<>();
-	            for (String tagContent : tagArray) {
-	                Tag tag = new Tag();
-	                tag.setTagContent(tagContent.trim());
-	                tag.setRefFno(f.getFeedNo());
-	                tagList.add(tag);
-	                feedService.insertTag(tag);
-	            }
-	        }
+			int result = feedService.insertFeed(f);
 			
-			session.setAttribute("alertMsg", "게시글이 등록 되었습니다.");
-			return "redirect:feed.fe";
-		} else {
-			session.setAttribute("alertMsg", "게시글 등록이 실패했습니다.");
+			if (result > 0) {// 게시글 작성 성공
+				int feedNo = feedService.selectFeedNo();
+				f.setFeedNo(feedNo);
+				
+				List<FeedImg> feedImg = new ArrayList<>();
+				
+				for (MultipartFile upfile : upfiles) {
+		            if (!upfile.getOriginalFilename().equals("")) {
+		                String changeName = saveFile(upfile, session);
+		                FeedImg feedImage = new FeedImg();
+		                feedImage.setFeedNo(feedNo);
+		                feedImage.setOriginName(upfile.getOriginalFilename());
+		                feedImage.setChangeName("resources/uploadFiles/" + changeName);
+		                feedImg.add(feedImage);
+		                feedService.insertFeedImg(feedImage);
+		            }
+		        }
+				
+				if (tags != null && !tags.isEmpty()) {
+		            String[] tagArray = tags.split(",");
+		            List<Tag> tagList = new ArrayList<>();
+		            for (String tagContent : tagArray) {
+		                Tag tag = new Tag();
+		                tag.setTagContent(tagContent.trim()); //앞 뒤 공백을 제거해준대요
+		                tag.setRefFno(f.getFeedNo());
+		                tagList.add(tag);
+		                feedService.insertTag(tag);
+		            }
+		        }
+				
+				session.setAttribute("alertMsg", "게시글이 등록 되었습니다.");
+				return "redirect:feed.fe";
+			} else {
+				session.setAttribute("alertMsg", "게시글 등록이 실패했습니다.");
+				
+				return "redirect:feed.fe";
+			}
+		
 			
-			return "redirect:feed.fe";
 		}
-	
-		
-	}
 	
 	//파일 업로드 처리 메소드(재활용)
 		public String saveFile(MultipartFile upfile,HttpSession session) {

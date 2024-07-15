@@ -3,6 +3,9 @@ package com.kh.reMerge.feed.model.vo;
 import java.sql.Date;
 import java.util.List;
 
+import com.kh.reMerge.user.model.vo.FollowList;
+import com.kh.reMerge.user.model.vo.User;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
