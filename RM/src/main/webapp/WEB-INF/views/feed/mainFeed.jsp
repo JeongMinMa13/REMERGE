@@ -677,7 +677,7 @@
 					for(var i=0;i<story.length;i++){
 						if(!processedUserIds.has(story[i].userId)){//저장된 집합에 이름이 있는지 확인
 							
-							html +="<div class='story' onclick='storyView("+i+");'>";
+							html +="<div class='story swiper-slide' onclick='storyView("+i+");'>";
 							html +="<input type='hidden' class='storyNoCheck' value='"+story[i].storyNo+"'>";
 							html +="<img class='story_img' src='"+story[i].changeName+"'>";
 							html +="<span>"+story[i].userId+"</span>";
