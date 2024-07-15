@@ -59,8 +59,6 @@ public class MypageDao {
 		return (ArrayList)sqlSession.selectList("mypageMapper.followerList",userId);
 	}
 
-
-
 	public ArrayList<Feed> myFeedlist(SqlSessionTemplate sqlSession, String userId) {
 	
 		return (ArrayList)sqlSession.selectList("mypageMapper.myFeedlist",userId);

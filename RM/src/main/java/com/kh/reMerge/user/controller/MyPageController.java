@@ -67,9 +67,6 @@ public class MyPageController {
 		session.setAttribute("myFeedlist", myFeedlist);
 		session.setAttribute("myFeedlike", myFeedlike);
 		session.setAttribute("myFeedsave", myFeedsave);
-		
-		
-		
 
 		return "myPage/myPage";
 
@@ -138,14 +135,11 @@ public class MyPageController {
 				defaultProfile = u.getProfileChangeName(); // 프로필 경로로 설정
 			} else {
 				String profileChangePath = saveFile(upfile, session);
-
 				// 새 사진 등록
 				u.setProfileOriginName(upfile.getOriginalFilename());
 				u.setProfileChangeName("resources/profile/" + profileChangePath);
-
 			}
 		}
-
 
 		int result = mypageService.updateProfile(u);
 
@@ -193,24 +187,17 @@ public class MyPageController {
 				
 				e.printStackTrace();
 			}
-			
 			return profileChangePath;
-			
-
 		}
-
 	
-
-	
-
 	// 회원탈퇴 메소드
 	@RequestMapping("delete.us")
 	public String deleteMember(String userPwd, HttpSession session, Model model) {
 		// 사용자의 아이디를 가지고 데이터베이스에서 해당 정보를 조회해온다(암호문인 비밀번호)
 		// 넘어온 평문과 조회한 암호문(비밀번호)를 비교한뒤 일치하면 회원탈퇴 시키기
 
-//			System.out.println("평문 : "+userPwd);
-//			System.out.println("로그인 비밀번호 : "+((Member)session.getAttribute("loginUser")).getUserPwd());
+		//System.out.println("평문 : "+userPwd);	
+		//System.out.println("로그인 비밀번호 : "+((Member)session.getAttribute("loginUser")).getUserPwd());
 		// 로그인했을때 데이터베이스에 있는 암호문을 가지고 왔으니
 		// 해당 암호문과 넘겨진 평문 matches() 메소드로 비교하여 처리하기
 
@@ -247,8 +234,6 @@ public class MyPageController {
 		ArrayList<User> followingList=mypageService.followingList(userId);
 		session.setAttribute("followingList", followingList);
 		
-		
-	
 		return followingList;
 		
 	}
@@ -259,9 +244,7 @@ public class MyPageController {
 		ArrayList<User> followerList=mypageService.followerList(userId);
 		session.setAttribute("followerList", followerList);
 		
-		
 		return followerList;
-		
 	}
 	
 	@GetMapping("storyArchive.us")
@@ -270,7 +253,6 @@ public class MyPageController {
 		ArrayList<Story> storyArchive = mypageService.storyArchive(userId);
 		session.setAttribute("storyArchive", storyArchive);
 		
-
 		return "myPage/storyArchive";
 	}
 	
@@ -280,10 +262,10 @@ public class MyPageController {
 		
 		Story story = mypageService.storyDetail(storyNo);
 		
-		
 		return story;
 		
 	}
+	
 	@ResponseBody
 	@PostMapping("deleteStory.us")
 	public String deleteStory (int storyNo,HttpSession session){

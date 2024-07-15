@@ -97,11 +97,10 @@
 				success: function(result) {
 					$("#story_view_img").attr("src", result.changeName);
 					$("#story_view_content").text(result.storyContent);
-					
 					str="";
 					str+= "<button onclick='deleteStory("+storyNo+");'>삭제</button>";
-					
-					 $(".modal-header").html('<h5 class="modal-title" id="modal_view_story_title">스토리</h5>' +
+
+					$(".modal-header").html('<h5 class="modal-title" id="modal_view_story_title">스토리</h5>' +
                              '<button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="storyClose();">' +
                              '<span aria-hidden="true">&times;</span>' +
                              '</button>' +

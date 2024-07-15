@@ -53,20 +53,19 @@
                     
 	                 <c:choose> 
 	                  	<c:when test="${loginUser.profileChangeName ne null }">  
-						 	 <img id="profile" src="${loginUser.profileChangeName}" width="100" height="100" style="border-radius:70%"> &nbsp;
+						 	 <img id="profile-preview" src="${loginUser.profileChangeName}" width="100" height="100" style="border-radius:70%"> &nbsp;
 						 </c:when>
 						 <c:otherwise>
-							 <img id="profile" src="resources/unknown.jpg" width="100" height="100" > &nbsp;
+							 <img id="profile-preview" src="resources/unknown.jpg" width="100" height="100" > &nbsp;
 						 </c:otherwise>
 	                </c:choose>
                     <br><br>
                     <label for="upfile" class="upfilebtn" >사진 업로드</label>
-                    <input type="file" id="upfile" class="form-control-file border" name="upfile" style="display: none;"><Br>
+                    <input type="file"   id="upfile" name="upfile" class="form-control-file border" style="display: none;"><br>
                     <label for="delete" class="deletebtn"style="color: red;" >사진 삭제</label>
                     <input type="submit" id="delete" class="form-control-file border" name="delete" style="display: none;">
                     <br>
                     <button type="submit">완료</button>
-                   
                    </form>
                 </div> 
 					
@@ -193,5 +192,27 @@
 			</div>
 		</div>
 	</div>
+	
+	<script>
+	$(function(){
+	    $("#upfile").change(function() {
+	        loadImg(this);
+	    });
+
+	    function loadImg(inputFile) {
+	        if (inputFile.files && inputFile.files.length > 0) {
+	            var reader = new FileReader();
+
+	            reader.onload = function(e) {
+	                // 읽어온 이미지의 URL을 미리보기 영역의 src에 설정
+	                $('#profile-preview').attr('src', e.target.result);
+	            };
+	            reader.readAsDataURL(inputFile.files[0]);
+	        }
+	    }
+	});
+	
+				
+	</script>
 </body>
 </html>
