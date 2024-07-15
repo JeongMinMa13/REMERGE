@@ -113,8 +113,14 @@ public interface FeedService {
 	//사진 추가
 	int insertFeedImg(FeedImg feedImage);
 	
-	
+	//이미지 선택
 	ArrayList<FeedImg> selectImages(int feedNo);
+	
+	//탐색기능
+	ArrayList<Feed> explore(String userId);
+	
+	//좋아요 누른 사람
+	List<User> likeUsers(int feedNo, String userId);
 	
 	
 	

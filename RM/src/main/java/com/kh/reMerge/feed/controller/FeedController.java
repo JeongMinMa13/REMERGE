@@ -254,8 +254,6 @@ public class FeedController {
 	    result.put("rList", rList);
 	    result.put("timeAgo", timeAgo);
 	    
-	    System.out.println(result);
-	    
 	    return result;
 		
 	}
@@ -357,7 +355,7 @@ public class FeedController {
 
 	    int likeCheck = feedService.checkReplyLike(replyNo, userId);
 	    Map<String, Object> result = new HashMap<>();
-
+	    
 	    if (likeCheck > 0) {
 	        feedService.deleteReplyLike(rl);
 	        result.put("status", "unliked");
@@ -366,8 +364,8 @@ public class FeedController {
 	        result.put("status", "liked");
 	    }
 
-	    int likeCount = feedService.countReplyLikes(replyNo);
-	    result.put("likeCount", likeCount);
+	    int relikeCount = feedService.countReplyLikes(replyNo);
+	    result.put("RelikeCount", relikeCount);
 
 	    return result; 
 	
@@ -382,8 +380,8 @@ public class FeedController {
 	        int likeCheck = feedService.checkReplyLike(replyNo, userId);
 	        result.put("status", likeCheck > 0 ? "liked" : "unliked"); //좋아요 됐고 안 됐고 반별
 
-	        int likeCount = feedService.likeCount(replyNo);
-	        result.put("likeCount", likeCount);
+	        int relikeCount = feedService.countReplyLikes(replyNo);
+	        result.put("RelikeCount", relikeCount);
 	    } catch (Exception e) {
 	        result.put("error", e.getMessage());
 	    }
@@ -465,7 +463,30 @@ public class FeedController {
 	}
 	
 	
+	//탐색 기능
+	@GetMapping("explore.fe")
+	public String explore(HttpSession session) {
+		User loginUser = (User) session.getAttribute("loginUser");
+		String userId = loginUser.getUserId();
+		ArrayList<Feed> feedExplore = feedService.explore(userId);
+		session.setAttribute("feedExplore", feedExplore);
+		
+		return "feed/explore";
+	}
 	
+	//게시글 좋아요 리스트
+	@ResponseBody
+	@GetMapping("likeDetail.fe")
+	public Map<String,Object> likeDetail(@RequestParam int feedNo, @RequestParam String userId) {
+		List<User> likeUserList = feedService.likeUsers(feedNo, userId);
+	    Map<String, Object> result = new HashMap<>();
+	    result.put("likeUserList", likeUserList);
+	    
+	    System.out.println(result);
+		
+		return result;
+		
+	}
 
 	
 	

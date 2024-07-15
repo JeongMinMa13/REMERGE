@@ -55,6 +55,7 @@
 		   ,RE_CONTENT reContent
 		   ,USER_ID userId
 		   ,CREATE_DATE createDate
+		   ,RELIKE_COUNT reLikeCount
 		FROM REPLY
 		WHERE FEED_NO = #{feedNo} 
 		AND STATUS = 'Y'
@@ -180,15 +181,28 @@
 	</select>
 	
 	<insert id="insertReplyLike" parameterType="ReplyLike">
-		INSERT INTO REPLY_LIKE(USER_ID,REPLY_NO)
-		VALUES (#{userId},#{replyNo})
+		INSERT INTO REPLY_LIKE (USER_ID, REPLY_NO)
+        VALUES (#{userId}, #{replyNo})
 	</insert>
+	
+	<update id="likeCountUpdate" parameterType="_int">
+        UPDATE REPLY
+        SET RELIKE_COUNT = RELIKE_COUNT + 1
+        WHERE REPLY_NO = #{replyNo}
+    </update>
+	
 	
 	<delete id="deleteReplyLike" parameterType="ReplyLike">
 		DELETE FROM REPLY_LIKE
-		WHERE USER_ID = #{userId}
-		AND REPLY_NO = #{replyNo}
+        WHERE USER_ID = #{userId}
+        AND REPLY_NO = #{replyNo}
 	</delete>
+	
+	 <update id="likeCountDelete" parameterType="_int">
+        UPDATE REPLY
+        SET RELIKE_COUNT = RELIKE_COUNT - 1
+        WHERE REPLY_NO = #{replyNo}
+    </update>
 	
 	<select id="checkReplyLike" parameterType="ReplyLike" resultType="_int">
 		SELECT COUNT(*)
@@ -198,8 +212,8 @@
 	</select>
 	
 	<select id="countReplyLikes" parameterType="_int" resultType="_int">
-        SELECT COUNT(*)
-        FROM REPLY_LIKE
+        SELECT RELIKE_COUNT
+        FROM REPLY
         WHERE REPLY_NO = #{replyNo}
     </select>
     
@@ -292,6 +306,43 @@
    WHERE FEED_NO = #{feedNo}
    </select>
    
+  
+   <select id="explore" resultMap="feedResultSet">
+   SELECT 
+        F.FEED_NO,
+        F.FEED_CONTENT,
+        F.FEED_WRITER,
+        F.CREATE_DATE,
+        MIN(FI.CHANGE_NAME) AS CHANGE_NAME,  
+        F.FEED_LOCATION
+    FROM 
+        FEED F
+    JOIN 
+        FEED_IMG FI ON F.FEED_NO = FI.FEED_NO
+    LEFT JOIN 
+        FOLLOWLIST FL ON F.FEED_WRITER = FL.TO_USER AND FL.FROM_USER = #{userId}
+    WHERE 
+        FL.TO_USER IS NULL
+    GROUP BY 
+        F.FEED_NO,
+        F.FEED_CONTENT,
+        F.FEED_WRITER,
+        F.CREATE_DATE,
+        F.FEED_LOCATION
+    ORDER BY 
+        F.CREATE_DATE DESC
+   </select>
+ 
+ <select id="likeUsers" parameterType="map" resultType="User">
+ 	SELECT U.USER_ID, U.PROFILE_CHANGE_NAME,
+           CASE WHEN F.FROM_USER IS NULL THEN 0 ELSE 1 END AS IS_FOLLOWING
+    FROM USERS U
+    LEFT JOIN FOLLOWLIST F ON U.USER_ID = F.TO_USER AND F.FROM_USER = #{userId}
+    WHERE U.USER_ID IN (
+        SELECT USER_ID FROM FEED_LIKE WHERE FEED_NO = #{feedNo}
+    )
+ 
+ </select>
 	
 	
 	

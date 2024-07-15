@@ -25,14 +25,12 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <div class="outer">
         <!--스토리 목록-->
-        <div class="">
             <div class="storys">
             	<div class="story" onclick="addStory();">
 		      		<img class="story_img" src="resources/plusicon.jpeg">
 		      		<span>스토리 추가하기</span>
 		      	</div>
             </div>
-         </div>   
     <div class="body">
 		   <div class="con_wrap">
 		    <div class="conA">
@@ -77,7 +75,7 @@
 	                    <input type="file" class="form-control-file d-none" id="files" name="upfiles" multiple>
 	                </div>
 	                <div class="swiper-container mt-3" id="thumbnailsFeedSwiper">
-	                    <div class="swiper-wrapper" id="thumbnailsFeed">
+	                    <div class="swiper-wrapper feedSlide" id="thumbnailsFeed">
 	                        <!-- 썸네일 이미지들이 이곳에 추가됩니다. -->
 	                    </div>
 	                    <!-- Add Pagination -->
@@ -108,12 +106,10 @@
 	                <div class="modal-body d-flex">
 	                    <div class="thumbnail-container flex-fill text-center">
 	                        <div class="swiper-container mt-3" id="selectedThumbnailsSwiper">
-	                            <div class="swiper-wrapper" id="selectedThumbnails">
+	                            <div class="swiper-wrapper feedSlide" id="selectedThumbnails">
 	                                <!-- 선택된 썸네일 이미지들이 이곳에 추가됩니다. -->
 	                            </div>
-	                            <!-- Add Pagination -->
 	                            <div class="swiper-pagination"></div>
-	                            <!-- Add Navigation -->
 	                            <div class="swiper-button-next"></div>
 	                            <div class="swiper-button-prev"></div>
 	                        </div>
@@ -141,7 +137,7 @@
 	    </div>
 	</div>
 	
-	<!-- 게시물 디테일 모달 -->
+	<!--모달 -->
 	<div class="modal fade" id="modal_detail_feed" tabindex="-1" role="dialog" aria-labelledby="modal_detail_feed" aria-hidden="true">
 	    <div class="modal-dialog modal-xl" role="document">
 	        <div class="modal-content">
@@ -195,7 +191,7 @@
 	        </div>
 	    </div>
 	</div>
-		
+	
 		<!-- 지도 모달 -->
 		<div class="modal fade" id="mapModal" tabindex="-1" role="dialog" aria-labelledby="mapModalTitle" aria-hidden="true">
 		    <div class="modal-dialog modal-lg" role="document">
@@ -266,7 +262,30 @@
 			</div>
 		</div>
 	</div>
+	
+	<!-- 좋아요 리스트 모달 -->
+	<div class="modal fade" id="likeDetail" tabindex="-1" role="dialog" aria-labelledby="likeListModalTitle" aria-hidden="true">
+	    <div class="modal-dialog modal-lg" role="document">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h5 class="modal-title" id="likeListModalTitle">좋아요</h5>
+	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                    <span aria-hidden="true">&times;</span>
+	                </button>
+	            </div>
+	            <div class="modal-body">
+	                <ul id="likeList" class="list-group">
+	                    <!-- 좋아요 한 사용자 목록이 여기에 추가됩니다. -->
+	                </ul>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+	
 </div>
+
+	
+	
 	<script>
 		<!-- 태그 -->
 		$(document).ready(function() {
@@ -540,7 +559,7 @@
 			        	    str += '            <button class="reply-like-button" onclick="toggleReplyLike(' + reply.replyNo + ', \'' + "${loginUser.userId}"	+ '\')">';
 			        	    str += '                <i class="reply-heart-icon far fa-heart"></i>';
 			        	    str += '            </button>';
-			        	    str += '            <span class="reply-like-count" id="reply-like-count-' + reply.replyNo + '"></span>';
+			        	    str += '            <span class="reply-like-count" id="reply-like-count-' + reply.replyNo + '">' + reply.reLikeCount + '</span>';
 			        	    str += '        </p>';
 			        	    str += '    </div>';
 			        	    str += '</div>';
@@ -566,7 +585,9 @@
 			         // 댓글 좋아요 상태 로드
 			            for (var i = 0; i < result.rList.length; i++) {
 			                var reply = result.rList[i];
+			                console.log(result);
 			                loadReplyLikeStatus(reply.replyNo, userId);
+			                console.log(reply.replyNo);
 			            }
 			         
 				},
@@ -639,6 +660,26 @@
             });
         }
 		</script>
+		
+		<!-- 게시물 좋아요 누른 디테일 리스트 -->
+		<script>
+		<!--
+		function likeDetailView(feedNo,feedWriter){
+			$('#likeDetail').modal('show');
+			$.ajax({
+				url : 'likeDetail.fe',
+				type: 'GET',
+				data: {
+					feedNo : feedNo
+					userId : feedWriter
+				},
+				success: function(result){
+					var likeStr = "";
+				}
+			});
+		}
+		-->
+		</script>
 
 	<script>
 		<!-- 게시글 리스트 목록 -->
@@ -657,6 +698,9 @@
                     for (var i = 0; i < response.list.length; i++) {
                         var feed = response.list[i];
                         var userProfile = feed.userProfile;
+                        var feedContent = feed.feedContent ? feed.feedContent : ''; // null이면 빈 문자열로 대체
+                        var feedLocation = feed.feedLocation ? feed.feedLocation : ''; // null이면 빈 문자열로 대체
+                        
                         str += '<div class="con" data-feed-no="' + feed.feedNo + '">';
                         str += '    <div class="title">';
                         if (userProfile && userProfile.profileChangeName) {
@@ -665,13 +709,13 @@
                             str += '        <img src="resources/unknown.jpg" class="img">';
                         }
                         str += '        <div class="info">';
-                        str += '            <span class="username">' + feed.feedWriter + '</span>';
+                        str += '            <span class="username"><a href="myPage.us?userId=' + feed.feedWriter + '" class="username-link">' + feed.feedWriter + '</a></span>';
                         str += '            <span class="timeAgo">' + timeAgoMap[feed.feedNo] + '</span>';
-                        str += '            <p class="location" onclick="showMap(\'' + feed.feedLocation + '\')">' + feed.feedLocation + '</p>';
+                        str += '            <p class="location" onclick="showMap(\'' + feedLocation + '\')">' + feedLocation + '</p>';
                         str += '        </div>';
                         str += '    </div>';
                         str += '    <div class="swiper-container postSwiper">';
-                        str += '        <div class="swiper-wrapper">';
+                        str += '        <div class="swiper-wrapper feedSlide">';
                         if (feed.feedImg && feed.feedImg.length > 0) {
                             for (var j = 0; j < feed.feedImg.length; j++) {
                                 var img = feed.feedImg[j];
@@ -691,7 +735,6 @@
                         str += '                <i class="heart-icon far fa-heart" style="font-size: 30px; color: #ff5a5f;"></i>';
                         str += '            </button>';
                         str += '            <img src="resources/chat.png" class="logo_img" onclick="detailView(' + feed.feedNo + ')" >';
-                        str += '            <img src="resources/direct.png" alt="" class="logo_img">';
                         str += '        </div>';
                         str += '        <div class="logos_right">';
                         str += '            <button id="saveButton' + feed.feedNo + '" class="save-button" data-feed-no="' + feed.feedNo + '" onclick="saveFeed(' + feed.feedNo + ')">';
@@ -700,10 +743,10 @@
                         str += '        </div>';
                         str += '    </div>';
                         str += '    <div class="content">';
-                        str += '        <p><b>좋아요 <span class="like-count" data-feed-no="' + feed.feedNo + '">' + feed.likeCount + '</span>개</b></p>';
-                        str += '        <p id="feedContent' + feed.feedNo + '" class="feed-content">' + feed.feedContent + '</p>';
+                        str += '        <p onclick="likeDetailView(' + feed.feedNo + ','+feed.feedWriter+')"><b>좋아요 <span class="like-count" data-feed-no="' + feed.feedNo + '">' + feed.likeCount + '</span>개</b></p>';
+                        str += '        <p id="feedContent' + feed.feedNo + '" class="feed-content">' + feedContent + '</p>';
                         str += '        <button id="moreButton' + feed.feedNo + '" class="more-button" onclick="showFullContent(' + feed.feedNo + ')" style="display: none;">더보기</button>';
-                        str += '        <div id="fullContent' + feed.feedNo + '" class="full-content" style="display: none;">' + feed.feedContent + '</div>';
+                        str += '        <div id="fullContent' + feed.feedNo + '" class="full-content" style="display: none;">' + feedContent + '</div>';
                         str += '        <div id="replyList' + feed.feedNo + '"></div>';
                         if (feed.tags && feed.tags.length > 0) {
                             str += '        <p>';
@@ -712,8 +755,7 @@
                             }
                             str += '        </p>';
                         }
-                        str += '        <input type="text" name="reContent" id="reContent' + feed.feedNo + '" placeholder="댓글을 입력해주세요..">';
-                        str += '        <label><button onclick="insertReply(' + feed.feedNo + ')">등록</button></label>';
+                        str += '        <input type="text" name="reContent" id="reContent' + feed.feedNo + '" placeholder="댓글을 입력해주세요.." onkeydown="if(event.key === \'Enter\') insertReply(' + feed.feedNo + ')">';
                         str += '    </div>';
                         str += '</div>';
                         
@@ -733,7 +775,9 @@
                 }
             });
         }
+		
 		</script>
+		
 
 		<!-- 댓글 리스트 -->
 		<script>
@@ -749,8 +793,14 @@
 		                    var reply = result.rList[0];
 		                    str += '<div class="comment">';
 		                    str += '    <p><strong class="username">' + reply.userId + ':</strong> ' + reply.reContent + '</p>';
-		                    str += '    <button class="reply-like-button" onclick="toggleReplyLike(' + reply.replyNo + ', \'' + reply.userId + '\')">';
+		                    str += '    <button class="reply-like-button" onclick="toggleReplyLike(' + reply.replyNo + ', \'' + "${loginUser.userId}" + '\')">';
+		                    str += '        <i class="reply-heart-icon far fa-heart"></i>';
+		                    str += '    </button>';
+		                    str += '    <span class="reply-like-count" id="reply-like-count-' + reply.replyNo + '">' + reply.reLikeCount + '</span>';
 		                    str += '</div>';
+		                    
+		                    loadReplyLikeStatus(reply.replyNo, "${loginUser.userId}");
+		                    console.log("댓글리스트 조회"+reply.replyNo);
 		            }
 		            $("#replyList" + feedNo).html(str); // 댓글 리스트를 해당 게시물 div에 추가
 		            
@@ -777,7 +827,6 @@
 						if(result>0){
 							replyList(feedNo); //추가된 댓글 정보까지 다시 조회
 							$("#reContent"+feedNo).val("");
-							
 							alert("댓글등록");
 						}else{
 							alert("댓글작성실패");
@@ -972,7 +1021,9 @@
 			                heartIcon.addClass('far fa-heart');
 			            }
 			
-			            likeCountElement.text(response.likeCount);
+			            likeCountElement.text(response.RelikeCount);
+			            console.log("좋아요 토글 함수 발동 "+response.RelikeCount);
+			            console.log("좋아요 토글 삼훗 발동 RELIKECOUNT"+replyNo);
 			        },
 			        error: function() {
 			            alert('댓글 좋아요 처리에 실패했습니다.');
@@ -1006,7 +1057,8 @@
 			                heartIcon.addClass('far fa-heart');
 			            }
 			
-			            likeCountElement.text(response.likeCount);
+			            likeCountElement.text(response.RelikeCount);
+			            console.log("조회해온 댓글 좋아요 수 "+ response.RelikeCount);
 			        },
 			        error: function() {
 			            alert('댓글 좋아요 상태를 가져오는데 실패했습니다.');

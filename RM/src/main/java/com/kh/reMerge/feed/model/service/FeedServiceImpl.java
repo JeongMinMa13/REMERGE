@@ -140,17 +140,21 @@ public class FeedServiceImpl implements FeedService {
 	//댓글 좋아요
 	@Override
 	public int insertReplyLike(ReplyLike rl) {
-		
-		return feedDao.insertReplyLike(sqlSession,rl);
-		
+		int result = sqlSession.insert("feedMapper.insertReplyLike", rl);
+		if (result > 0) {
+			sqlSession.update("feedMapper.likeCountUpdate", rl.getReplyNo());
+		}
+		return result;
 	}
 	
 	//댓글 좋아요 취소
 	@Override
 	public int deleteReplyLike(ReplyLike rl) {
-		
-		return feedDao.deleteReplyLike(sqlSession,rl);
-		
+		int result = sqlSession.delete("feedMapper.deleteReplyLike", rl);
+		if (result > 0) {
+			sqlSession.update("feedMapper.likeCountDelete", rl.getReplyNo());
+		}
+		return result;
 	}
 	
 	//댓글 좋아요 여부
@@ -233,6 +237,18 @@ public class FeedServiceImpl implements FeedService {
 	public ArrayList<FeedImg> selectImages(int feedNo) {
 		
 		return feedDao.selectImages(sqlSession,feedNo);
+	}
+
+	@Override
+	public ArrayList<Feed> explore(String userId) {
+		
+		return feedDao.explore(sqlSession,userId);
+	}
+
+	@Override
+	public List<User> likeUsers(int feedNo, String userId) {
+		
+		return feedDao.likeUsers(sqlSession,feedNo,userId);
 	}
 
 	

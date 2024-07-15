@@ -239,5 +239,18 @@ public class FeedDao {
 		return (ArrayList)sqlSession.selectList("feedMapper.selectImages",feedNo);
 	}
 
+	public ArrayList<Feed> explore(SqlSessionTemplate sqlSession,String userId) {
+		
+		return (ArrayList)sqlSession.selectList("feedMapper.explore",userId);
+	}
+
+	public List<User> likeUsers(SqlSessionTemplate sqlSession, int feedNo, String userId) {
+		Map<String,Object> paramMap = new HashMap<>();
+		paramMap.put("feedNo", feedNo);
+		paramMap.put("userId", userId);
+		
+		return sqlSession.selectList("feedMapper.likeUsers",paramMap);
+	}
+
 
 }
