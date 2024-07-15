@@ -86,6 +86,11 @@ public class MypageDao {
 		return sqlSession.selectOne("mypageMapper.storyDetail",storyNo);
 	}
 
+	public int deleteStory(SqlSessionTemplate sqlSession, int storyNo) {
+		
+		return sqlSession.delete("mypageMapper.deleteStory",storyNo );
+	}
+
 
 
 	

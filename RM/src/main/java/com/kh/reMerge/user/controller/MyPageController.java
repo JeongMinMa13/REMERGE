@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -283,6 +284,25 @@ public class MyPageController {
 		return story;
 		
 	}
+	@ResponseBody
+	@PostMapping("deleteStory.us")
+	public String deleteStory (int storyNo,HttpSession session){
+		
+		int result = mypageService.deleteStory(storyNo);
+		System.out.println(storyNo);
+		
+		if(result>0) {
+			session.setAttribute("alertMsg", "스토리 삭제 성공");
+		}else {
+				session.setAttribute("alertMsg", "스토리 삭제 실패");
+		}
+		session.setAttribute("storyNo", storyNo);
+		
+		return "myPage/mypage";
+		
+	}
+	
+	
 	
 	
 	

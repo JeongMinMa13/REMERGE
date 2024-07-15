@@ -232,8 +232,6 @@
 		</div>
 	</div>
 </div>
-
-	
 	
 	<script>
 		function follow() {
@@ -261,43 +259,47 @@
 	</script>{
 	<!-- 팔로잉 스크립트 -->
 	<script>
-		function following(){
-			$.ajax({
-				url:"followingList.us",
-				type: "GET",
-				data : {
-					userId : "${user.userId}"
-				
-				},
-				success : function(followingList){
-					console.log(followingList);
-					 var str ="";
-					 if(followingList.length==0){
-						 str="<p>팔로잉이 없습니다.<p>"
-					 }else{
-					 for(var i =0; i < followingList.length;i++){
-					 var sfollowingList = followingList[i]
-					 var profilePath = sfollowingList.profilePath;
-					 var profileChangeName= sfollowingList.profileChangeName;
-					 if(sfollowingList.profileChangeName){
-					 str +="<ul>"
-					 str += "<li onclick=followingPage('"+sfollowingList.userId+"');><img src='" + profileChangeName + "' style='width: 30px; height: 30px; border-radius: 50%;'>"  + sfollowingList.userId + "<button class='btn btn-link' onclick=\"event.stopPropagation(); unFollowing(event, '" + sfollowingList.userId + "');\">언팔로우</button></li>";
-					 str +="</ul>"
-					 }else{
-						 str +="<ul>"
-							 str += "<li onclick=followingPage('"+sfollowingList.userId+"');><img src='" + profilePath + "' style='width: 30px; height: 30px; border-radius: 50%;'>"  + sfollowingList.userId + "<button class='btn btn-link' onclick=\"event.stopPropagation(); unFollowing(event, '" + sfollowingList.userId + "');\">언팔로우</button></li>";
-							 str +="</ul>"
-					 }
-					 }
-					 }
-					$("#following").html(str);
-				},
-				error : function(){
-					console.log("zz");
-				}
-				
-			});
-		}
+	function following(){
+	    $.ajax({
+	        url:"followingList.us",
+	        type: "GET",
+	        data : {
+	            userId : "${user.userId}",
+	            loginUser:"${loginUser.userId}"
+	            
+	        },
+	        success : function(followingList){
+	            var str ="";
+	            if(followingList.length==0){
+	                str="<p>팔로잉이 없습니다.<p>";
+	            }else{
+	                str+="<ul>";
+	                for(var i =0; i < followingList.length;i++){
+	                    var sfollowingList = followingList[i];
+	                    var profilePath = sfollowingList.profilePath;
+	                    var profileChangeName= sfollowingList.profileChangeName;
+	                    var unfollowButton = "";
+	                    
+	                    
+	                    if("${loginUser.userId}"=== "${user.userId}") {
+	                        unfollowButton = "<button class='btn btn-link' onclick=\"event.stopPropagation(); unFollowing(event, '" + sfollowingList.userId + "');\">언팔로우</button>";
+	                    }
+	                    
+	                    if(sfollowingList.profileChangeName){
+	                        str += "<li onclick=followingPage('"+sfollowingList.userId+"');><img src='" + profileChangeName + "' style='width: 30px; height: 30px; border-radius: 50%;'>"  + sfollowingList.userId + unfollowButton + "</li>";
+	                    }else{
+	                        str += "<li onclick=followingPage('"+sfollowingList.userId+"');><img src='" + profilePath + "' style='width: 30px; height: 30px; border-radius: 50%;'>"  + sfollowingList.userId + unfollowButton + "</li>";
+	                    }
+	                }
+	                str +="</ul>";
+	            }
+	            $("#following").html(str);
+	        },
+	        error : function(){
+	            console.log("Error occurred while fetching following list.");
+	        }
+	    });
+	}
 		
 		function followingPage(userId){
 			
@@ -340,22 +342,27 @@
 					 if(followerList.length==0){
 						 str="<p>팔로워가 없습니다.<p>"
 					 }else{
-					 for(var i =0; i < followerList.length;i++){
-					 var sfollowerList = followerList[i]
-					 var profilePath = sfollowerList.profilePath;
-					 var profileChangeName= sfollowerList.profileChangeName;
-					 if(sfollowerList.profileChangeName){
-						 str +="<ul>"
-						 str += "<li onclick=followerPage('"+sfollowerList.userId+"');><img src='" + profileChangeName + "' style='width: 30px; height: 30px; border-radius: 50%;'>"  + sfollowerList.userId + "<button class='btn btn-link' onclick=\"event.stopPropagation(); unFollower(event, '" + sfollowerList.userId + "');\">언팔로우</button></li>";					
-						 str +="</ul>"
-						 }else{
-							 str +="<ul>"
-								 str += "<li onclick=followerPage('"+sfollowerList.userId+"');><img src='" + profileOriginName + "' style='width: 30px; height: 30px; border-radius: 50%;'>"  + sfollowerList.userId + "<button  class='btn btn-link' onclick=\"event.stopPropagation(); unFollower(event, '" + sfollowerList.userId + "');\">언팔로우</button></li>";
-								 str +="</ul>"
+						 str+="<ul>"
+						 for(var i =0; i < followerList.length;i++){
+							 var sfollowerList = followerList[i]
+							 var profilePath = sfollowerList.profilePath;
+							 var profileChangeName= sfollowerList.profileChangeName;
+							 var deleteButton ="";
+							 
+							 if("${loginUser.userId}"=== "${user.userId}") {
+								 deleteButton = "<button class='btn btn-link' onclick=\"event.stopPropagation(); unFollowing(event, '" + sfollowerList.userId + "');\">삭제</button>";
+			                    }
+							 
+							 if(sfollowerList.profileChangeName){
+								 str += "<li onclick=followerPage('"+sfollowerList.userId+"');><img src='" + profileChangeName + "' style='width: 30px; height: 30px; border-radius: 50%;'>"  + sfollowerList.userId + deleteButton + "</li>";
+							}else{
+								 str += "<li onclick=followerPage('"+sfollowerList.userId+"');><img src='" + profilePath + "' style='width: 30px; height: 30px; border-radius: 50%;'>"  + sfollowerList.userId + deleteButton + "</li>";
+							 }
 						 }
-						 }
+						 str+="</ul>";
 					 }
 					$("#follower").html(str);
+					
 				},
 				error : function(){
 					console.log("zz");
@@ -364,7 +371,6 @@
 			});
 			
 		}
-
 			function followerPage(userId){
 				location.href="myPage.us?userId="+userId;
 			}
@@ -382,8 +388,8 @@
 							alert('팔로우가 성공적으로 해제 되었습니다.');
 						} else {
 							alert('팔로우 해제가 되지 않았습니다. 관리자에게 문의하세요.');
-						$(e.target).closest('li').hide();
 						}
+						$(e.target).closest('li').hide();
 					}
 					});	
 				}

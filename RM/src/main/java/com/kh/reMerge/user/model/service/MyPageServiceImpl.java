@@ -110,6 +110,14 @@ public class MyPageServiceImpl implements MyPageService {
 		return mypageDao.storyDetail(sqlSession,storyNo);
 	}
 
+	@Override
+	public int deleteStory(int storyNo) {
+		
+		return mypageDao.deleteStory(sqlSession, storyNo);
+	}
+	
+	
+
 	
 	
 

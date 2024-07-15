@@ -36,8 +36,13 @@ public interface MyPageService {
 	ArrayList<Feed> myFeedsave(String userId);
 	//보관된 내 스토리 조회
 	ArrayList<Story> storyArchive(String userId);
-	
+	//스토리 삭제
 	Story storyDetail(int storyNo);
+	
+	int deleteStory(int storyNo);
+	
+	
+	
 	
 
 	

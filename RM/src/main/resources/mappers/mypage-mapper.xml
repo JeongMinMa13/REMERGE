@@ -246,8 +246,11 @@
 		STORY_NO=#{storyNo}
 
 	</select>
-
-
+	
+	<delete id="deleteStory" parameterType="_int">
+		DELETE FROM STORY
+		WHERE STORY_NO =#{storyNo}
+	</delete>
 
 
 

@@ -295,7 +295,7 @@ public class FeedController {
 			Map<String, Object> result = new HashMap<>();
 		    try {
 		        int likeCheck = feedService.likeCheck(feedNo, userId);
-		        result.put("status", likeCheck > 0 ? "liked" : "unliked"); //좋아요 됐고 안 됐고 반별
+		        result.put("status", likeCheck > 0 ? "liked" : "unliked"); // 됐고 안 됐고 반별
 	
 		        int likeCount = feedService.likeCount(feedNo);
 		        result.put("likeCount", likeCount);
