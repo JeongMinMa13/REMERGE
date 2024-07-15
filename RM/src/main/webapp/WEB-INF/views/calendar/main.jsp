@@ -325,7 +325,7 @@
                 	success:function(result){
                 		if(result>0){
                 			alert('성공적으로 등록되었습니다.');
-                			location.reload();
+                			window.location.reload();
                 		}else{
                 			alert('등록 실패, 관리자에게 문의하세요.')
                 		}
@@ -341,11 +341,6 @@
 
                 // 폼 초기화
                 document.getElementById('addScheduleForm').reset();
-                
-                //
-               	setTimeout(function() {
-	                window.location.reload();
-				}, 3000);
                 
             });
             

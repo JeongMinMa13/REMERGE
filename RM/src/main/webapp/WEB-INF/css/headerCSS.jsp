@@ -78,7 +78,7 @@ header {
 .searchBox{
 	display:none; 
 	background-color: #FFFFFF;
-    height: 738px;
+    height: 1000px;
     width: 360px;
     position: relative;
     z-index:1001;
