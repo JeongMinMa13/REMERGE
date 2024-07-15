@@ -83,7 +83,7 @@ public class GoogleLoginController {
 		String APIcheckId = loginUser.getUserId();
 		int result = UserService.checkId(APIcheckId);
 		
-		System.out.println(loginUser);
+		//System.out.println(loginUser);
 		//System.out.println("result : "+result);
 		if(result>0) { //중복아이디 있음
 			

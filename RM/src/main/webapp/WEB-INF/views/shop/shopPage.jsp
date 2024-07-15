@@ -102,16 +102,12 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <div class="outer">
         <!--스토리 목록-->
-          <div class="storySwiper">
-            <div class="storys swiper-wrapper">
-            	<div class="story swiper-slide" onclick="addStory();">
+            <div class="storys">
+            	<div class="story" onclick="addStory();">
 		      		<img class="story_img" src="resources/plusicon.jpeg">
 		      		<span>스토리 추가하기</span>
 		      	</div>
             </div>
-            <div class="swiper-button-prev"></div>
- 			<div class="swiper-button-next"></div>
-		 </div>
     <div class="body">
 		   <div class="con_wrap">
 		    <div class="conA">
@@ -228,7 +224,7 @@
 								<div class="shopSelectList"></div>
 								<div class="shopSelectCL"></div>
 							    </details>   <br>
-							    <input type="hidden" id="shopNo" name="shopNo" value="0" >
+							    <input type="hidden" id="shopNo" name="shopNo" value="0">
 	                            <label for="tags">태그</label>
 	                            <input type="text" class="form-control" id="tags" name="tags" placeholder="(#제외)태그를 입력해주세요">
 	                            <div id="tagSuggestions" class="list-group"></div> <!-- 태그 제안 리스트 -->
@@ -245,7 +241,6 @@
 	        </div>
 	    </div>
 	</div>
-	
 	<!-- 게시물 디테일 모달 -->
 	<div class="modal fade" id="modal_detail_feed" tabindex="-1" role="dialog" aria-labelledby="modal_detail_feed" aria-hidden="true">
 	    <div class="modal-dialog modal-xl" role="document">
@@ -473,13 +468,14 @@
 							if(sListNo != null ){
 								intsertShopNo(sListNo);
 								//console.log("화긴 : "+sListNo);
+								}
 							}
-							}
-							$(".shopSelectCL").append(str);//작성된 html 넣어주기
+						$(".shopSelectCL").append(str);//작성된 html 넣어주기
+						$(".shopSelectCL2").append(str);//작성된 html 넣어주기
 						}
 					}
 				});
-	         }
+         }
 	    	function intsertShopNo(sListNo) {
 	        	$("#shopNo").val(sListNo);
 	        	console.log("shopNod에게 값을 넣음 : "+sListNo);
@@ -701,19 +697,6 @@
 				}
 			});
 		});	
-		/* 스토리 스와이프 */
-		 new Swiper('.storySwiper', {
-	            slidesPerView: 8,
-	            spaceBetween: 2,
-	            navigation: {
-	                nextEl: '.swiper-button-next',
-	                prevEl: '.swiper-button-prev',
-	            },
-	            pagination: {
-	                el: '.swiper-pagination',
-	                clickable: true,
-	            },
-	        });
 		
 		<!-- 게시글 detail 스와이프 -->
 		function detailSwiper() {
@@ -746,7 +729,37 @@
 			         $('#feed_userId').text(result.f.feedWriter);
 			         $('#feed_location').text(result.f.feedLocation || '');
 			         $('#feed_detail_content').text(result.f.feedContent || '');
-			         
+			         $('#shopSelectBr').text(result.f.shopNo);
+			        $(function () {
+			         $.ajax({
+							url : "shopSelectBr.sh",
+							data : {
+								sListNo : result.f.shopNo
+							},
+							error : function() {
+								console.log("처리 실패");
+							},
+							success : function(result) {
+								console.log(result);
+								   $("#shopSelectBr").empty();
+								for (var i = 0; i < result.length; i++){
+									var str = "";
+									var sList = result[i];
+								/* div안에 사진, 가격, 썸네일 넣고 클릭하면 체크되고 체크된 sList.shopNo feedInsert구문으로 가져가야함 구현 */
+									if(sList.inven>0){ //재고가 있다면
+									var sListNo = sListNo;
+									str += '         <br>  <p> 선택된 상품 </p> <hr>'; // 
+									str += '    <div class="shopIcon" onclick="detailShop(' + sList.shopNo + ');" id="' + sListNo + '">';
+									str += '         <p>No.' + sList.shopNo + '</p>'; // 상품번호 
+									str += '        <img src="' + sList.filePath + '" alt="상품사진">'; // 이미지
+									str += '         <br>  <p>' + sList.modelName + '</p>'; // 모델명 
+									str += '    </div>';
+									}
+									$("#shopSelectBr").append(str);
+								}
+							}
+						});
+			        });
 			         var timeAgo = result.timeAgo; // 디테일 모달에서도 시간 표시
 			         $('#feed_timeAgo').text(timeAgo);
 			         
@@ -806,6 +819,7 @@
 			                var reply = result.rList[i];
 			                loadReplyLikeStatus(reply.replyNo, userId);
 			            }
+			         
 			         
 				},
 				error : function(){
@@ -895,7 +909,7 @@
                     for (var i = 0; i < response.list.length; i++) {
                         var feed = response.list[i];
                         var userProfile = feed.userProfile;
-                        if(feed.shopNo == 0){
+                        if(feed.shopNo !== 0){
 	                        str += '<div class="con" data-feed-no="' + feed.feedNo + '">';
 	                        str += '    <div class="title">';
 	                        if (userProfile && userProfile.profileChangeName) {
@@ -1428,7 +1442,12 @@
 			location.reload();
 		}
 		
-
+		new Swiper('.swiper', {
+		    // 다양한 옵션 설정, 
+		    // 아래에서 설명하는 옵션들은 해당 위치에 들어갑니다!!
+		    slidesPerView : 8,
+		    spaceBetween : 2, 
+		})
 	</script>
 	
 	<!-- 게시글 저장 함수 -->

@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="shopMapper">
+	<resultMap type="Shop" id="shopResultSet">
+		<result column="SHOP_NO" property="shopNo" />
+		<result column="SHOP_STATUS" property="shopStatus" />
+		<result column="BRANDNAMELIST" property="brandNameList" />
+		<result column="BRANDLIST" property="brandList" />
+		<result column="BRANDSIZE" property="brandSize" />
+		<result column="KRW" property="krw" />
+		<result column="INVEN" property="inven" />
+		<result column="FILEPATH" property="filePath" />
+		<result column="MODELNAME" property="modelName" />
+		<result column="ADDRESS" property="shopAddress" />
+	</resultMap>
+	
+	<resultMap type="PaymentList" id="pmResultSet">
+		<result column="USER_ID" property="userId" />
+		<result column="PG" property="pg" />
+		<result column="MCUID" property="mcUid" />
+		<result column="PRODUCTNAME" property="productName" />
+		<result column="AMOUNT" property="amount" />
+		<result column="BUYERNAME" property="buyerName" />
+		<result column="BUYERADDR" property="buyerAddr" />
+		<result column="FILEPATH" property="filePath" />
+	</resultMap>
+	
+	<resultMap type="Address" id="adResultSet">
+		<result column="USER_ID" property="userId" />
+		<result column="ADDRESS_ORI" property="addressOri" />
+		<result column="ADDRESS_ORIDE" property="addressOriDetail" />
+	</resultMap>
+	
+	<resultMap type="User" id="userResultSet">
+		<result column="USER_ID" property="userId" />
+		<result column="USER_PWD" property="userPwd" />
+		<result column="EMAIL" property="email" />
+		<result column="JOINDATE" property="joinDate" />
+		<result column="PROFILE_PATH" property="profilePath" />
+		<result column="PROFILE_ORIGINNAME" property="profileOriginName"/>
+		<result column="PROFILE_CHANGENAME" property="profileChangeName"/>
+		<result column="STATUS" property="status" />
+		<result column="SHOP_BRANDCHEK" property="shopBrandChek" />
+		<result column="USER_MEMO" property="userMemo" />
+	</resultMap>
+	
+	<resultMap type="Feed" id="feedResultSet">
+			<result column="FEED_NO" property="feedNo"/>
+			<result column="FEED_CONTENT" property="feedContent"/>
+			<result column="FEED_WRITER" property="feedWriter"/>
+			<result column="CREATE_DATE" property="createDate"/>
+			<result column="ORIGIN_NAME" property="originName"/>
+			<result column="CHANGE_NAME" property="changeName"/>
+			<result column="STATUS" property="status"/>
+			<result column="FEED_LOCATION" property="feedLocation"/>
+			<result column="SHOP_NO" property="shopNo" />
+		</resultMap>
+	
+	<update id="UpdateStatus" parameterType="User">
+		UPDATE USERS
+		SET SHOP_BRANDCHEK = 'Y'
+		WHERE USER_ID = #{userId}
+		AND STATUS = 'Y'
+	</update> 
+	
+	<select id="shopList" resultMap="shopResultSet">
+		SELECT SHOP_NO ,
+        SHOP_STATUS,
+        BRANDNAMELIST,
+        BRANDLIST,
+        BRANDSIZE,
+        KRW,
+        INVEN,
+        FILEPATH,
+        MODELNAME,
+        ADDRESS
+		FROM SHOP
+		WHERE BRANDNAMELIST = #{brandNameList}
+		AND BRANDLIST = #{brandList}
+	</select> 
+	
+	
+	<update id="shopInsertFeed" parameterType="String">
+		UPDATE FEED
+		SET NO_SHOP = #{sListNo}
+		WHERE FEED_NO = #{feedNo}
+	</update>
+	
+	<select id="shopSelectBr" resultMap="shopResultSet">
+		SELECT SHOP_NO ,
+        SHOP_STATUS,
+        BRANDNAMELIST,
+        BRANDLIST,
+        BRANDSIZE,
+        KRW,
+        INVEN,
+        FILEPATH,
+        MODELNAME,
+        ADDRESS
+		FROM SHOP
+		WHERE SHOP_NO = #{shopNo}
+	</select> 
+	
+	<select id="shopDetail"  resultType="Shop">
+		SELECT *
+		FROM SHOP
+		WHERE SHOP_NO = #{shopNo}
+	</select> 
+	
+	<select id="selectSize"  resultMap="shopResultSet">
+		SELECT BRANDSIZE
+		FROM SHOP
+		WHERE MODELNAME = #{modelName}
+	</select> 
+	
+	<select id="shopInfo" resultMap="shopResultSet">
+		SELECT SHOP_NO ,
+        SHOP_STATUS,
+        BRANDNAMELIST,
+        BRANDLIST,
+        BRANDSIZE,
+        KRW,
+        INVEN,
+        FILEPATH,
+        MODELNAME,
+        ADDRESS
+		FROM SHOP
+		WHERE SHOP_NO = #{shopNo}
+	</select> 
+	
+ 	<select id="addressSelect"  parameterType="string" resultMap="adResultSet">
+		SELECT *
+		FROM ADDRESSLIST
+		WHERE USER_ID = #{userId}
+	</select> 
+	
+	<insert id="insertOriAD"  parameterType="Address">
+	INSERT INTO ADDRESSLIST(USER_ID
+	                     ,ADDRESS_ORI
+	                     ,ADDRESS_ORIDE)
+	           VALUES(#{userId}	
+	           		  ,#{addressOri}
+	           		  ,#{addressOriDetail})
+	
+	</insert>
+	
+	<select id="selectOriAD" parameterType="string" resultMap="adResultSet">
+		SELECT ADDRESS_ORI,
+				ADDRESS_ORIDE,
+				USER_ID
+		FROM ADDRESSLIST
+		WHERE USER_ID = #{userId}
+	</select>
+	
+	<update id="updateOriAD"  parameterType="Address">
+	 UPDATE ADDRESSLIST
+ 	 SET ADDRESS_ORI = #{addressOri},
+         ADDRESS_ORIDE = #{addressOriDetail}
+	 WHERE USER_ID = #{userId}
+	</update>
+	
+	<insert id="insertPayment"  parameterType="PaymentList">
+	INSERT INTO PAYMENTLIST(USER_ID
+	                     ,PG
+	                     ,MCUID
+	                     ,PRODUCTNAME
+	                     ,AMOUNT
+	                     ,QUANTITY
+	                     ,BUYERNAME
+	                     ,BUYERADDR
+	                     ,FILEPATH)
+	           VALUES(#{userId}	
+	           		  ,#{pg}
+	           		  ,#{mcUid}
+	           		  ,#{productName}
+	           		  ,#{amount}
+	           		  ,#{quantity}
+	           		  ,#{buyerName}
+	           		  ,#{buyerAddr}
+	           		  ,#{filePath})
+	
+	</insert>
+	
+	<select id="PaymentList" parameterType="string" resultMap="pmResultSet">
+		SELECT *
+		FROM PAYMENTLIST
+		WHERE USER_ID = #{userId}
+	</select>
+</mapper>
