@@ -6,18 +6,23 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
+
 body {
 	height: auto;
 	margin: 0;
 	padding: 0;
-	background-color: #FAFAFA;
+	background-color: #fafafa;
 	font-family: 'Arial', sans-serif;
 }
+
 .outer{width: calc(100% - 250px); margin-left:250px;}
+
 header {
 	display: flex;
 	height: 100px;
+
 }
+
 .sidebar {
 	width: 250px;
 	background-color: #FFFFFF;
@@ -50,10 +55,10 @@ header {
 	padding: 10px 20px;
 }
 .menu-item a {
-	display:block;
+	display:block; 
 	cursor: pointer;
 	font-size: 16px;
-	font-weight: 500;
+	font-weight: 500; 
 	width:100%;
 	text-decoration: none;
 	color: black;
@@ -67,10 +72,13 @@ header {
 	background-color: #F0F0F0;
 	border-radius: 10px;
 }
+
+
+
 .searchBox{
-	display:none;
+	display:none; 
 	background-color: #FFFFFF;
-    height: 738px;
+    height: 1000px;
     width: 360px;
     position: relative;
     z-index:1001;
@@ -85,7 +93,7 @@ header {
 }
 .searchBox .btn {
 	position:absolute;
-	top:5px;
+	top:5px; 
 	right:5px;
 }
 .searchBox .searchfollow {
@@ -93,14 +101,14 @@ header {
 }
 .searchBox .searchfollow input {
 	width: 100%;
-    background-color: #EFEFEF;
+    background-color: #efefef;
     line-height: 40px;
     border-radius: 5px;
     outline: none;
     border: none;
 }
 .searchUserResult {}
-.searchUserResult ul {
+.searchUserResult ul {    
 	list-style: none;
     padding: 16px;
 }
@@ -120,7 +128,7 @@ header {
 	height: 100%;
 }
 .searchUserResult ul li button {
-	background-color: #FFFFFF;
+	background-color: #ffffff;
 	border: 0px;
 	
 }
@@ -133,6 +141,7 @@ header {
 .searchUserResult ul li p .memo {
 	color:#737373;
 }
+
 .badge {
     margin-left: 5px;
     padding: 0.5em;
