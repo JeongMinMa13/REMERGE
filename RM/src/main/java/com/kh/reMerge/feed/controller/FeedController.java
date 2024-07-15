@@ -1,4 +1,4 @@
-package com.kh.reMerge.feed.controller;
+ package com.kh.reMerge.feed.controller;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.mail.Session;
 import javax.servlet.http.HttpSession;
@@ -40,13 +41,11 @@ import com.kh.reMerge.user.model.vo.User;
 
 import oracle.jdbc.proxy.annotation.Post;
 
-
 @Controller
 public class FeedController {
 	
 	@Autowired
 	private FeedService feedService;
-	
 	
 	//메인페이지
 	@GetMapping("feed.fe")
@@ -58,7 +57,8 @@ public class FeedController {
 	//리스트 조회
 	@ResponseBody
 	@PostMapping("feedList.fe")
-	public Map<String, Object> feedlist(@RequestParam(value="currentPage",defaultValue = "1")int currentPage,String userId) {
+	public Map<String, Object> feedlist(@RequestParam(value="currentPage",defaultValue = "1")int currentPage, String userId) {
+		
 		int listCount = feedService.listcount();
 		int feedLimit = 5;
 		
@@ -83,89 +83,90 @@ public class FeedController {
 		        ArrayList<FeedImg> images = feedService.selectImages(feed.getFeedNo());
 		        feed.setFeedImg(images);
 		    }
-		  
+		
+		
 		Map<String, Object> result = new HashMap<>();
 		result.put("pi", pi);
 		result.put("list", list);
 		result.put("timeAgoMap", timeAgoMap);
 		
+		
 		return result;
 	}
-	
 	//시간 넣기
-	private String calculateTimeAgo(long timeDiff) {
-		
-		long seconds = timeDiff / 1000;
-		long minutes = seconds / 60;
-		long hours = minutes / 60;
-		long days = hours / 24;
-		long weeks = days / 7;
-		long months = days / 30;
-		long years = days / 365;
+		private String calculateTimeAgo(long timeDiff) {
+			
+			long seconds = timeDiff / 1000;
+			long minutes = seconds / 60;
+			long hours = minutes / 60;
+			long days = hours / 24;
+			long weeks = days / 7;
+			long months = days / 30;
+			long years = days / 365;
 
-		if (years > 0) {
-			return years + "년 전";
-		} else if (months > 0) {
-			return months + "달 전";
-		} else if (weeks > 0) {
-			return weeks + "주 전";
-		} else if (days > 0) {
-			return days + "일 전";
-		} else if (hours > 0) {
-			return hours + "시간 전";
-		} else if (minutes > 0) {
-			return minutes + "분 전";
-		} else {
-			return "방금 전";
-		}
-	}
-
-	//게시글 넣기
-	@PostMapping("insert.fe")
-	public String insertFeed(Feed f, @RequestPart MultipartFile[] upfiles, HttpSession session, @RequestParam(value="tags", required=false) String tags) {
-		
-		int result = feedService.insertFeed(f);
-		
-		if (result > 0) {// 게시글 작성 성공
-			int feedNo = feedService.selectFeedNo();
-			f.setFeedNo(feedNo);
-			
-			List<FeedImg> feedImg = new ArrayList<>();
-			
-			for (MultipartFile upfile : upfiles) {
-	            if (!upfile.getOriginalFilename().equals("")) {
-	                String changeName = saveFile(upfile, session);
-	                FeedImg feedImage = new FeedImg();
-	                feedImage.setFeedNo(feedNo);
-	                feedImage.setOriginName(upfile.getOriginalFilename());
-	                feedImage.setChangeName("resources/uploadFiles/" + changeName);
-	                feedImg.add(feedImage);
-	                feedService.insertFeedImg(feedImage);
-	            }
-	        }
-			
-			if (tags != null && !tags.isEmpty()) {
-	            String[] tagArray = tags.split(",");
-	            List<Tag> tagList = new ArrayList<>();
-	            for (String tagContent : tagArray) {
-	                Tag tag = new Tag();
-	                tag.setTagContent(tagContent.trim()); //앞 뒤 공백을 제거해준대요
-	                tag.setRefFno(f.getFeedNo());
-	                tagList.add(tag);
-	                feedService.insertTag(tag);
-	            }
-	        }
-			
-			session.setAttribute("alertMsg", "게시글이 등록 되었습니다.");
-			return "redirect:feed.fe";
-		} else {
-			session.setAttribute("alertMsg", "게시글 등록이 실패했습니다.");
-			
-			return "redirect:feed.fe";
+			if (years > 0) {
+				return years + "년 전";
+			} else if (months > 0) {
+				return months + "달 전";
+			} else if (weeks > 0) {
+				return weeks + "주 전";
+			} else if (days > 0) {
+				return days + "일 전";
+			} else if (hours > 0) {
+				return hours + "시간 전";
+			} else if (minutes > 0) {
+				return minutes + "분 전";
+			} else {
+				return "방금 전";
+			}
 		}
 	
+		//게시글 넣기
+		@PostMapping("insert.fe")
+		public String insertFeed(Feed f, @RequestPart MultipartFile[] upfiles, HttpSession session, @RequestParam(value="tags", required=false) String tags) {
+			
+			int result = feedService.insertFeed(f);
+			
+			if (result > 0) {// 게시글 작성 성공
+				int feedNo = feedService.selectFeedNo();
+				f.setFeedNo(feedNo);
+				
+				List<FeedImg> feedImg = new ArrayList<>();
+				
+				for (MultipartFile upfile : upfiles) {
+		            if (!upfile.getOriginalFilename().equals("")) {
+		                String changeName = saveFile(upfile, session);
+		                FeedImg feedImage = new FeedImg();
+		                feedImage.setFeedNo(feedNo);
+		                feedImage.setOriginName(upfile.getOriginalFilename());
+		                feedImage.setChangeName("resources/uploadFiles/" + changeName);
+		                feedImg.add(feedImage);
+		                feedService.insertFeedImg(feedImage);
+		            }
+		        }
+				
+				if (tags != null && !tags.isEmpty()) {
+		            String[] tagArray = tags.split(",");
+		            List<Tag> tagList = new ArrayList<>();
+		            for (String tagContent : tagArray) {
+		                Tag tag = new Tag();
+		                tag.setTagContent(tagContent.trim()); //앞 뒤 공백을 제거해준대요
+		                tag.setRefFno(f.getFeedNo());
+		                tagList.add(tag);
+		                feedService.insertTag(tag);
+		            }
+		        }
+				
+				session.setAttribute("alertMsg", "게시글이 등록 되었습니다.");
+				return "redirect:feed.fe";
+			} else {
+				session.setAttribute("alertMsg", "게시글 등록이 실패했습니다.");
+				
+				return "redirect:feed.fe";
+			}
 		
-	}
+			
+		}
 	
 	//파일 업로드 처리 메소드(재활용)
 		public String saveFile(MultipartFile upfile,HttpSession session) {
@@ -248,13 +249,10 @@ public class FeedController {
 		ArrayList<FeedImg> images = feedService.selectImages(feedNo);
 		f.setFeedImg(images);
 		
-		
 		Map<String, Object> result = new HashMap<>();
 	    result.put("f", f);
 	    result.put("rList", rList);
 	    result.put("timeAgo", timeAgo);
-	    
-	    System.out.println(result);
 	    
 	    return result;
 		
@@ -295,7 +293,7 @@ public class FeedController {
 			Map<String, Object> result = new HashMap<>();
 		    try {
 		        int likeCheck = feedService.likeCheck(feedNo, userId);
-		        result.put("status", likeCheck > 0 ? "liked" : "unliked"); //좋아요 됐고 안 됐고 반별
+		        result.put("status", likeCheck > 0 ? "liked" : "unliked"); // 됐고 안 됐고 반별
 	
 		        int likeCount = feedService.likeCount(feedNo);
 		        result.put("likeCount", likeCount);
@@ -321,7 +319,7 @@ public class FeedController {
 	@GetMapping("selectTag.fe")
 	public String selectTag(Tag tag, HttpSession session) {
 		ArrayList<Feed> tagList = feedService.selectTag(tag);
-		System.out.println(tagList);
+
 		session.setAttribute("tagList", tagList);
 		session.setAttribute("tag", tag);
 		
@@ -346,129 +344,122 @@ public class FeedController {
 		}
 		return "redirect:feed.fe";
 	}
-	
 	//댓글 좋아요
-	@ResponseBody
-	@PostMapping("replyLike.fe")
-	public Map<String, Object> likeReply(@RequestParam int replyNo, @RequestParam String userId) {
-	    ReplyLike rl = new ReplyLike();
-	    rl.setReplyNo(replyNo);
-	    rl.setUserId(userId);
+		@ResponseBody
+		@PostMapping("replyLike.fe")
+		public Map<String, Object> likeReply(@RequestParam int replyNo, @RequestParam String userId) {
+		    ReplyLike rl = new ReplyLike();
+		    rl.setReplyNo(replyNo);
+		    rl.setUserId(userId);
 
-	    int likeCheck = feedService.checkReplyLike(replyNo, userId);
-	    Map<String, Object> result = new HashMap<>();
+		    int likeCheck = feedService.checkReplyLike(replyNo, userId);
+		    Map<String, Object> result = new HashMap<>();
 
-	    if (likeCheck > 0) {
-	        feedService.deleteReplyLike(rl);
-	        result.put("status", "unliked");
-	    } else {
-	        feedService.insertReplyLike(rl);
-	        result.put("status", "liked");
-	    }
-
-	    int likeCount = feedService.countReplyLikes(replyNo);
-	    result.put("likeCount", likeCount);
-
-	    return result; 
-	
-	}
-	
-	//댓글 좋아요 상태 확인
-	@ResponseBody
-	@GetMapping("replyLikeStatus.fe")
-	public Map<String,Object> replyLikeStatus(@RequestParam int replyNo, @RequestParam String userId){
-		Map<String, Object> result = new HashMap<>();
-	    try {
-	        int likeCheck = feedService.checkReplyLike(replyNo, userId);
-	        result.put("status", likeCheck > 0 ? "liked" : "unliked"); //좋아요 됐고 안 됐고 반별
-
-	        int likeCount = feedService.likeCount(replyNo);
-	        result.put("likeCount", likeCount);
-	    } catch (Exception e) {
-	        result.put("error", e.getMessage());
-	    }
-	    return result;
-	
-	}
-	
-	//게시물 저장
-	@ResponseBody
-	@PostMapping("saveFeed.fe")
-	public Map<String,Object> saveFeed(@RequestParam int feedNo, @RequestParam String userId){
-		FeedKeep feedKeep = new FeedKeep(feedNo,userId);
-		
-		int saveCheck = feedService.checkFeedSave(feedNo,userId);
-		Map<String,Object> result = new HashMap<>();
-		
-		 if (saveCheck > 0) {
-		        feedService.unsaveFeed(feedKeep);
-		        result.put("status", "unsaved");
+		    if (likeCheck > 0) {
+		        feedService.deleteReplyLike(rl);
+		        result.put("status", "unliked");
 		    } else {
-		        feedService.saveFeed(feedKeep);
-		        result.put("status", "saved");
+		        feedService.insertReplyLike(rl);
+		        result.put("status", "liked");
 		    }
 
-		    return result;
-	}
-	
-	//게시물 저장 상태 확인
-	@ResponseBody
-    @RequestMapping("saveStatus.fe")
-    public Map<String, Object> saveStatus(@RequestParam int feedNo, @RequestParam String userId) {
-        Map<String, Object> result = new HashMap<>();
-        try {
-            int saveCheck = feedService.checkFeedSave(feedNo, userId);
-            result.put("status", saveCheck > 0 ? "saved" : "unsaved");
-        } catch (Exception e) {
-            result.put("error", e.getMessage());
-        }
-        return result;
-	}
-	
-	//팔로우 안 한 리스트 뽑아주기
-	@ResponseBody
-	@RequestMapping("recommend.fe")
-	public List<User> recommend(@RequestParam String userId){
-		List<User> recommend = feedService.getRecommend(userId, 5); //5명만 추천
+		    int likeCount = feedService.countReplyLikes(replyNo);
+		    result.put("likeCount", likeCount);
+
+		    return result; 
 		
-		return recommend;
-	}
-	
-	//팔로우 하기
-	@ResponseBody
-	@RequestMapping("follow.fe")
-	public int follow(FollowList followList) {
-        int result = feedService.followUser(followList);
+		}
+		
+		//댓글 좋아요 상태 확인
+		@ResponseBody
+		@GetMapping("replyLikeStatus.fe")
+		public Map<String,Object> replyLikeStatus(@RequestParam int replyNo, @RequestParam String userId){
+			Map<String, Object> result = new HashMap<>();
+		    try {
+		        int likeCheck = feedService.checkReplyLike(replyNo, userId);
+		        result.put("status", likeCheck > 0 ? "liked" : "unliked"); //좋아요 됐고 안 됐고 반별
 
-        return result;
-    }
-	
-	//팔로우 리스트 추천으로 넘어가는 페이지
-	@GetMapping("followDetailList.fe")
-	public String selectFollow(@RequestParam String userId, Model model) {
-		List<User> recommendList = feedService.getRecommendList(userId, 50); // 50명 추천 예시
-        
-        long currentTime = System.currentTimeMillis();
-        Map<String, Long> TimeMap = new HashMap<>();
-        
-        for(User user: recommendList) {
-        	long joinTime = user.getJoinDate().getTime();
-        	long time = currentTime - joinTime;
-        	TimeMap.put(user.getUserId(), time);
-        }
-        
-        model.addAttribute("recommendList", recommendList);
-        model.addAttribute("TimeMap", TimeMap);
-        
-        
-		return "/feed/followDetailList";
-	}
-	
-	
-	
+		        int likeCount = feedService.likeCount(replyNo);
+		        result.put("likeCount", likeCount);
+		    } catch (Exception e) {
+		        result.put("error", e.getMessage());
+		    }
+		    return result;
+		
+		}
+		
+		//게시물 저장
+		@ResponseBody
+		@PostMapping("saveFeed.fe")
+		public Map<String,Object> saveFeed(@RequestParam int feedNo, @RequestParam String userId){
+			FeedKeep feedKeep = new FeedKeep(feedNo,userId);
+			
+			int saveCheck = feedService.checkFeedSave(feedNo,userId);
+			Map<String,Object> result = new HashMap<>();
+			
+			 if (saveCheck > 0) {
+			        feedService.unsaveFeed(feedKeep);
+			        result.put("status", "unsaved");
+			    } else {
+			        feedService.saveFeed(feedKeep);
+			        result.put("status", "saved");
+			    }
 
-	
-	
+			    return result;
+		}
+		
+		//게시물 저장 상태 확인
+		@ResponseBody
+	    @RequestMapping("saveStatus.fe")
+	    public Map<String, Object> saveStatus(@RequestParam int feedNo, @RequestParam String userId) {
+	        Map<String, Object> result = new HashMap<>();
+	        try {
+	            int saveCheck = feedService.checkFeedSave(feedNo, userId);
+	            result.put("status", saveCheck > 0 ? "saved" : "unsaved");
+	        } catch (Exception e) {
+	            result.put("error", e.getMessage());
+	        }
+	        return result;
+		}
+		
+		//팔로우 안 한 리스트 뽑아주기
+		@ResponseBody
+		@RequestMapping("recommend.fe")
+		public List<User> recommend(@RequestParam String userId){
+			List<User> recommend = feedService.getRecommend(userId, 5); //5명만 추천
+			
+			return recommend;
+		}
+		
+		//팔로우 하기
+		@ResponseBody
+		@RequestMapping("follow.fe")
+		public int follow(FollowList followList) {
+	        int result = feedService.followUser(followList);
+
+	        return result;
+	    }
+		
+		//팔로우 리스트 추천으로 넘어가는 페이지
+		@GetMapping("followDetailList.fe")
+		public String selectFollow(@RequestParam String userId, Model model) {
+			List<User> recommendList = feedService.getRecommendList(userId, 50); // 50명 추천 예시
+	        
+	        long currentTime = System.currentTimeMillis();
+	        Map<String, Long> TimeMap = new HashMap<>();
+	        
+	        for(User user: recommendList) {
+	        	long joinTime = user.getJoinDate().getTime();
+	        	long time = currentTime - joinTime;
+	        	TimeMap.put(user.getUserId(), time);
+	        }
+	        
+	        model.addAttribute("recommendList", recommendList);
+	        model.addAttribute("TimeMap", TimeMap);
+	        
+	        
+			return "/feed/followDetailList";
+		}
 	
 }
 	

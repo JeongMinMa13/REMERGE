@@ -249,7 +249,7 @@ public class UserController {
 		u.setEmail(pwForEmail);
 		u.setUserId(userId);
 		
-		int result =userService.accEmail(u);
+		int result = userService.accEmail(u);
 		
 		
 		if(result >0) { //아이디 및 이메일이 일치 할때
@@ -285,7 +285,7 @@ public class UserController {
 				
 			} catch (MessagingException e) {
 				//e.printStackTrace();
-				//System.out.println(e.getMessage());
+				//tem.out.println(e.getMessage());
 				
 			}
 			map.put("status", true);

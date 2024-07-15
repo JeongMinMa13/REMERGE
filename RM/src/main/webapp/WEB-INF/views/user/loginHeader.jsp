@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <title></title>
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c" %>
-<jsp:include page="/WEB-INF/css/headerCSS.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/css/headerCSS.jsp"/>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script><!-- jquery CDN -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"><!-- bootstrapCSS -->
 <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
@@ -117,10 +117,10 @@ function updateUnreadMessageCount(count) {
                      <span id="unreadMessageCount" class="badge bg-danger"></span>
                     </div></li>
                     <li><div class="menu-item" id="create"><img src="${pageContext.request.contextPath}/resources/create.png">만들기</div></li>
-                    <li><div class="menu-item" id="store"><img src="${pageContext.request.contextPath}/resources/store.png">스토어</div></li>
-                    <li><div class="menu-item" id="profile"><a href="myPage.us?userId=${loginUser.userId}"><img src="${pageContext.request.contextPath}/resources/unknown.jpg">프로필</a></div></li>
-                    <li><div class="menu-item" id="calendarIcon"><a href="calendar.sc"><img src="${pageContext.request.contextPath}/resources/calendaricon.png">캘린더</a></div></li>
-                    <li><div class="menu-item" id="festivalIcon"><a href="festival.fs"><img src="${pageContext.request.contextPath}/resources/festivalIcon.png">축제</a></div></li>
+                    <li><div class="menu-item" id="store"><a href="storeHome.sh"><img src="${pageContext.request.contextPath}/resources/store.png">스토어</a></div></li>
+                    <li><div class="menu-item" id="profile"><a href="${pageContext.request.contextPath}/myPage.us?userId=${loginUser.userId}"><img src="${pageContext.request.contextPath}/resources/unknown.jpg">프로필</a></div></li>
+                    <li><div class="menu-item" id="calendarIcon"><a href="${pageContext.request.contextPath}/calendar.sc"><img src="${pageContext.request.contextPath}/resources/calendaricon.png">캘린더</a></div></li>
+                    <li><div class="menu-item" id="festivalIcon"><a href="${pageContext.request.contextPath}/festival.fs"><img src="${pageContext.request.contextPath}/resources/festivalIcon.png">축제</a></div></li>
                 </ul>
             </nav>
         </div>
@@ -136,7 +136,7 @@ function updateUnreadMessageCount(count) {
     </header>
     <script>
     	function searchDisplay(){//검색 버튼 클릭시 검색 창 영역 보여주기
-    		$('.searchBox').toggleClass('active');
+    		$('.searchBox').toggleClass('active'); 
     		selectSearchHistory();//검색 버튼 클릭시 검색 기록 함수 실행
     	}
     	
