@@ -17,9 +17,86 @@
   href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
 />
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-
+ <style>
+        .shopIcon {
+            width: 100px;
+            height: 120px;
+            overflow: hidden;
+            text-align: center;
+            border: 1px solid #ccc;
+            margin: 10px;
+            cursor: pointer;
+            position: relative;
+            user-select: none;
+        }
+        .shopIcon img {
+            width: 100%;
+            height: auto;
+        }
+        .shopIcon p {
+            margin: 0;
+            font-size: 14px;
+        }
+        .shopIcon:hover {
+            opacity: 0.5;
+        }
+        .shopIcon-soldout {
+            width: 100px;
+            height: 120px;
+            overflow: hidden;
+            text-align: center;
+            border: 1px solid #ccc;
+            margin: 10px;
+            cursor: pointer;
+            position: relative;
+        }
+        .shopIcon-soldout img {
+            width: 100%;
+            height: auto;
+        }
+        .shopIcon-soldout p {
+            margin: 0;
+            font-size: 14px;
+        }
+        .shopIcon-soldout:hover {
+            opacity: 0.5;
+        }
+        .shopIcon-soldout:hover::after {
+            content: 'SOLD OUT';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 16px;
+            color: red; /* 원하는 색상으로 변경 가능 */
+            background: rgba(255, 255, 255, 0.8); /* 배경 색상 및 투명도 조절 가능 */
+            padding: 5px;
+            border-radius: 5px;
+        }
+        .shopIcon.checked::after {
+            content: '✔';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            color: green; /* 체크 표시 색상 */
+            background: rgba(255, 255, 255, 0.8); /* 배경 색상 및 투명도 조절 가능 */
+            padding: 5px;
+            border-radius: 50%; /* 원형 배경 */
+        }
+        #shopNo {
+            border: none;
+            outline: none;
+            font-size: 14px;
+            text-align: center;
+            width: 100px;
+            height: 20px;
+        }
+    </style>
 </head>
 <body>
+<jsp:include page="/WEB-INF/css/headerCSS.jsp"></jsp:include>
 <%@include file="../user/loginHeader.jsp" %>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <div class="con_wrap">
@@ -147,34 +224,38 @@
 								<textarea class="form-control" id="post_text" rows="3"
 									name="feedContent" placeholder="게시물 내용을 입력하세요..."></textarea>
 							</div>
+							<div class="form-group">
 						    <details>
     	    					<summary style="font-size:1.5em;font-weight:bold;">상 품 추 가</summary>
     	    					<div id="shopList-area">
-						            <input class="single-listCheckbox" style="font-size:1.5em;font-weight:bold;" type="checkbox"
+						            <input class="single-listCheckbox" style="font-size:1.5em;font-weight:bold;"  type="radio"
 						            id="brandList" name="brandList" value="상의">
 									<label for="brandList">상 의</label>
-						            <input class="single-listCheckbox" style="font-size:1.5em;font-weight:bold;" type="checkbox"
+						            <input class="single-listCheckbox" style="font-size:1.5em;font-weight:bold;" type="radio"
 						            id="brandList" name="brandList" value="하의">
 						            <label for="brandList">하 의</label>
-						            <input class="single-listCheckbox" style="font-size:1.5em;font-weight:bold;" type="checkbox"
+						            <input class="single-listCheckbox" style="font-size:1.5em;font-weight:bold;" type="radio"
 						            id="brandList" name="brandList" value="신발">
-							    	<label for="brandList">신 발</label>
-    	    					</div>
-						    	<div id="brandName-area" style="display:none;">
-						    		<input class="single-checkbox" style="font-size:1.5em;font-weight:bold;" type="checkbox"
+							    	<label for="brandList">신 발</label> <br>
+						    		<input class="single-checkbox" style="font-size:1.5em;font-weight:bold;"  type="radio"
 						    		id="brandNameList" name="brandNameList" value="나이키">
 									<label for="brandNameList">나이키</label>
-						            <input class="single-checkbox" style="font-size:1.5em;font-weight:bold;" type="checkbox"
+						            <input class="single-checkbox" style="font-size:1.5em;font-weight:bold;" type="radio"
 						            id="brandNameList" name="brandNameList" value="뉴발란스">
 						            <label for="brandNameList">뉴발란스</label>
-						            <input class="single-checkbox" style="font-size:1.5em;font-weight:bold;" type="checkbox"
+						            <input class="single-checkbox" style="font-size:1.5em;font-weight:bold;" type="radio"
 						            id="brandNameList" name="brandNameList" value="아디다스">
 							    	<label for="brandNameList">아디다스</label>
-							    </div>
+							  </div>
+							  <div class="shopSelectList"></div>
+							  <div class="shopSelectCL"></div>
 						    </details>   <br>
+							    <input type="hidden" id="shopNo" name="shopNo" >
+							</div>
 							<div class="hashTag">
 								<label for="tag">태그</label>
 								 <input type="text" class="tag-control" id="tag" placeholder="태그를 입력해주세요">
+								  <div id="tagSuggestions" class="list-group"></div> <!-- 태그 제안 리스트 -->
 							</div>
 							<div class="form-group">
 								<label for="location">위치</label> <input type="text"
@@ -274,47 +355,135 @@
 		
 		<!-- 상품추가 구문 1개만 체크될수있도록 -->
 		<script>
-			$("#shopList-area").click(function () {
-				$("#brandName-area").show();
-			});
-			
-	        $(document).ready(function() {
-	            $('input.single-checkbox').on('change', function() {
-	                $('input.single-checkbox').not(this).prop('checked', false);
-	            });
-	            $('input.single-listCheckbox').on('change', function() {
-	                $('input.single-listCheckbox').not(this).prop('checked', false);
-	            });
-	        });
+            $('input.single-checkbox').on('change', function() {
+                $('input.single-checkbox').not(this).prop('checked', false);
+            });
+            $('input.single-listCheckbox').on('change', function() {
+                $('input.single-listCheckbox').not(this).prop('checked', false);
+            });
+	        
 			
 	        <!-- 체크된 상품 List불러오기 -->
-	        $(function() {
-				var brandList = $("input[name='brandList']:checked").val();
-				var brandNameList = $("input[name='brandNameList']:checked").val();
-				//console.log(susDays, userIdval);
+	        $("#shopList-area").click(function() {
+				var brandList = $("#brandList:checked").val();
+				var brandNameList = $("#brandNameList:checked").val();
+				console.log(brandList);
+				console.log(brandNameList);
 
 				$.ajax({
-					url : "shopList.sh",
+				    url: "shopList.sh",
+				    data: {
+				        brandList: brandList,
+				        brandNameList: brandNameList
+				    },
+				    error: function() {
+				        console.log("처리 실패");
+				    },
+				    success: function(result) {
+				        console.log(result);
+				        $(".shopSelectList").empty();
+				        var processedModels = new Set();
+				        // 모델별 재고 상태 값 선언
+				        var modelInventoryMap = new Map();
+
+				        // 재고파악
+				        for (var i = 0; i < result.length; i++) {
+				            var sList = result[i];
+				            if (sList.inven > 0) { //재고가있다면
+				                modelInventoryMap.set(sList.modelName, true); //해당 모델명에 재고가 있으므로 true선언
+				            } else if (!modelInventoryMap.has(sList.modelName)) { //모델명에 재고가 없으므로 false 선언
+				                modelInventoryMap.set(sList.modelName, false);
+				            }
+				        }
+				        for (var i = 0; i < result.length; i++) {
+				            var str = "";
+				            var sList = result[i];
+
+				            if (sList.inven > 0) { // 재고가 있다면
+				                if (!processedModels.has(sList.modelName)) { // 모델이 add된적없다면
+				                    processedModels.add(sList.modelName);
+
+				                    var sListNo = sList.shopNo;
+				                    str += '    <div class="shopIcon" onclick="shopIconSelect(' + sListNo + ');" id="' + sList.shopNo + '">';
+				                    str += '         <p>No.' + sList.shopNo + '</p>'; //
+				                    str += '        <img src="' + sList.filePath + '" alt="상품사진">'; 
+				                    str += '         <br>  <p>' + sList.modelName + '</p>'; 
+				                    str += '    </div>';
+				                }
+				            } else if (!modelInventoryMap.get(sList.modelName)) { // 재고파악에서 false선언되고 true에 같은 모델명이 있다면 보여주지않기
+				                str += '    <div class="shopIcon-soldout" onclick="shopNoDetail();" id="' + sList.shopNo + '">';
+				                str += '         <p>No.' + sList.shopNo + '</p>'; 
+				                str += '        <img src="' + sList.filePath + '" alt="상품사진">'; 
+				                str += '         <br>  <p>' + sList.modelName + '</p>';
+				                str += '    </div>';
+				            }
+				            $(".shopSelectList").append(str); // 작성된 html 넣어주기
+				        }
+				    }
+				});
+			});
+	  
+	        function shopIconSelect(sListNo) {
+	        	$.ajax({
+					url : "shopSelectBr.sh",
 					data : {
-						brandList : brandList,
-						brandNameList : brandNameList
+						sListNo : sListNo
 					},
 					error : function() {
 						console.log("처리 실패");
 					},
-					success : function(sList) {
-						/* div안에 사진, 가격, 썸네일 넣고 클릭하면 디테일뷰로 넘어가는 창 구현 */
-						
-						
-						
+					success : function(result) {
+						console.log(result);
+						   $(".shopSelectCL").empty();
+						for (var i = 0; i < result.length; i++){
+							var str = "";
+							var sList = result[i];
+						/* div안에 사진, 가격, 썸네일 넣고 클릭하면 체크되고 체크된 sList.shopNo feedInsert구문으로 가져가야함 구현 */
+							if(sList.inven>0){ //재고가 있다면
+							var sListNo = sList.shopNo;
+							str += '         <br>  <p> 선택된 상품 </p> <hr>'; // 
+							str += '    <div class="shopIcon" id="' + sList.shopNo + '">';
+							str += '         <p>No.' + sList.shopNo + '</p>'; // 상품번호 
+							str += '        <img src="' + sList.filePath + '" alt="상품사진">'; // 이미지
+							str += '         <br>  <p>' + sList.modelName + '</p>'; // 모델명 
+							str += '    </div>';
+							//console.log("intsertShopNo에게 값을 넣음 : "+sListNo);
+							
+							if(sListNo != null ){
+								intsertShopNo(sListNo);
+								//console.log("화긴 : "+sListNo);
+							}
+							}
+							$(".shopSelectCL").append(str);//작성된 html 넣어주기
+						}
 					}
 				});
-			});
+	         }
+	    	function intsertShopNo(sListNo) {
+	        	$("#shopNo").val(sListNo);
+	        	console.log("shopNod에게 값을 넣음 : "+sListNo);
+			}
+			
+	        function shopNoDetail() {
+				alert("재고가 없습니다. 해당 상품 재입고 후 선택이 가능합니다.")
+			}
+	       
 	        
 	        
 		</script>
 		
 		<script>
+		
+		<!-- 태그 -->
+		$(document).ready(function() {
+		    $('#uploadForm').submit(function(event) {
+		        var tags = $('#tag').val();
+		        if (tags) {
+		            tags = tags.split(' ').join(','); // 공백으로 구분된 태그를 쉼표로 구분
+		            $('#tag').val(tags);
+		        }
+		    });
+		});
 		
 		<!-- 게시물 등록 스크립트 -->
 		 <!--썸네일 만들기-->
@@ -360,6 +529,8 @@
 			        formData.append('feedWriter', $('[name="feedWriter"]').val());
 			        formData.append('feedContent', $('#post_text').val());
 			        formData.append('feedLocation', $('#location').val());
+			        formData.append('shopNo', $('#shopNo').val());
+			        formData.append('tags',$('#tags').val());
 			        
 				<!-- 게시글 등록 ajax -->
 			        $.ajax({
@@ -491,6 +662,7 @@
 			         $('#feed_userId').text(result.f.feedWriter);
 			         $('#feed_location').text(result.f.feedLocation); 
 			         $('#feed_detail_content').text(result.f.feedContent);
+			         
 			         var str = "";
 			         for(var i = 0; i<result.rList.length; i++){
 			        	 var reply = result.rList[i];
@@ -507,7 +679,6 @@
 					 var reHtml = "";			        
 					 reHtml += '<div>';
 					 reHtml += '<input type="text" name="content" id="content'+result.f.feedNo+'" placeholder="댓글을 입력해주세요..">';
-// 					 reHtml += '<label><button onclick="insertModal(' + result.f.feedNo + ')">등록</button></label>'
 					 reHtml += '<label><button onclick="insertModal(this,'+result.f.feedNo+')">등록</button></label>'
 					 reHtml += '</div>';
 	
@@ -600,8 +771,46 @@
 						str += '        <div class="content">';
 						str += '               <p><b>좋아요 <span class="like-count" data-feed-no="'+feed.feedNo+'">'+feed.likeCount+'</span>개</b></p>';
 						str += '            <p>' + feed.feedContent + '</p>';
+						 // feed.shopNo가 0이 아닐 경우에만 AJAX 요청을 통해 Shop 정보 가져오기
+		                if (feed.shopNo !== 0) {
+		                    str += '            <div id="shopIcons' + feed.feedNo + '">';
+		                    str += '                <p>No.' + feed.shopNo + '</p>'; 
+		                    str += '            </div>';
+
+		                    (function(feedNo, shopNo) {
+		                        $.ajax({
+		                            url: 'shopInfo.sh', 
+		                            method: 'GET',
+		                            data: { shopNo: shopNo },
+		                            dataType: 'json',
+		                            success: function(sList) {
+		                                //console.log("feedNo:", feedNo);
+		                                //console.log("sList:", sList);
+		                                var shopStr = '';
+		                                for (var j = 0; j < sList.length; j++) {
+		                                	//console.log("shopNo:", shopNo);
+		                                    shopStr += '            <div class="shopIcon" onclick="detailShop('+shopNo+')">';
+		                                    shopStr += '                <p>모델명: ' + sList[j].modelName + '</p>'; // 모델명 출력
+		                                    shopStr += '                <img src="' + sList[j].filePath + '" alt="Shop Icon">'; // 이미지 출력
+		                                    shopStr += '            </div>';
+		                                }
+		                                $('#shopIcons' + feedNo).html(shopStr); // 생성된 HTML을 해당 shop-icon div에 추가
+		                            },
+		                            error: function() {
+		                                console.log("shopInfo 통신오류");
+		                            }
+		                        });
+		                    })(feed.feedNo, feed.shopNo);
+		                }
 						str += '            <div id="replyList'+feed.feedNo+'"></div>'; // 댓글 리스트를 표시할 부분
-						str += '            <p><a href="www.naver.com"></a>#하잉 #하잉 #하용</p>';
+											// 태그 추가 부분
+							                if (feed.tags && feed.tags.length > 0) {
+							                    str += '            <p>';
+							                    for (var j = 0; j < feed.tags.length; j++) {
+							                        str += '<a href="selectTag.fe?tagContent=' + encodeURIComponent(feed.tags[j]) + '">#' + feed.tags[j] + '</a> ';
+							                    }
+							                    str += '            </p>';
+							                }						
 						str += '            <input type="text" name="reContent" id="reContent'+feed.feedNo+'" placeholder="댓글을 입력해주세요..">';
 						str += '            <label><button onclick="insertReply('+feed.feedNo+')">등록</button></label>';
 						str += '        </div>';
@@ -811,18 +1020,6 @@
 
 		</script>
 
-  
-        
-       <div class="outer" align="center">
-        <button id="shopCreate" onclick="shopCreate.sh">상표 등록</button>
-        <br><br>
-        <c:if test="${loginUser.shopBrandChek eq Y } ">
-        <button id="shopInsert" onclick="shopInsert.sh">상품 등록</button>
-        <br><br>
-        <button id="shopList" onclick="shopList.sh">상품 목록</button>
-        <br><br>
-        </c:if>
-       </div>
         
         
         <script>
@@ -855,6 +1052,13 @@
       		location.href="/reMerge/shopList.sh";
       	});
     	
+        </script>
+        
+        <script>
+        function detailShop(shopNo) {
+        	location.href="/reMerge/detailShop.sh?shopNo="+shopNo;
+         	}
+        
         </script>
         
 

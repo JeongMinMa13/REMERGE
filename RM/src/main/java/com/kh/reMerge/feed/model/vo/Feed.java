@@ -20,6 +20,6 @@ public class Feed {
 	private String status;
 	private int likeCount;
 	private String feedLocation;
-	
+	private int shopNo;
 	private List<String> tags;
 }

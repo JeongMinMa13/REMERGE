@@ -14,7 +14,6 @@ public class UserDao {
 
 	public User loginUser(SqlSessionTemplate sqlSession, User u) {
 		User loginUser = sqlSession.selectOne("userMapper.loginUser",u);
-		
 		return loginUser;
 	}
 

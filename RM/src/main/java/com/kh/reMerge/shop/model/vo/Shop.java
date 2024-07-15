@@ -14,7 +14,7 @@ public class Shop {
 	private String brandNameList;
 	private String brandList;
 	private String brandSize;
-	private int KRW;
+	private int krw;
 	private int inven;
 	private String filePath;
 	private String modelName;

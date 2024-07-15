@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.mail.Session;
 import javax.servlet.http.HttpSession;
@@ -74,13 +75,17 @@ public class FeedController {
 	
 	//게시글 넣기
 	@PostMapping("insert.fe")
-	public String insertFeed(Feed f, @RequestPart MultipartFile upfile, HttpSession session, @RequestParam(value="tags", required=false) String tags) {
+	public String insertFeed(Feed f, @RequestPart MultipartFile upfile, HttpSession session, @RequestParam(value="tags", required=false) String tags,
+			@RequestParam(value = "shopNo", required = false) int shopNo) {
 		if (!upfile.getOriginalFilename().equals("")) {
 			String changeName = saveFile(upfile,session);
 			f.setOriginName(upfile.getOriginalFilename());
 			f.setChangeName("resources/uploadFiles/"+changeName);
 		}
 		
+		System.out.println("shopNo넘어오는지" +shopNo);
+		f.setShopNo(shopNo);
+		System.out.println("게시글 작성에 가져가는 정보 : "+f);
 		int result = feedService.insertFeed(f);
 		
 		if (result > 0) {// 게시글 작성 성공

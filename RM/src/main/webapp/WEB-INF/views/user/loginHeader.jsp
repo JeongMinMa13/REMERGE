@@ -34,6 +34,7 @@
           <li><div class="menu-item" id="shop"><a href="storeHome.sh"><img src="${pageContext.request.contextPath}/resources/store.png">스토어</a></div></li>
           <li><div class="menu-item" id="profile"><a href="myPage.us?userId=${loginUser.userId}"><img src="${pageContext.request.contextPath}/resources/unknown.jpg">프로필</a></div></li>
           <li><div class="menu-item" id="calendarIcon"><a href="calendar.sc"><img src="${pageContext.request.contextPath}/resources/calendaricon.png">캘린더</a></div></li>
+          <li><div><a href="logout.us">로그아웃</a></div> </li> 
         </ul>
       </nav>
     </div>
@@ -50,6 +51,7 @@
   <script>
   	function searchDisplay(){//검색 버튼 클릭시 검색 창 영역 보여주기
   		$('.searchBox').toggleClass('active');
+  		    		selectSearchHistory();//검색 버튼 클릭시 검색 기록 함수 실행
   	}
    	
   	function closeSearch(){//검색창 활성화시 x버튼 클릭하면 검색창 닫기
@@ -206,8 +208,8 @@
   	
   	
   </script>
-   <h2>${loginUser.userId}</h2>
-	<a href="logout.us">로그아웃</a>
+   <%-- <h2>${loginUser.userId}</h2> --%>
+
 </body>
 
 </html>

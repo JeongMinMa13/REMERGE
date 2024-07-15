@@ -19,7 +19,7 @@
 			<result column="CHANGE_NAME" property="changeName"/>
 			<result column="STATUS" property="status"/>
 			<result column="FEED_LOCATION" property="feedLocation"/>
-		 
+		 	<result column="SHOP_NO" property="shopNo"/>
 		</resultMap>
 	
 	<insert id="insertFeed" parameterType="Feed">
@@ -28,13 +28,15 @@
 	    				,FEED_WRITER
 	    				,ORIGIN_NAME
 	    				,CHANGE_NAME
-	    				,FEED_LOCATION)
+	    				,FEED_LOCATION
+	    				,SHOP_NO)
 		    VALUES(SEQ_FNO.NEXTVAL
 		    	   ,#{feedContent}
 		    	   ,#{feedWriter}
 		    	   ,#{originName}
 		    	   ,#{changeName}
-		    	   ,#{feedLocation})
+		    	   ,#{feedLocation}
+		    	   ,#{shopNo})
 	</insert>
 	
 	<select id="selectFeedNo" resultType="_int">
@@ -48,6 +50,7 @@
 		      ,CREATE_DATE
 		      ,CHANGE_NAME
 		      ,FEED_LOCATION
+		      ,SHOP_NO
 		FROM FEED
 		WHERE STATUS = 'Y'
 	 	ORDER BY CREATE_DATE DESC   

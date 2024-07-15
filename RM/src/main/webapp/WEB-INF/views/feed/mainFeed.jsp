@@ -17,6 +17,75 @@
   href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
 />
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<style>
+        .shopIcon {
+            width: 100px;
+            height: 120px;
+            overflow: hidden;
+            text-align: center;
+            border: 1px solid #ccc;
+            margin: 10px;
+            cursor: pointer;
+            position: relative;
+            user-select: none;
+        }
+        .shopIcon img {
+            width: 100%;
+            height: auto;
+        }
+        .shopIcon p {
+            margin: 0;
+            font-size: 14px;
+        }
+        .shopIcon:hover {
+            opacity: 0.5;
+        }
+        .shopIcon-soldout {
+            width: 100px;
+            height: 120px;
+            overflow: hidden;
+            text-align: center;
+            border: 1px solid #ccc;
+            margin: 10px;
+            cursor: pointer;
+            position: relative;
+        }
+        .shopIcon-soldout img {
+            width: 100%;
+            height: auto;
+        }
+        .shopIcon-soldout p {
+            margin: 0;
+            font-size: 14px;
+        }
+        .shopIcon-soldout:hover {
+            opacity: 0.5;
+        }
+        .shopIcon-soldout:hover::after {
+            content: 'SOLD OUT';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 16px;
+            color: red; /* 원하는 색상으로 변경 가능 */
+            background: rgba(255, 255, 255, 0.8); /* 배경 색상 및 투명도 조절 가능 */
+            padding: 5px;
+            border-radius: 5px;
+        }
+        .shopIcon.checked::after {
+            content: '✔';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            color: green; /* 체크 표시 색상 */
+            background: rgba(255, 255, 255, 0.8); /* 배경 색상 및 투명도 조절 가능 */
+            padding: 5px;
+            border-radius: 50%; /* 원형 배경 */
+        }
+</style>
 </head>
 <body>
 	<%@include file="../user/loginHeader.jsp" %>
@@ -146,6 +215,30 @@
 		                        <textarea class="form-control" id="post_text" rows="3"
 		                            name="feedContent" placeholder="게시물 내용을 입력하세요..."></textarea>
 		                    </div>
+		                    <details>
+    	    					<summary style="font-size:1.5em;font-weight:bold;">상 품 추 가</summary>
+    	    					<div id="shopList-area">
+						            <input class="single-listCheckbox" style="font-size:1.5em;font-weight:bold;"  type="radio"
+						            id="brandList" name="brandList" value="상의">
+									<label for="brandList">상 의</label>
+						            <input class="single-listCheckbox" style="font-size:1.5em;font-weight:bold;" type="radio"
+						            id="brandList" name="brandList" value="하의">
+						            <label for="brandList">하 의</label>
+						            <input class="single-listCheckbox" style="font-size:1.5em;font-weight:bold;" type="radio"
+						            id="brandList" name="brandList" value="신발">
+							    	<label for="brandList">신 발</label> <br>
+						    		<input class="single-checkbox" style="font-size:1.5em;font-weight:bold;"  type="radio"
+						    		id="brandNameList" name="brandNameList" value="나이키">
+									<label for="brandNameList">나이키</label>
+						            <input class="single-checkbox" style="font-size:1.5em;font-weight:bold;" type="radio"
+						            id="brandNameList" name="brandNameList" value="뉴발란스">
+						            <label for="brandNameList">뉴발란스</label>
+						            <input class="single-checkbox" style="font-size:1.5em;font-weight:bold;" type="radio"
+						            id="brandNameList" name="brandNameList" value="아디다스">
+							    	<label for="brandNameList">아디다스</label>
+							    </div>
+							    <div class="shopSelectList"></div>
+						    </details>   <br>
 		                    <div class="hashTag">
 		                        <label for="tag">태그</label>
 		                        <input type="text" class="tag-control" id="tags" name="tags" placeholder="태그를 입력해주세요">
@@ -245,6 +338,95 @@
 				</div>
 			</div>
 		</div>
+		<!-- 상품추가 구문 1개만 체크될수있도록 -->
+		<script>
+            $('input.single-checkbox').on('change', function() {
+                $('input.single-checkbox').not(this).prop('checked', false);
+            });
+            $('input.single-listCheckbox').on('change', function() {
+                $('input.single-listCheckbox').not(this).prop('checked', false);
+            });
+	        
+			
+	        <!-- 체크된 상품 List불러오기 -->
+	        $("#shopList-area").click(function() {
+				var brandList = $("#brandList:checked").val();
+				var brandNameList = $("#brandNameList:checked").val();
+				console.log(brandList);
+				console.log(brandNameList);
+
+				$.ajax({
+					url : "shopList.sh",
+					data : {
+						brandList : brandList,
+						brandNameList : brandNameList
+					},
+					error : function() {
+						console.log("처리 실패");
+					},
+					success : function(result) {
+						console.log(result);
+						   $(".shopSelectList").empty();
+						for (var i = 0; i < result.length; i++){
+							var str = "";
+							var sList = result[i];
+						/* div안에 사진, 가격, 썸네일 넣고 클릭하면 체크되고 체크된 sList.shopNo feedInsert구문으로 가져가야함 구현 */
+							if(sList.inven>0){ //재고가 있다면
+							var sListNo = sList.shopNo;
+							str += '    <div class="shopIcon" onclick="shopIconSelect('+sListNo+');" id="' + sList.shopNo + '">';
+							str += '         <p>No.' + sList.shopNo + '</p>'; // 상품번호 
+							str += '        <img src="' + sList.filePath + '" alt="상품사진">'; // 이미지
+							str += '         <br>  <p>' + sList.modelName + '</p>'; // 모델명 
+							str += '    </div>';
+							shopIconSelect(sListNo);
+							} else{ //재고가 없다면
+								str += '    <div class="shopIcon-soldout" onclick="shopNoDetail();" id="' + sList.shopNo + '">';
+								str += '         <p>No.' + sList.shopNo + '</p>'; // 상품번호 
+								str += '        <img src="' + sList.filePath + '" alt="상품사진">'; // 이미지
+								str += '         <br>  <p>' + sList.modelName + '</p>'; // 모델명 
+								str += '    </div>';	
+							}
+							$(".shopSelectList").append(str);//작성된 html 넣어주기
+							
+						}
+					}
+				});
+			});
+
+	        
+	       
+	        function shopIconSelect(sListNo) {
+	        	console.log(sListNo);
+	        	$.ajax({
+	        		url : "shopInsertFeed.sh",
+	        		data :{
+	        			sListNo : sListNo
+	        		},
+	        		error  : function ()  {
+	        			console.log("오류 발생");
+	        		},
+	        		succese : function (result)  {
+	        			if(result>0){ //상태값변경 성공
+	        					console.log("상태값변경");
+	        			}
+	        			console.log("상태값변경실패");
+	        		}
+	        		
+	        	});	
+	        	
+	        	
+	         }
+	        
+			
+	        function shopNoDetail() {
+				alert("재고가 없습니다. 해당 상품 재입고 후 선택이 가능합니다.")
+			}
+	        
+	        
+	        
+	        
+		</script>
+		
 		<script>
 		
 		<!-- 태그 -->
@@ -259,7 +441,7 @@
 		});
 		
 		<!-- 게시물 등록 스크립트 -->
-		 <!--썸네일 만들기-->
+		<!--썸네일 만들기-->
 		 $(document).ready(function() {
 			feedList();
 			loadAllLikes();
