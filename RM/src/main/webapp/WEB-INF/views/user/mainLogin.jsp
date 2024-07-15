@@ -7,6 +7,11 @@
 <meta charset="UTF-8">
 <title>로그인 화면</title>
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
+<jsp:include page="/WEB-INF/css/mainLoginCSS.jsp"></jsp:include>
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <!-- jQuery -->
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -57,6 +62,11 @@
 		<br> <br>
 		</div>
 	</form>
+<!-- 	<table align="center">
+		<tr>
+			<td><img alt="" src="https://sneakerbardetroit.com/wp-content/uploads/2024/07/YESEYESEE-New-Balance-610-ML610TYA.jpg"></td>
+		</tr>
+	</table> -->
 	
 			<br> <br>
 
@@ -72,7 +82,7 @@
 				src="<c:url value="resources/btnG_google.png"/>" onclick="location.href='<c:url value="/google/login"/>';"  role="button">
 			</div>
 			<br>
-
+	<img src="https://kream-phinf.pstatic.net/MjAyNDA2MjhfMjAx/MDAxNzE5NTUxMDY3Mzc3.uXj8I6krEJA20pBw2ZcLURf1SwTWZcux9dXN46qcZgIg.z3ZN2p-_N3EfJq5JsDjkWVtUulpS9AvML6-g9tpRXyIg.PNG/a_89aa88c47d7b45618834357739ac5431.png?type=l_webp"> 
 	<br>
 	<br>
 	<br>
@@ -81,6 +91,8 @@
 		<a href="insertEnrollForm.us">회원 가입!</a>
 		<br><br><br><br><br><br>
 	</div>
+	
+
 
 	<c:if test="${not empty alertMsg}">
 		<script>
@@ -147,14 +159,44 @@
            alert("reCAPTCHA checked.");
     	}
 	};
-		
+	$(function() {
+		console.log
+		("				__ __  ____   ______ ___     __  ___                  / //_/ / __ \ / ____//   |   /  |/  /                 / ,<   / /_/ // __/  / /| |  / /|_/ /                 / /| | / _, _// /___ / ___ | / /  / /                 /_/ |_|/_/ |_|/_____//_/  |_|/_/  /_/                                                                           Unlock Your Potential With KREAM                        https://recruit.kreamcorp.com/                                                                     ")
+		                                                                   
+ /*    __ __  ____   ______ ___     __  ___
+   / //_/ / __ \ / ____//   |   /  |/  /
+  / ,<   / /_/ // __/  / /| |  / /|_/ /
+ / /| | / _, _// /___ / ___ | / /  / /
+/_/ |_|/_/ |_|/_____//_/  |_|/_/  /_/
+    ____   ______ __  ___  ______  _______   ______ 
+   / __ \ / ____//  |/  / / ____/ / /   ) ) / ____/
+  / /_/ // __/  / /|_/ / / __/   / / _____ / __/ 
+ / /| | / /___ / /  / / / /___  / / |__  // /___
+/_/ |_|/_____//_/  /_/ /_____/ ( (____/ //_____/
+  */
+	})	
 	</script>
-	
-	
-	
-	
-<body>
 
+	<div class="container">
+        <div class="phone">
+            <img src="phone-image.png" alt="Phone Image">
+        </div>
+        <div class="login-form">
+            <h1>Instagram</h1>
+            <form>
+                <div class="form-group">
+                    <input type="text" placeholder="전화번호, 사용자 이름 또는 이메일">
+                </div>
+                <div class="form-group">
+                    <input type="password" placeholder="비밀번호">
+                </div>
+                <button type="submit">로그인</button>
+            </form>
+            <div class="divider">또는</div>
+            <button class="facebook-login"><i class="fab fa-facebook-square"></i> Facebook으로 로그인</button>
+            <a href="#" class="forgot-password">비밀번호를 잊으셨나요?</a>
+        </div>
+    </div>
 
 
 </body>
