@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <title></title>
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c" %>
-<jsp:include page="/WEB-INF/css/headerCSS.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/css/headerCSS.jsp"/>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script><!-- jquery CDN -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"><!-- bootstrapCSS -->
 <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
@@ -132,7 +132,7 @@ function updateUnreadMessageCount(count) {
     </header>
     <script>
     	function searchDisplay(){//검색 버튼 클릭시 검색 창 영역 보여주기
-    		$('.searchBox').toggleClass('active');
+    		$('.searchBox').toggleClass('active'); 
     		selectSearchHistory();//검색 버튼 클릭시 검색 기록 함수 실행
     	}
     	
@@ -306,7 +306,6 @@ function updateUnreadMessageCount(count) {
     	}
     	
     </script>
-     <h2>${loginUser.userId}</h2>
-	<a href="logout.us">로그아웃</a>
+    
 </body>
 </html>

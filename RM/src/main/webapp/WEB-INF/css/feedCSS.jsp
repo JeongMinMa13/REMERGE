@@ -25,7 +25,7 @@ header {
 	padding: 20px;
 }
 .storySwiper{
-	margin-top: -150px;
+	margin-top: -75px;
 	position:relative;
 	overflow:hidden;
 	padding:0 22px;
@@ -216,7 +216,8 @@ header {
 	color: white;
 }
 <!--
-모달-->.modal-content {
+모달-->
+#modal_view_story .modal-content {
 	display: flex;
 	flex-direction: column;
 	width: 90%;
@@ -225,6 +226,17 @@ header {
 	overflow: hidden;
 	border: none;
 }
+
+#modal_create_story .modal-content {
+	display: flex;
+	flex-direction: column;
+	width: 90%;
+	max-width: 100%;
+	border-radius: 10px;
+	overflow: hidden;
+	border: none;
+} 
+
 .modal-body {
 	padding: 0;
 	display: flex;
@@ -539,12 +551,13 @@ h2 {
     font-size: 12px; /* 필요에 따라 조정 */
     margin-left: 10px; /* ID와 시간 사이의 간격 조정 */
 }
-.swiper-slide {
-    /* visibility: hidden; */
+.feedSlide .swiper-slide {
+	visibility: hidden;
 }
-.swiper-slide-active {
-    visibility: visible;
+.feedSlide .swiper-slide-active {
+	visibility: visible;
 }
+
 .swiper-container {
     position: relative;
     width: 100%;
