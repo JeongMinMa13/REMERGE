@@ -75,7 +75,6 @@ public class FeedController {
 		        long timeDiff = currentTime - createTime;
 		        String timeAgo = calculateTimeAgo(timeDiff);
 		        timeAgoMap.put(feed.getFeedNo(), timeAgo);
-		        
 		        ArrayList<FeedImg> images = feedService.selectImages(feed.getFeedNo());
 		        feed.setFeedImg(images);
 		    }

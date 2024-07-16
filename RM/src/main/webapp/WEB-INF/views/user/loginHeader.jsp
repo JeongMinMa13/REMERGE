@@ -309,7 +309,5 @@ function updateUnreadMessageCount(count) {
     	}
     	
     </script>
-
-  
 </body>
 </html>

@@ -37,7 +37,6 @@ header {
 .storys .swiper-slide {
     text-align: center;
 }
-
 .story_img {
     width: 60px;
     height: 60px;
@@ -68,18 +67,15 @@ header {
     font-weight: bold;
     margin-left: 10px;
 }
-
 .username-link {
     text-decoration: none;
     color: #262626;
     font-weight: 600;
     font-size: 14px;
 }
-
 .username-link:hover {
-    color: #0095f6;
+    color: #0095F6;
 }
-
 .con_wrap {
     display: flex;
     width: 40%;
@@ -153,7 +149,7 @@ header {
 .body .container {
     position: absolute;
     top: 150px;
-    right: 200px;
+    right: 50px;
     width: 400px; /* 원하는 너비로 조정 */
     background-color: white;
     border-radius: 10px;
@@ -322,7 +318,6 @@ header {
     font-size: 14px;
     height: 40px; /* 댓글 입력 상자 높이 설정 */
 }
-
 .btn-register:hover {
     background-color: #E0E0E0;
 }
@@ -514,15 +509,12 @@ h2 {
     font-size: 12px; /* 필요에 따라 조정 */
     margin-left: 10px; /* ID와 시간 사이의 간격 조정 */
 }
-
 .feedSlide .swiper-slide {
     visibility: hidden;
 }
-
 .feedSlide .swiper-slide-active {
     visibility: visible;
 }
-
 .swiper-container {
     position: relative;
     width: 100%;
@@ -549,7 +541,6 @@ h2 {
     width: 450px;
     height: 700px;
 }
-
 .more-button {
     color: gray; /* 회색 글씨 */
     background: none; /* 배경 제거 */
@@ -560,38 +551,31 @@ h2 {
     font-size: 14px; /* 폰트 크기 */
     text-decoration: underline; /* 밑줄 추가 */
 }
-
 .more-button:focus {
     outline: none; /* 포커스 시 아웃라인 제거 */
 }
-
 .save-button {
     background: none; /* 배경색 제거 */
     border: none; /* 테두리 제거 */
     padding: 0; /* 패딩 제거 */
     cursor: pointer; /* 커서 포인터로 변경 */
 }
-
 .save-button:focus {
     outline: none; /* 포커스 시 아웃라인 제거 */
 }
-
 .save-icon {
     font-size: 30px;
 }
-
 .logos {
     display: flex;
     justify-content: space-between;
     padding: 10px;
     align-items: center; /* 추가하여 아이콘 수직 정렬 */
 }
-
 .logos_left {
     display: flex;
     align-items: center; /* 추가하여 아이콘 수직 정렬 */
 }
-
 .like-button, .comment-button, .direct-button, .save-button {
     background: none;
     border: none;
@@ -599,63 +583,52 @@ h2 {
     cursor: pointer;
     margin-right: 10px; /* 아이콘 간 간격 조정 */
 }
-
 .like-button .heart-icon, .comment-button .comment-icon, .direct-button, .save-button .save-icon {
     font-size: 30px;
 }
-
 .like-button:focus, .comment-button:focus, .save-button:focus {
     outline: none;
 }
-
 .heart-icon, .comment-icon,.save-icon {
     font-size: 30px;
     vertical-align: middle; /* 아이콘 수직 정렬 */
     color: #262626; /* 진한 색상으로 변경 */
 }
-
 .follow-btn {
-    border: 1px solid #0095f6;
+    border: 1px solid #0095F6;
     font-weight: bold;
     padding: 5px 10px;
     border-radius: 5px;
 }
-
 .not-following {
-    background-color: #0095f6;
+    background-color: #0095F6;
     color: white;
 }
-
 .following {
     background-color: white;
-    color: #0095f6;
+    color: #0095F6;
 }
-
 </style>
 <style type="text/css">
 /* 디테일 모달 */
 #modal_detail_feed .modal-dialog.modal-lg {
     max-width: 1200px; /* 모달 크기 고정 */
 }
-
 #modal_detail_feed .modal-body {
     display: flex;
     padding: 0;
     overflow: hidden;
 }
-
 #modal_detail_feed .modal-image {
     flex: 1;
     max-width: 50%; /* 이미지 영역을 절반으로 조정 */
     background-color: #000;
 }
-
 #modal_detail_feed .modal-image img {
     width: 100%;
     height: 100%; /* 이미지 크기 고정 */
     object-fit: cover; /* 모든 이미지가 동일한 크기로 유지되도록 */
 }
-
 #modal_detail_feed .modal-details {
     flex: 1;
     max-width: 50%; /* 오른쪽 영역의 최대 너비를 설정 */
@@ -664,7 +637,6 @@ h2 {
     border-left: 1px solid #DBDBDB; /* 왼쪽 이미지와의 구분을 위해 경계선 추가 */
     background-color: #fff;
 }
-
 #modal_detail_feed .modal-header {
     display: flex;
     align-items: center;
@@ -673,55 +645,77 @@ h2 {
     background-color: #fff;
     width: 100%;
 }
-
 #modal_detail_feed .modal-header img {
     width: 40px;
     height: 40px;
     border-radius: 50%;
     margin-right: 10px;
 }
-
 #modal_detail_feed .modal-header .username {
     font-weight: bold;
 }
-
 #modal_detail_feed .modal-body-content {
     flex: 1;
     padding: 10px;
     overflow-y: auto;
 }
-
 #modal_detail_feed .modal-footer {
     border-top: 1px solid #DBDBDB;
     padding: 10px;
     display: flex;
     flex-direction: column;
 }
-
 #modal_detail_feed .comment-section {
     margin-top: 10px;
 }
-
 #modal_detail_feed .form-group.d-flex {
     margin-bottom: 0;
 }
-
 #modal_detail_feed .like-button {
     background: none;
     border: none;
     padding: 0;
     cursor: pointer;
 }
-
 #modal_detail_feed .heart-icon {
     font-size: 24px;
     color: #FF5A5F;
 }
-
 #modal_detail_feed .close {
     font-size: 20px;
 }
-
+#modal_view_story .modal-content {
+	display: flex;
+	flex-direction: column;
+	width: 90%;
+	max-width: 100%;
+	border-radius: 10px;
+	overflow: hidden;
+	border: none;
+}
+#modal_create_story .modal-content {
+	display: flex;
+	flex-direction: column;
+	width: 90%;
+	max-width: 100%;
+	border-radius: 10px;
+	overflow: hidden;
+	border: none;
+}
+#modal_view_story .modal-body {	
+	padding: 0;	
+	display: flex;	
+	flex-direction: column;
+	width: 100%;
+	height: auto; /* 모달의 높이를 자동으로 조정 */
+}
+#modal_create_story .modal-body {	
+	padding: 0;	
+	display: flex;	
+	flex-direction: column;
+	width: 100%;
+	height: auto; /* 모달의 높이를 자동으로 조정 */
+}
 
 </style>
 </head>
