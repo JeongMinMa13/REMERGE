@@ -316,7 +316,7 @@
    
   
    <select id="explore" resultMap="feedResultSet">
-   SELECT 
+     SELECT 
         F.FEED_NO,
         F.FEED_CONTENT,
         F.FEED_WRITER,
@@ -331,6 +331,7 @@
         FOLLOWLIST FL ON F.FEED_WRITER = FL.TO_USER AND FL.FROM_USER = #{userId}
     WHERE 
         FL.TO_USER IS NULL
+        AND F.FEED_WRITER != #{userId}
     GROUP BY 
         F.FEED_NO,
         F.FEED_CONTENT,
