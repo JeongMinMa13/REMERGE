@@ -767,6 +767,7 @@
             success: function(response) {
                 var str = "";
                 var timeAgoMap = response.timeAgoMap;
+                console.log(timeAgoMap);
                 for (var i = 0; i < response.list.length; i++) {
                     var feed = response.list[i];
                     if (feed.shopNo == 0) {
