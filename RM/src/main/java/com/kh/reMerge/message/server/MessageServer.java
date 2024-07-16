@@ -24,7 +24,8 @@ public class MessageServer extends TextWebSocketHandler {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
-    private WebSocketHandler webSocketHandler; 
+    private WebSocketHandler webSocketHandler;
+
     @Autowired
     private MessageService messageService;
 
@@ -32,7 +33,6 @@ public class MessageServer extends TextWebSocketHandler {
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         users.add(session);
         User loginUser = (User) session.getAttributes().get("loginUser");
-        log.info("접속! 접속자 수 : {}", users.size());
 
         // 읽음처리 하기위한 방번호 구하기
         List<Integer> chatRoomNumbers = messageService.getChatRoomNumbers(loginUser.getUserId());
@@ -47,7 +47,6 @@ public class MessageServer extends TextWebSocketHandler {
     protected void handleTextMessage(WebSocketSession session, TextMessage textMessage) throws Exception {
         // JSON 문자열을 Map으로 변환
         Map<String, Object> messageData = objectMapper.readValue(textMessage.getPayload(), Map.class);
-        log.info("메시지서버-발신메시지 정보 확인 : {}", messageData);
         String type = (String) messageData.get("type");
 
         if ("join".equals(type)) {
@@ -61,41 +60,34 @@ public class MessageServer extends TextWebSocketHandler {
         // 메시지를 데이터베이스에 저장
         messageService.saveMessage(message);
 
+        User loginUser = (User) session.getAttributes().get("loginUser");
+        String receiveId = message.getReceiveId();
+
         // 채팅방 번호를 가져와서 해당 채팅방에 메시지 보내기
         int chatRoomNo = message.getMessageRoomNo();
         Set<WebSocketSession> sessions = chatRooms.get(chatRoomNo);
 
-        if (sessions != null && sessions.size() == 2) {
-            User loginUser = (User) session.getAttributes().get("loginUser");
-            String receiveId = message.getReceiveId();
+        if (sessions != null) {
+            for (WebSocketSession s : sessions) {
+                s.sendMessage(new TextMessage(objectMapper.writeValueAsString(message)));
+            }
+        }
+
+        if (sessions.size() == 2) { // 채팅방에 두명 모두 있을 때
             if (!loginUser.getUserId().equals(receiveId)) {
                 messageService.markAsRead(chatRoomNo, receiveId);
             }
         }
-        
-        if (sessions != null && sessions.size() == 1) {
-            User loginUser = (User) session.getAttributes().get("loginUser");
-            String receiveId = message.getReceiveId();
+        if (sessions.size() == 1) { // 채팅방에 발신자만 있을 때 
             if (!loginUser.getUserId().equals(receiveId)) {
-                // WebSocketHandler를 통해 알림을 보냄
-                for (WebSocketSession s : sessions) {
-                    webSocketHandler.sendMessageToSession(s, "새로운 메세지");
-                }
-            }
-        }
-
-        if (sessions != null) {
-            for (WebSocketSession s : sessions) {
-                s.sendMessage(new TextMessage(objectMapper.writeValueAsString(message)));
-                log.info("발신 메시지 정보: {}", objectMapper.writeValueAsString(message));
+                webSocketHandler.updateUnreadMessageCount(receiveId);
+                webSocketHandler.sendNotifications(session, receiveId);
             }
         }
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        users.remove(session);
-
         for (Map.Entry<Integer, Set<WebSocketSession>> entry : chatRooms.entrySet()) {
             int chatRoomNo = entry.getKey();
             Set<WebSocketSession> sessions = entry.getValue();
@@ -110,7 +102,7 @@ public class MessageServer extends TextWebSocketHandler {
                 messageService.markAsUnRead(chatRoomNo, remainingUser.getUserId());
             }
         }
-        log.info("접속종료! 접속자 수 : {}", users.size());
+        webSocketHandler.afterConnectionEstablished(session);
     }
 
     public void joinChatRoom(int messageRoomNo, WebSocketSession session) {
