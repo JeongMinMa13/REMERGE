@@ -22,20 +22,20 @@ $(document).ready(function() {
             console.log('알림 권한 설정에 실패했습니다.');
         }
     });
-    
+
     connectWebSocket(); // 페이지가 로드 시 웹소켓 연결
     
     function connectWebSocket() {
-        var sessionId = localStorage.getItem('sessionId'); // 세션 ID 로드
-		console.log("세션아이디"+sessionId);
-        if (sessionId) {
-            socket = new SockJS("<c:url value='/echo-ws'/>?sessionId=" + sessionId);
-        } else {
-            socket = new SockJS("<c:url value='/echo-ws'/>");
-        }
-        socket.onerror = function(e) {
-            console.log("웹소켓 핸들러 못들어옴 : "+e);
+        socket = new SockJS("<c:url value='/echo-ws'/>");
+
+        socket.onopen = function() {
+            console.log("웹소켓 연결 성공");
         };
+
+        socket.onerror = function(e) {
+            console.log("웹소켓 오류 발생: ", e);
+        };
+
         socket.onmessage = function(event) {
             try {
                 var data = JSON.parse(event.data);
@@ -45,11 +45,16 @@ $(document).ready(function() {
                 } else if (data.type === 'unreadMessageCount') {
                     updateUnreadMessageCount(data.count);
                 } else {
-                    console.error('예기치 않은 데이터 형식:', data);
+                    console.error('웹소켓 핸들러 오류:', data);
                 }
             } catch (error) {
                 console.error('JSON 파싱 실패 :', event.data);
             }
+        };
+
+        socket.onclose = function(event) {
+            console.log("웹소켓 연결 종료");
+//             setTimeout(connectWebSocket, 1000); // 재연결 시도
         };
     }
 });
@@ -71,7 +76,7 @@ function showNotification(data) {
                 location.href = "${pageContext.request.contextPath}/message/dm";
             };
 
-            setTimeout(notification.close.bind(notification), 3000);
+            setTimeout(notification.close.bind(notification), 4000);
             displayedNotifications.push(notificationMessage);
 
             localStorage.setItem('displayedNotifications', JSON.stringify(displayedNotifications));
@@ -84,11 +89,10 @@ function showNotification(data) {
 }
 
 function updateUnreadMessageCount(count) {
-    console.log('안 읽은 메시지 개수:'+ count);
+    console.log('안 읽은 메시지 개수:', count);
     var countSpan = document.getElementById('unreadMessageCount');
     countSpan.textContent = count > 0 ? count : '';
 }
-
 </script>
 </head>
 <body>
@@ -177,8 +181,7 @@ function updateUnreadMessageCount(count) {
 	    			url:"searchUser.us",
 	    			type:"get",
 	    			data:{
-	    				searchStr:searchStr,
-	    				loginUser:"${loginUser.userId}"
+	    				searchStr:searchStr
 	    			},
 	    			success:function(data){
 	    				//console.log(data)// 데이터 확인

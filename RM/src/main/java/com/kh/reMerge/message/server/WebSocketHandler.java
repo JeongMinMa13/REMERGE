@@ -17,7 +17,6 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import com.kh.reMerge.message.model.service.MessageService;
 import com.kh.reMerge.user.model.vo.User;
 
@@ -29,7 +28,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
     private final Set<WebSocketSession> users = Collections.synchronizedSet(new HashSet<>());
     private final Map<String, WebSocketSession> userSessions = new ConcurrentHashMap<>();
     private final ObjectMapper objectMapper = new ObjectMapper();
-    
+
     @Autowired
     private MessageService messageService;
 
@@ -37,72 +36,105 @@ public class WebSocketHandler extends TextWebSocketHandler {
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         users.add(session);
         User loginUser = (User) session.getAttributes().get("loginUser");
-        log.info("접속! 접속자 수 : {}", users.size());
 
-        // 연결된 세션에 대해 추가 처리
         handleNewSession(session);
-    }
 
-    public void sendMessageToSession(WebSocketSession session, String message) throws IOException {
-        if (session.isOpen()) {
-            session.sendMessage(new TextMessage(message));
-        }
-        handleNewSession(session);
-    }
-
-    private void handleNewSession(WebSocketSession session) {
-        User loginUser = (User) session.getAttributes().get("loginUser");
-        String userId = loginUser.getUserId();
-
-        if (!isUserInChatRoom(userId)) {
-            try {
-                // 안 읽은 메시지 개수 가져오기
-                int unreadMessageCount = messageService.getUnreadMessageCount(userId);
-                System.out.println("안일긍ㄴ메시지:"+unreadMessageCount);
-                // 안 읽은 메시지 개수 전송
-                Map<String, Object> countMessage = new HashMap<>();
-                countMessage.put("type", "unreadMessageCount");
-                countMessage.put("count", unreadMessageCount);
-
-                // JSON 문자열로 변환하여 세션에 전송
-                String jsonCountMessage = objectMapper.writeValueAsString(countMessage);
-                session.sendMessage(new TextMessage(jsonCountMessage));
-
-                // 나머지 처리: 알림 메시지 전송
-                ArrayList<String> notifications = messageService.getNotificationsForUser(userId);
-                if (notifications != null && !notifications.isEmpty()) {
-                    for (String notification : notifications) {
-                        // 각 알림을 포함한 JSON 객체 생성
-                        Map<String, Object> message = new HashMap<>();
-                        message.put("type", "notification");
-                        message.put("fromUserId", userId);
-                        message.put("content", notification);
-
-                        // JSON 문자열로 변환하여 세션에 전송
-                        String jsonMessage = objectMapper.writeValueAsString(message);
-                        session.sendMessage(new TextMessage(jsonMessage));
-                    }
-                }
-            } catch (IOException e) {
-                log.error("알림을 보내는 중 오류 발생: {}", e.getMessage());
-            }
-        }
-        userSessions.put(userId, session);
+        // 안 읽은 메시지 개수 업데이트
+        updateUnreadMessageCount(loginUser.getUserId());
     }
 
     @Override
-    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        if (session != null) {
-            User loginUser = (User) session.getAttributes().get("loginUser");
+    public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+        User loginUser = (User) session.getAttributes().get("loginUser");
+
+        if (loginUser != null) {
+            String receivedMessage = message.getPayload();
+
+            sendNotificationOnMessageReceived(session, loginUser.getUserId(), receivedMessage);
+        }
+    }
+
+    protected void sendNotificationOnMessageReceived(WebSocketSession session, String userId, String messageContent) {
+        try {
+            Map<String, Object> message = new HashMap<>();
+            message.put("type", "notification");
+            message.put("fromUserId", userId);
+            message.put("content", "새 메세지: " + messageContent);
+
+            String jsonMessage = objectMapper.writeValueAsString(message);
+            session.sendMessage(new TextMessage(jsonMessage));
+        } catch (IOException e) {
+            log.error("알림 안감 : {}", e.getMessage());
         }
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         users.remove(session);
-        log.info("접속종료! 접속자 수 : {}", users.size());
+
+        User loginUser = (User) session.getAttributes().get("loginUser");
+        if (loginUser != null) {
+            userSessions.remove(loginUser.getUserId());
+            // 안 읽은 메시지 개수 업데이트
+            updateUnreadMessageCount(loginUser.getUserId());
+        }
     }
+
+    private void handleNewSession(WebSocketSession session) {
+        User loginUser = (User) session.getAttributes().get("loginUser");
+        String userId = loginUser.getUserId();
+
+        if (isUserInChatRoom(userId)) {
+            try {
+                // 안 읽은 메시지 개수 가져오기
+                int unreadMessageCount = messageService.getUnreadMessageCount(userId);
+                sendUnreadMessageCount(session, unreadMessageCount);
+
+                // 알림 메시지 전송
+                sendNotifications(session, userId);
+            } catch (IOException e) {
+                log.error("알림 안 감: {}", e.getMessage());
+            }
+        }
+
+        userSessions.put(userId, session);
+    }
+
+    protected void sendUnreadMessageCount(WebSocketSession session, int unreadMessageCount) throws IOException {
+        Map<String, Object> countMessage = new HashMap<>();
+        countMessage.put("type", "unreadMessageCount");
+        countMessage.put("count", unreadMessageCount);
+
+        String jsonCountMessage = objectMapper.writeValueAsString(countMessage);
+        session.sendMessage(new TextMessage(jsonCountMessage));
+    }
+
+    protected void sendNotifications(WebSocketSession session, String userId) throws IOException {
+        ArrayList<String> notifications = messageService.getNotificationsForUser(userId);
+
+        if (notifications != null && !notifications.isEmpty()) {
+            for (String notification : notifications) {
+                Map<String, Object> message = new HashMap<>();
+                message.put("type", "notification");
+                message.put("fromUserId", userId);
+                message.put("content", notification);
+
+                String jsonMessage = objectMapper.writeValueAsString(message);
+                session.sendMessage(new TextMessage(jsonMessage));
+            }
+        }
+    }
+
+    protected void updateUnreadMessageCount(String userId) throws IOException {
+        WebSocketSession session = userSessions.get(userId);
+
+        if (session != null && session.isOpen()) {
+            int unreadMessageCount = messageService.getUnreadMessageCount(userId);
+            sendUnreadMessageCount(session, unreadMessageCount);
+        }
+    }
+
     private boolean isUserInChatRoom(String userId) {
-        return false;
+        return true;
     }
 }
