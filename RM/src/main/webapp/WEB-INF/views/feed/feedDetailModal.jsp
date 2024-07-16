@@ -11,6 +11,7 @@
   rel="stylesheet"
   href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
 />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 </head>
 <body>
@@ -18,32 +19,28 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 	<!-- 게시물 디테일 모달 -->	
 	<div class="modal fade" id="modal_detail_feed" tabindex="-1" role="dialog" aria-labelledby="modal_detail_feed" aria-hidden="true">
-	    <div class="modal-dialog modal-xl" role="document">
+	    <div class="modal-dialog modal-lg" role="document">
 	        <div class="modal-content">
 	            <div class="modal-body d-flex p-0">
 	                <div class="modal-image flex-fill">
 	                    <div class="swiper-container postSwiperDetail">
-	                        <div class="swiper-wrapper" id="feed_detail_images">
+	                        <div class="swiper-wrapper feedSlide" id="feed_detail_images">
 	                            <!-- 이미지 슬라이드가 여기 추가됩니다. -->
 	                        </div>
-	                        <!-- 점  -->
 	                        <div class="swiper-pagination"></div>
-	                        <!-- 다음 전 -->
 	                        <div class="swiper-button-next"></div>
 	                        <div class="swiper-button-prev"></div>
 	                    </div>
 	                </div>
 	                <div class="modal-details flex-fill d-flex flex-column">
-	                    <div class="modal-header">
-	                        <div class="d-flex align-items-center">
-	                            <img src="resources/unknown.jpg" id="feed_user_img" class="rounded-circle" alt="프로필 사진">
-	                            <div class="ml-2">
-	                                <span class="username" id="feed_userId">사용자 이름</span>
-	                                <div id="feed_location" class="text-muted" style="font-size: 12px;">위치 정보</div>
-	                                <span class="timeAgo" id="feed_timeAgo"></span> <!-- 시간 경과 표시 -->
-	                            </div>
+	                    <div class="modal-header d-flex align-items-center">
+	                        <img src="resources/unknown.jpg" id="feed_user_img" class="rounded-circle" alt="프로필 사진">
+	                        <div class="ml-2">
+	                            <span class="username" id="feed_userId">사용자 이름</span>
+	                            <div id="feed_location" class="text-muted" style="font-size: 12px;">위치 정보</div>
+	                            <span class="timeAgo" id="feed_timeAgo"></span>
 	                        </div>
-	                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                        <button type="button" class="close ml-auto" data-dismiss="modal" aria-label="Close">
 	                            <span aria-hidden="true">&times;</span>
 	                        </button>
 	                    </div>
@@ -60,7 +57,7 @@
 	                        </div>
 	                        <div id="like_reply" class="w-100">
 	                            <div class="form-group d-flex mb-0">
-	                                <input type="text" name="content" id="content${feedNo}" class="form-control mr-2" placeholder="댓글을 입력해주세요.." style="height: 40px;">
+	                                <input type="text" name="content" id="content${feedNo}" class="form-control mr-2" placeholder="댓글을 입력해주세요.." style="height: 40px;" onkeydown="if(event.key === 'Enter') insertReply(${feedNo})">
 	                                <button class="btn btn-primary" onclick="insertReply(${feedNo})">등록</button>
 	                            </div>
 	                        </div>
@@ -93,85 +90,86 @@
 	<!-- 게시글 detail 불러오기 -->
 	function detailView(feedNo){
 		var userId = '${loginUser.userId}';
-		$('#modal_detail_feed').modal('show');
-		$.ajax({
-			url : "detail.fe",
-			type : "post",
-			data :{
-				feedNo : feedNo
-			},
-			success:function(result){
-		         $('#feed_userId').text(result.f.feedWriter);
-		         $('#feed_location').text(result.f.feedLocation || '');
-		         $('#feed_detail_content').text(result.f.feedContent || '');
-		         
-		         var timeAgo = result.timeAgo; // 디테일 모달에서도 시간 표시
-		         $('#feed_timeAgo').text(timeAgo);
-		         
-		         if (result.f.userProfile && result.f.userProfile.profileChangeName) {
-		                $('#feed_user_img').attr('src', result.f.userProfile.profileChangeName);
-		            } else {
-		                $('#feed_user_img').attr('src', 'resources/unknown.jpg');
-		            }
-		         
-		         loadLikeStatusDetail(result.f.feedNo, userId); //디테일 게시글 좋아요 유저
-		         
-		         if (result.f.feedImg && result.f.feedImg.length > 0) {
-		                var slides = '';
-		                result.f.feedImg.forEach(function(img) {
-		                    slides += '<div class="swiper-slide"><img src="' + img.changeName + '" alt="" class="con_img"></div>';
-		                });
-		                $('#feed_detail_images').html(slides);
-		                detailSwiper();
-		            } else {
-		                $('#feed_detail_images').html('<div class="swiper-slide"><img src="" class="con_img"></div>');
-		            }
-		         
-		         
-		         var str = "";
-		         for(var i = 0; i<result.rList.length; i++){
-		        	 var reply = result.rList[i];
-		        		str += '<div class="modal-body">';
-		        	    str += '    <div id="feed_detail_replyList">';
-		        	    str += '        <p><strong>' + reply.userId + ':</strong> ' + reply.reContent;
-		        	    str += '            <button class="reply-like-button" onclick="toggleReplyLike(' + reply.replyNo + ', \'' + "${loginUser.userId}"	+ '\')">';
-		        	    str += '                <i class="reply-heart-icon far fa-heart"></i>';
-		        	    str += '            </button>';
-		        	    str += '            <span class="reply-like-count" id="reply-like-count-' + reply.replyNo + '"></span>';
-		        	    str += '        </p>';
-		        	    str += '    </div>';
-		        	    str += '</div>';
+        $('#modal_detail_feed').data("feed-no", feedNo).modal('show'); // feedNo 저장
 
-		         }
-		         
-		         $('#feed_detail_replyList').html(str);
-		         
-				 var reHtml = "";			        
-				 reHtml += '<div>';
-				 reHtml += '<input type="text" name="content" id="content'+result.f.feedNo+'" placeholder="댓글을 입력해주세요..">';
-				 reHtml += '<label><button onclick="insertModal(this,'+result.f.feedNo+')">등록</button></label>'
-				 reHtml += '</div>';
+        $.ajax({
+            url: "detail.fe",
+            type: "post",
+            data: {
+                feedNo: feedNo
+            },
+            success: function(result) {
+                $('#feed_userId').text(result.f.feedWriter);
+                $('#feed_location').text(result.f.feedLocation || '');
+                $('#feed_detail_content').text(result.f.feedContent || '');
 
-		         var content = $("#content"+feedNo).val();
-		         console.log("content",content);
-		         $('.form-group').html(reHtml);
-		         
-		         $("#likeButtonDetail").off("click").on("click", function() {
-		                toggleLikeDetail(result.f.feedNo, userId);
-		            });
-		         
-		         // 댓글 좋아요 상태 로드
-		            for (var i = 0; i < result.rList.length; i++) {
-		                var reply = result.rList[i];
-		                loadReplyLikeStatus(reply.replyNo, userId);
-		            }
-		         
-			},
-			error : function(){
-				console.log("통신실패");	
-			}
-		});
-	}
+                var timeAgo = result.timeAgo; // 디테일 모달에서도 시간 표시
+                $('#feed_timeAgo').text(timeAgo);
+
+                if (result.f.userProfile && result.f.userProfile.profileChangeName) {
+                    $('#feed_user_img').attr('src', result.f.userProfile.profileChangeName);
+                } else {
+                    $('#feed_user_img').attr('src', 'resources/unknown.jpg');
+                }
+
+                loadLikeStatusDetail(result.f.feedNo, userId); // 디테일 게시글 좋아요 유저
+
+                if (result.f.feedImg && result.f.feedImg.length > 0) {
+                    var slides = '';
+                    result.f.feedImg.forEach(function(img) {
+                        slides += '<div class="swiper-slide"><img src="' + img.changeName + '" alt="" class="con_img"></div>';
+                    });
+                    $('#feed_detail_images').html(slides);
+                    detailSwiper();
+                } else {
+                    $('#feed_detail_images').html('<div class="swiper-slide"><img src="" class="con_img"></div>');
+                }
+
+                var str = "";
+                for (var i = 0; i < result.rList.length; i++) {
+                    var reply = result.rList[i];
+                    str += '<div class="modal-body">';
+                    str += '    <div id="feed_detail_replyList">';
+                    str += '        <p><strong>' + reply.userId + ':</strong> ' + reply.reContent;
+                    str += '            <button class="reply-like-button" onclick="toggleReplyLike(' + reply.replyNo + ', \'' + "${loginUser.userId}" + '\')">';
+                    str += '                <i class="reply-heart-icon far fa-heart"></i>';
+                    str += '            </button>';
+                    str += '            <span class="reply-like-count" id="reply-like-count-' + reply.replyNo + '">' + reply.reLikeCount + '</span>';
+                    str += '        </p>';
+                    str += '    </div>';
+                    str += '</div>';
+                }
+
+                $('#feed_detail_replyList').html(str);
+
+                var reHtml = "";
+                reHtml += '<div>';
+                reHtml += '<input type="text" name="content" id="content' + result.f.feedNo + '" placeholder="댓글을 입력해주세요..">';
+                reHtml += '<label><button onclick="insertModal(this,' + result.f.feedNo + ')">등록</button></label>'
+                reHtml += '</div>';
+
+                var content = $("#content" + feedNo).val();
+                console.log("content", content);
+                $('.form-group').html(reHtml);
+
+                $("#likeButtonDetail").off("click").on("click", function() {
+                    toggleLikeDetail(result.f.feedNo, userId);
+                });
+
+                // 댓글 좋아요 상태 로드
+                for (var i = 0; i < result.rList.length; i++) {
+                    var reply = result.rList[i];
+                    console.log(result);
+                    loadReplyLikeStatus(reply.replyNo, userId);
+                    console.log(reply.replyNo);
+                }
+
+            },
+            error: function() {
+                console.log("통신실패");
+            }
+        });
+    }
 	
 	function replyList(feedNo){
 	    $.ajax({
@@ -414,6 +412,8 @@
             }
         });
     }
+    
+    
 	
 	
 	

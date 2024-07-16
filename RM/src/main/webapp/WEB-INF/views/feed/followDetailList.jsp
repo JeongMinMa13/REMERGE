@@ -15,32 +15,35 @@
 			<h2>추천</h2>
 			<div id="recommendList">
 				<c:forEach var="user" items="${recommendList}">
-					<div class="suggestion-list">
-						<div class="suggestion-info-list">
-							<c:choose>
-								<c:when test="${user.profileChangeName != null}">
-									<img src="${user.profileChangeName}" alt="Profile Picture">
-								</c:when>
-								<c:otherwise>
-									<img src="resources/unknown.jpg" alt="Profile Picture">
-								</c:otherwise>
-							</c:choose>
-							<div>
-								<div class="recommendName white-text">${user.userId}</div>
-								 <c:set var="oneDayInMillis" value="${3 * 24 * 60 * 60 * 1000}" />
-	                            <c:set var="Time" value="${TimeMap[user.userId]}" />
-	                            <c:choose>
-	                                <c:when test="${Time <= oneDayInMillis}">
-	                                     <p class="gray-text">Re:Merge 신규 가입</p>
-	                                </c:when>
-	                                <c:otherwise>
-	                                    <p class="gray-text">회원님을 위한 추천</p>
-	                                </c:otherwise>
-	                            </c:choose>
+					<!-- 로그인한 사용자는 목록에서 제외 -->
+					<c:if test="${user.userId != loginUser.userId}">
+						<div class="suggestion-list">
+							<div class="suggestion-info-list">
+								<c:choose>
+									<c:when test="${user.profileChangeName != null}">
+										<img src="${user.profileChangeName}" alt="Profile Picture">
+									</c:when>
+									<c:otherwise>
+										<img src="resources/unknown.jpg" alt="Profile Picture">
+									</c:otherwise>
+								</c:choose>
+								<div>
+									<div class="recommendName white-text">${user.userId}</div>
+									<c:set var="oneDayInMillis" value="${3 * 24 * 60 * 60 * 1000}" />
+	                                <c:set var="Time" value="${TimeMap[user.userId]}" />
+	                                <c:choose>
+	                                    <c:when test="${Time <= oneDayInMillis}">
+	                                         <p class="gray-text">Re:Merge 신규 가입</p>
+	                                    </c:when>
+	                                    <c:otherwise>
+	                                        <p class="gray-text">회원님을 위한 추천</p>
+	                                    </c:otherwise>
+	                                </c:choose>
+								</div>
+								<div class="follow-btn" onclick="follow('${user.userId}')">팔로우</div>
 							</div>
-							<div class="follow-btn" onclick="follow('${user.userId}')">팔로우</div>
 						</div>
-					</div>
+					</c:if>
 				</c:forEach>
 			</div>
 		</div>
@@ -70,6 +73,7 @@
 					}
 				});
 			}
+			
 		</script>
 </body>
 </html>

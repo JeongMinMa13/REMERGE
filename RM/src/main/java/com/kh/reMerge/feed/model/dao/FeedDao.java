@@ -183,10 +183,10 @@ public class FeedDao {
 
 	public boolean isFollowing(SqlSessionTemplate sqlSession, String fromUser, String toUser) {
 		Map<String, Object> paramMap = new HashMap<>();
-		paramMap.put("fromUser", fromUser);
-		paramMap.put("toUser", toUser);
-		int count = sqlSession.selectOne("feedMapper.isFollowing",paramMap);
-		return count > 0;
+	    paramMap.put("fromUser", fromUser);
+	    paramMap.put("toUser", toUser);
+	    Integer count = sqlSession.selectOne("feedMapper.isFollowing", paramMap);
+	    return count != null && count > 0;
 	}
 
 	public int saveFeed(SqlSessionTemplate sqlSession, FeedKeep feedKeep) {
@@ -237,6 +237,21 @@ public class FeedDao {
 	public ArrayList<FeedImg> selectImages(SqlSessionTemplate sqlSession, int feedNo) {
 		
 		return (ArrayList)sqlSession.selectList("feedMapper.selectImages",feedNo);
+	}
+
+	public ArrayList<Feed> explore(SqlSessionTemplate sqlSession,String userId) {
+		
+		return (ArrayList)sqlSession.selectList("feedMapper.explore",userId);
+	}
+
+	public List<User> likeUsers(SqlSessionTemplate sqlSession, int feedNo) {
+		
+		return sqlSession.selectList("feedMapper.likeUsers",feedNo);
+	}
+
+	public int unfollowUser(SqlSessionTemplate sqlSession, FollowList followList) {
+		
+		return sqlSession.delete("feedMapper.unfollowUser",followList);
 	}
 
 

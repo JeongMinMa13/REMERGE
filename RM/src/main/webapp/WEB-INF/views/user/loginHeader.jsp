@@ -111,7 +111,7 @@ function updateUnreadMessageCount(count) {
                 <ul>
                     <li><div class="menu-item" id="home"><img src="${pageContext.request.contextPath}/resources/home.png">홈</div></li>
                     <li><div class="menu-item" id="search" onclick="searchDisplay();"><img src="${pageContext.request.contextPath}/resources/search.png">검색</div></li>
-                    <li><div class="menu-item" id="explore"><img src="${pageContext.request.contextPath}/resources/explore.png">탐색</div></li>
+                    <li><div class="menu-item" id="explore"><a href="explore.fe"><img src="${pageContext.request.contextPath}/resources/explore.png">탐색</a></div></li>
                     <li><div class="menu-item" id="messages"><img src="${pageContext.request.contextPath}/resources/messages.png"><a href="/reMerge/message/dm">메시지</a></div></li>
                     <li><div class="menu-item" id="notifications"><img src="${pageContext.request.contextPath}/resources/notifications.png">알림
                      <span id="unreadMessageCount" class="badge bg-danger"></span>
@@ -309,7 +309,7 @@ function updateUnreadMessageCount(count) {
     	}
     	
     </script>
-     <h2>${loginUser.userId}</h2>
-	<a href="logout.us">로그아웃</a>
+
+  
 </body>
 </html>
