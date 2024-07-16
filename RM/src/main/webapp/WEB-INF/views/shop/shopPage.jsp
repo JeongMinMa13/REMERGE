@@ -19,7 +19,7 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=91ad4af1e5f058ed4f88efab8357dc34&libraries=services,clusterer"></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
- <style>
+<style>
         .shopIcon {
             width: 100px;
             height: 120px;
@@ -130,7 +130,7 @@
 	</div>
 	
 	<!-- 첫 번째 모달: 이미지 업로드 -->
-	<div class="modal fade" id="modal_create" tabindex="-1" role="dialog" aria-labelledby="modal_create_title" aria-hidden="true">
+	<div class="modal fade" id="modal_create_feed" tabindex="-1" role="dialog" aria-labelledby="modal_create_title" aria-hidden="true">
 	    <div class="modal-dialog" role="document">
 	        <div class="modal-content">
 	            <div class="modal-header">
@@ -139,13 +139,15 @@
 	                    <span aria-hidden="true">&times;</span>
 	                </button>
 	            </div>
-	            <div class="modal-body d-flex justify-content-center align-items-center">
+	            <div class="modal-body d-flex flex-column justify-content-center align-items-center">
 	                <div class="form-group text-center">
-	                    <label for="files" class="custom-file-label">이미지 선택</label>
-	                    <input type="file" class="form-control-file d-none" id="files" name="upfiles" multiple>
+	                    <label for="files" class="btn btn-primary btn-lg">
+	                        이미지 선택
+	                        <input type="file" class="form-control-file d-none" id="files" name="upfiles" multiple onchange="previewImages()">
+	                    </label>
 	                </div>
 	                <div class="swiper-container mt-3" id="thumbnailsFeedSwiper">
-	                    <div class="swiper-wrapper" id="thumbnailsFeed">
+	                    <div class="swiper-wrapper feedSlide" id="thumbnailsFeed">
 	                        <!-- 썸네일 이미지들이 이곳에 추가됩니다. -->
 	                    </div>
 	                    <!-- Add Pagination -->
@@ -176,12 +178,10 @@
 	                <div class="modal-body d-flex">
 	                    <div class="thumbnail-container flex-fill text-center">
 	                        <div class="swiper-container mt-3" id="selectedThumbnailsSwiper">
-	                            <div class="swiper-wrapper" id="selectedThumbnails">
+	                            <div class="swiper-wrapper feedSlide" id="selectedThumbnails">
 	                                <!-- 선택된 썸네일 이미지들이 이곳에 추가됩니다. -->
 	                            </div>
-	                            <!-- Add Pagination -->
 	                            <div class="swiper-pagination"></div>
-	                            <!-- Add Navigation -->
 	                            <div class="swiper-button-next"></div>
 	                            <div class="swiper-button-prev"></div>
 	                        </div>
@@ -192,7 +192,7 @@
 	                            <textarea class="form-control" id="post_text" rows="3" name="feedContent" placeholder="게시물 내용을 입력하세요..."></textarea>
 	                        </div>
 	                        <div class="form-group">
-	                        	<details>
+	                        <details>
     	    					<summary style="font-size:1.5em;font-weight:bold;">상 품 추 가</summary>
     	    					<div id="shopList-area">
 						            <input class="single-listCheckbox" style="font-size:1.5em;font-weight:bold;"  type="radio"
@@ -234,34 +234,31 @@
 	        </div>
 	    </div>
 	</div>
-	<!-- 게시물 디테일 모달 -->
+	
+	<!-- 디테일 모달 -->
 	<div class="modal fade" id="modal_detail_feed" tabindex="-1" role="dialog" aria-labelledby="modal_detail_feed" aria-hidden="true">
-	    <div class="modal-dialog modal-xl" role="document">
+	    <div class="modal-dialog modal-lg" role="document">
 	        <div class="modal-content">
 	            <div class="modal-body d-flex p-0">
 	                <div class="modal-image flex-fill">
 	                    <div class="swiper-container postSwiperDetail">
-	                        <div class="swiper-wrapper" id="feed_detail_images">
+	                        <div class="swiper-wrapper feedSlide" id="feed_detail_images">
 	                            <!-- 이미지 슬라이드가 여기 추가됩니다. -->
 	                        </div>
-	                        <!-- 점  -->
 	                        <div class="swiper-pagination"></div>
-	                        <!-- 다음 전 -->
 	                        <div class="swiper-button-next"></div>
 	                        <div class="swiper-button-prev"></div>
 	                    </div>
 	                </div>
 	                <div class="modal-details flex-fill d-flex flex-column">
-	                    <div class="modal-header">
-	                        <div class="d-flex align-items-center">
-	                            <img src="resources/unknown.jpg" id="feed_user_img" class="rounded-circle" alt="프로필 사진">
-	                            <div class="ml-2">
-	                                <span class="username" id="feed_userId">사용자 이름</span>
-	                                <div id="feed_location" class="text-muted" style="font-size: 12px;">위치 정보</div>
-	                                <span class="timeAgo" id="feed_timeAgo"></span> <!-- 시간 경과 표시 -->
-	                            </div>
+	                    <div class="modal-header d-flex align-items-center">
+	                        <img src="resources/unknown.jpg" id="feed_user_img" class="rounded-circle" alt="프로필 사진">
+	                        <div class="ml-2">
+	                            <span class="username" id="feed_userId">사용자 이름</span>
+	                            <div id="feed_location" class="text-muted" style="font-size: 12px;">위치 정보</div>
+	                            <span class="timeAgo" id="feed_timeAgo"></span>
 	                        </div>
-	                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                        <button type="button" class="close ml-auto" data-dismiss="modal" aria-label="Close">
 	                            <span aria-hidden="true">&times;</span>
 	                        </button>
 	                    </div>
@@ -289,7 +286,7 @@
 	        </div>
 	    </div>
 	</div>
-		
+	
 		<!-- 지도 모달 -->
 		<div class="modal fade" id="mapModal" tabindex="-1" role="dialog" aria-labelledby="mapModalTitle" aria-hidden="true">
 		    <div class="modal-dialog modal-lg" role="document">
@@ -360,7 +357,28 @@
 			</div>
 		</div>
 	</div>
-</div>
+	
+	<!-- 좋아요 리스트 모달 -->
+		<div class="modal fade" id="likeDetail" tabindex="-1" role="dialog"
+			aria-labelledby="likeListModalTitle" aria-hidden="true">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="likeListModalTitle">좋아요</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<ul id="likeList" class="list-group">
+							<!-- 좋아요 한 사용자 목록이 여기에 추가됩니다. -->
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+
 
 	<!-- 상품추가 구문 1개만 체크될수있도록 -->
 		<script>
@@ -464,7 +482,6 @@
 								}
 							}
 						$(".shopSelectCL").append(str);//작성된 html 넣어주기
-						$(".shopSelectCL2").append(str);//작성된 html 넣어주기
 						}
 					}
 				});
@@ -477,8 +494,31 @@
 	        function shopNoDetail() {
 				alert("재고가 없습니다. 해당 상품 재입고 후 선택이 가능합니다.")
 			}
-		</script>
+	</script>
 
+	<!-- 좋아요 리스트 모달 -->
+	<div class="modal fade" id="likeDetail" tabindex="-1" role="dialog" aria-labelledby="likeListModalTitle" aria-hidden="true">
+	    <div class="modal-dialog modal-lg" role="document">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h5 class="modal-title" id="likeListModalTitle">좋아요</h5>
+	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                    <span aria-hidden="true">&times;</span>
+	                </button>
+	            </div>
+	            <div class="modal-body">
+	                <ul id="likeList" class="list-group">
+	                    <!-- 좋아요 한 사용자 목록이 여기에 추가됩니다. -->
+	                </ul>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+	
+</div>
+
+	
+	
 	<script>
 		<!-- 태그 -->
 		$(document).ready(function() {
@@ -494,7 +534,7 @@
 		<!-- 게시물 등록 스크립트 -->
 		 <!--썸네일 만들기-->
 		 $(document).ready(function() {
-			feedList(1);
+			feedList();
 			loadAllLikes();
 			
 			$(window).scroll(function() {
@@ -527,7 +567,6 @@
 		        
 		        new Swiper('#thumbnailsFeedSwiper', {
 		            slidesPerView: 1,
-		            spaceBetween: 10,
 		            centeredSlides: true,
 		            navigation: {
 		                nextEl: '.swiper-button-next',
@@ -614,12 +653,12 @@
 
 	      // 첫 번째 모달 열기
 	      $('#create').click(function() {
-	        $('#modal_create').modal('show');
+	        $('#modal_create_feed').modal('show');
 	      });
 
 	      // 첫 번째 모달 확인 버튼 클릭 시 두 번째 모달 열기
 	     $('#confirm_button').click(function() {
-	       $('#modal_create').modal('hide');
+	       $('#modal_create_feed').modal('hide');
 	       $('#modal_second').modal('show');
 	       console.log($('#file'));
 	     });
@@ -723,36 +762,36 @@
 			         $('#feed_location').text(result.f.feedLocation || '');
 			         $('#feed_detail_content').text(result.f.feedContent || '');
 			         $('#shopSelectBr').text(result.f.shopNo);
-			        $(function () {
-			         $.ajax({
-							url : "shopSelectBr.sh",
-							data : {
-								sListNo : result.f.shopNo
-							},
-							error : function() {
-								console.log("처리 실패");
-							},
-							success : function(result) {
-								console.log(result);
-								   $("#shopSelectBr").empty();
-								for (var i = 0; i < result.length; i++){
-									var str = "";
-									var sList = result[i];
-								/* div안에 사진, 가격, 썸네일 넣고 클릭하면 체크되고 체크된 sList.shopNo feedInsert구문으로 가져가야함 구현 */
-									if(sList.inven>0){ //재고가 있다면
-									var sListNo = sListNo;
-									str += '         <br>  <p> 선택된 상품 </p> <hr>'; // 
-									str += '    <div class="shopIcon" onclick="detailShop(' + sList.shopNo + ');" id="' + sListNo + '">';
-									str += '         <p>No.' + sList.shopNo + '</p>'; // 상품번호 
-									str += '        <img src="' + sList.filePath + '" alt="상품사진">'; // 이미지
-									str += '         <br>  <p>' + sList.modelName + '</p>'; // 모델명 
-									str += '    </div>';
+			         $(function () {
+				         $.ajax({
+								url : "shopSelectBr.sh",
+								data : {
+									sListNo : result.f.shopNo
+								},
+								error : function() {
+									console.log("처리 실패");
+								},
+								success : function(result) {
+									console.log(result);
+									   $("#shopSelectBr").empty();
+									for (var i = 0; i < result.length; i++){
+										var str = "";
+										var sList = result[i];
+									/* div안에 사진, 가격, 썸네일 넣고 클릭하면 체크되고 체크된 sList.shopNo feedInsert구문으로 가져가야함 구현 */
+										if(sList.inven>0){ //재고가 있다면
+										var sListNo = sListNo;
+										str += '         <br>  <p> 선택된 상품 </p> <hr>'; // 
+										str += '    <div class="shopIcon" onclick="detailShop(' + sList.shopNo + ');" id="' + sListNo + '">';
+										str += '         <p>No.' + sList.shopNo + '</p>'; // 상품번호 
+										str += '        <img src="' + sList.filePath + '" alt="상품사진">'; // 이미지
+										str += '         <br>  <p>' + sList.modelName + '</p>'; // 모델명 
+										str += '    </div>';
+										}
+										$("#shopSelectBr").append(str);
 									}
-									$("#shopSelectBr").append(str);
 								}
-							}
-						});
-			        });
+							});
+				        });
 			         var timeAgo = result.timeAgo; // 디테일 모달에서도 시간 표시
 			         $('#feed_timeAgo').text(timeAgo);
 			         
@@ -784,7 +823,7 @@
 			        	    str += '            <button class="reply-like-button" onclick="toggleReplyLike(' + reply.replyNo + ', \'' + "${loginUser.userId}"	+ '\')">';
 			        	    str += '                <i class="reply-heart-icon far fa-heart"></i>';
 			        	    str += '            </button>';
-			        	    str += '            <span class="reply-like-count" id="reply-like-count-' + reply.replyNo + '"></span>';
+			        	    str += '            <span class="reply-like-count" id="reply-like-count-' + reply.replyNo + '">' + reply.reLikeCount + '</span>';
 			        	    str += '        </p>';
 			        	    str += '    </div>';
 			        	    str += '</div>';
@@ -810,9 +849,10 @@
 			         // 댓글 좋아요 상태 로드
 			            for (var i = 0; i < result.rList.length; i++) {
 			                var reply = result.rList[i];
+			                console.log(result);
 			                loadReplyLikeStatus(reply.replyNo, userId);
+			                console.log(reply.replyNo);
 			            }
-			         
 			         
 				},
 				error : function(){
@@ -884,6 +924,89 @@
             });
         }
 		</script>
+		
+		<!-- 게시물 좋아요 누른 디테일 리스트 -->
+		<script>
+		function likeDetailView(feedNo, feedWriter) {
+		    $('#likeDetail').modal('show');
+		    
+		    $.ajax({
+		        url: 'likeDetail.fe',
+		        type: 'GET',
+		        data: {
+		            feedNo: feedNo,
+		            userId: feedWriter
+		        },
+		        success: function(result) {
+		            console.log('서버 응답:', result); // 서버 응답 확인
+		            var likeStr = "";
+		            var loginUserId = '${loginUser.userId}';
+		            result.likeUserList.forEach(function(userDetail) {
+		                var user = userDetail.user;
+		                var isFollowing = userDetail.isFollowing;
+		                console.log(user.userId, isFollowing); // 각 사용자의 팔로우 상태를 콘솔에 출력
+
+		                if (user) {
+		                    likeStr += '<li class="list-group-item d-flex justify-content-between align-items-center">';
+		                    likeStr += '<div class="d-flex align-items-center">';
+		                    if (user.profileChangeName) {
+		                        likeStr += '<img src="' + user.profileChangeName + '" class="rounded-circle" alt="프로필 사진" style="width: 40px; height: 40px; object-fit: cover;">';
+		                    } else {
+		                        likeStr += '<img src="resources/unknown.jpg" class="rounded-circle" alt="프로필 사진" style="width: 40px; height: 40px; object-fit: cover;">';
+		                    }
+		                    likeStr += '<span class="ml-3">' + (user.userId ? user.userId : 'Unknown User') + '</span>';
+		                    likeStr += '</div>';
+		                    if (user.userId !== loginUserId) {
+		                        if (isFollowing) {
+		                            likeStr += '<button class="btn follow-btn" data-user-id="' + user.userId + '" onclick="unfollow(\'' + user.userId + '\')">언팔로우</button>';
+		                        } else {
+		                            likeStr += '<button class="btn follow-btn" data-user-id="' + user.userId + '" onclick="follow(\'' + user.userId + '\')">팔로우</button>';
+		                        }
+		                    }
+		                    likeStr += '</li>';
+		                }
+		            });
+		            $('#likeList').html(likeStr);
+		        },
+		        error: function() {
+		            alert('좋아요 목록을 가져오는데 실패했습니다.');
+		        }
+		    });
+		}
+		
+		function toggleFollow(fromUser, toUser, isFollowing) {
+		    var action = isFollowing ? 'unfollow' : 'follow';
+		    $.ajax({
+		        url: action + '.fe',
+		        type: 'POST',
+		        data: {
+		            fromUser: fromUser,
+		            toUser: toUser
+		        },
+		        success: function(result) {
+		            if (result > 0) {
+		                var btn = $('#follow-btn-' + toUser);
+		                if (isFollowing) {
+		                	console.log(isFollowing);
+		                    btn.removeClass('btn-outline-danger').addClass('btn-outline-primary');
+		                    btn.text('팔로우');
+		                    btn.attr('onclick', 'toggleFollow("' + fromUser + '", "' + toUser + '", false)');
+		                } else {
+		                    btn.removeClass('btn-outline-primary').addClass('btn-outline-danger');
+		                    btn.text('팔로잉');
+		                    btn.attr('onclick', 'toggleFollow("' + fromUser + '", "' + toUser + '", true)');
+		                }
+		            } else {
+		                alert('상태를 변경하는 데 실패했습니다.');
+		            }
+		        },
+		        error: function() {
+		            alert('상태를 변경하는 데 실패했습니다.');
+		        }
+		    });
+		}
+
+		</script>
 
 	<script>
 		<!-- 게시글 리스트 목록 -->
@@ -901,103 +1024,102 @@
                     var timeAgoMap = response.timeAgoMap;
                     for (var i = 0; i < response.list.length; i++) {
                         var feed = response.list[i];
+                        if (feed.shopNo !== 0) {
                         var userProfile = feed.userProfile;
-                        if(feed.shopNo !== 0){
-	                        str += '<div class="con" data-feed-no="' + feed.feedNo + '">';
-	                        str += '    <div class="title">';
-	                        if (userProfile && userProfile.profileChangeName) {
-	                            str += '        <img src="' + userProfile.profileChangeName + '" class="img">';
-	                        } else {
-	                            str += '        <img src="resources/unknown.jpg" class="img">';
-	                        }
-	                        str += '        <div class="info">';
-	                        str += '            <span class="username">' + feed.feedWriter + '</span>';
-	                        str += '            <span class="timeAgo">' + timeAgoMap[feed.feedNo] + '</span>';
-	                        str += '            <p class="location" onclick="showMap(\'' + feed.feedLocation + '\')">' + feed.feedLocation + '</p>';
-	                        str += '        </div>';
-	                        str += '    </div>';
-	                        str += '    <div class="swiper-container postSwiper">';
-	                        str += '        <div class="swiper-wrapper">';
-	                        if (feed.feedImg && feed.feedImg.length > 0) {
-	                            for (var j = 0; j < feed.feedImg.length; j++) {
-	                                var img = feed.feedImg[j];
-	                                str += '    <div class="swiper-slide">';
-	                                str += '        <img src="' + img.changeName + '" alt="" class="con_img">';
-	                                str += '    </div>';
-	                            }
-	                        }
-	                        str += '        </div>';
-	                        str += '        <div class="swiper-pagination"></div>';
-	                        str += '        <div class="swiper-button-next"></div>';
-	                        str += '        <div class="swiper-button-prev"></div>';
-	                        str += '    </div>';
-	                        str += '    <div class="logos">';
-	                        str += '        <div class="logos_left">';
-	                        str += '            <button id="likeButton' + feed.feedNo + '" class="like-button" data-feed-no="' + feed.feedNo + '" data-user-id="' + '${loginUser.userId}' + '" onclick="toggleLike(' + feed.feedNo + ', \'' + '${loginUser.userId}' + '\')">';
-	                        str += '                <i class="heart-icon far fa-heart" style="font-size: 30px; color: #ff5a5f;"></i>';
-	                        str += '            </button>';
-	                        str += '            <img src="resources/chat.png" class="logo_img" onclick="detailView(' + feed.feedNo + ')" >';
-	                        str += '            <img src="resources/direct.png" alt="" class="logo_img">';
-	                        str += '        </div>';
-	                        str += '        <div class="logos_right">';
-	                        str += '            <button id="saveButton' + feed.feedNo + '" class="save-button" data-feed-no="' + feed.feedNo + '" onclick="saveFeed(' + feed.feedNo + ')">';
-	                        str += '                <i class="save-icon far fa-bookmark" style="font-size: 30px;"></i>';
-	                        str += '            </button>';
-	                        str += '        </div>';
-	                        str += '    </div>';
-	                        str += '    <div class="content">';
-	                        str += '        <p><b>좋아요 <span class="like-count" data-feed-no="' + feed.feedNo + '">' + feed.likeCount + '</span>개</b></p>';
-	                        str += '        <p id="feedContent' + feed.feedNo + '" class="feed-content">' + feed.feedContent + '</p>';
-	                        
-	                     // feed.shopNo가 0이 아닐 경우에만 AJAX 요청을 통해 Shop 정보 가져오기
-			                if (feed.shopNo !== 0) {
-			                    str += '            <div id="shopIcons' + feed.feedNo + '">';
-			                    str += '                <p>No.' + feed.shopNo + '</p>'; 
-			                    str += '            </div>';
-	
-			                    (function(feedNo, shopNo) {
-			                        $.ajax({
-			                            url: 'shopInfo.sh', 
-			                            method: 'GET',
-			                            data: { shopNo: shopNo },
-			                            dataType: 'json',
-			                            success: function(sList) {
-			                                //console.log("feedNo:", feedNo);
-			                                //console.log("sList:", sList);
-			                                var shopStr = '';
-			                                for (var j = 0; j < sList.length; j++) {
-			                                	//console.log("shopNo:", shopNo);
-			                                    shopStr += '            <div class="shopIcon" onclick="detailShop('+shopNo+')">';
-			                                    shopStr += '                <p>모델명: ' + sList[j].modelName + '</p>'; // 모델명 출력
-			                                    shopStr += '                <img src="' + sList[j].filePath + '" alt="Shop Icon">'; // 이미지 출력
-			                                    shopStr += '            </div>';
-			                                }
-			                                $('#shopIcons' + feedNo).html(shopStr); // 생성된 HTML을 해당 shop-icon div에 추가
-			                            },
-			                            error: function() {
-			                                console.log("shopInfo 통신오류");
-			                            }
-			                        });
-			                    })(feed.feedNo, feed.shopNo);
-			                }
-	                        
-	                        str += '        <button id="moreButton' + feed.feedNo + '" class="more-button" onclick="showFullContent(' + feed.feedNo + ')" style="display: none;">더보기</button>';
-	                        str += '        <div id="fullContent' + feed.feedNo + '" class="full-content" style="display: none;">' + feed.feedContent + '</div>';
-	                        str += '        <div id="replyList' + feed.feedNo + '"></div>';
-	                        if (feed.tags && feed.tags.length > 0) {
-	                            str += '        <p>';
-	                            for (var j = 0; j < feed.tags.length; j++) {
-	                                str += '<a href="selectTag.fe?tagContent=' + encodeURIComponent(feed.tags[j]) + '">#' + feed.tags[j] + '</a> ';
-	                            }
-	                            str += '        </p>';
-	                        }
-	                        str += '        <input type="text" name="reContent" id="reContent' + feed.feedNo + '" placeholder="댓글을 입력해주세요..">';
-	                        str += '        <label><button onclick="insertReply(' + feed.feedNo + ')">등록</button></label>';
-	                        str += '    </div>';
-	                        str += '</div>';
-	                        
-	                        replyList(feed.feedNo);
+                        var feedContent = feed.feedContent ? feed.feedContent : ''; // null이면 빈 문자열로 대체
+                        var feedLocation = feed.feedLocation ? feed.feedLocation : ''; // null이면 빈 문자열로 대체
+                        
+                        str += '<div class="con" data-feed-no="' + feed.feedNo + '">';
+                        str += '    <div class="title">';
+                        if (userProfile && userProfile.profileChangeName) {
+                            str += '        <img src="' + userProfile.profileChangeName + '" class="img">';
+                        } else {
+                            str += '        <img src="resources/unknown.jpg" class="img">';
                         }
+                        str += '        <div class="info">';
+                        str += '            <span class="username"><a href="myPage.us?userId=' + feed.feedWriter + '" class="username-link">' + feed.feedWriter + '</a></span>';
+                        str += '            <span class="timeAgo">' + timeAgoMap[feed.feedNo] + '</span>';
+                        str += '            <p class="location" onclick="showMap(\'' + feedLocation + '\')">' + feedLocation + '</p>';
+                        str += '        </div>';
+                        str += '    </div>';
+                        str += '    <div class="swiper-container postSwiper">';
+                        str += '        <div class="swiper-wrapper feedSlide">';
+                        if (feed.feedImg && feed.feedImg.length > 0) {
+                            for (var j = 0; j < feed.feedImg.length; j++) {
+                                var img = feed.feedImg[j];
+                                str += '    <div class="swiper-slide">';
+                                str += '        <img src="' + img.changeName + '" alt="" class="con_img">';
+                                str += '    </div>';
+                            }
+                        }
+                        str += '        </div>';
+                        str += '        <div class="swiper-pagination"></div>';
+                        str += '        <div class="swiper-button-next"></div>';
+                        str += '        <div class="swiper-button-prev"></div>';
+                        str += '    </div>';
+                        str += '    <div class="logos">';
+                        str += '        <div class="logos_left">';
+                        str += '            <button id="likeButton' + feed.feedNo + '" class="like-button" data-feed-no="' + feed.feedNo + '" data-user-id="' + '${loginUser.userId}' + '" onclick="toggleLike(' + feed.feedNo + ', \'' + '${loginUser.userId}' + '\')">';
+                        str += '                <i class="heart-icon far fa-heart" style="font-size: 30px; color: #ff5a5f;"></i>';
+                        str += '            </button>';
+                        str += '            <img src="resources/chat.png" class="logo_img" onclick="detailView(' + feed.feedNo + ')" >';
+                        str += '        </div>';
+                        str += '        <div class="logos_right">';
+                        str += '            <button id="saveButton' + feed.feedNo + '" class="save-button" data-feed-no="' + feed.feedNo + '" onclick="saveFeed(' + feed.feedNo + ')">';
+                        str += '                <i class="save-icon far fa-bookmark" style="font-size: 30px;"></i>';
+                        str += '            </button>';
+                        str += '        </div>';
+                        str += '    </div>';
+                        str += '    <div class="content">';
+                        str += '        <p onclick="likeDetailView(' + feed.feedNo + ',\'' + feed.feedWriter + '\')"><b>좋아요 <span class="like-count" data-feed-no="' + feed.feedNo + '">' + feed.likeCount + '</span>개</b></p>';
+                        str += '        <p id="feedContent' + feed.feedNo + '" class="feed-content">' + feedContent + '</p>';
+                        // feed.shopNo가 0이 아닐 경우에만 AJAX 요청을 통해 Shop 정보 가져오기
+		                
+		                    str += '            <div id="shopIcons' + feed.feedNo + '">';
+		                    str += '                <p>No.' + feed.shopNo + '</p>'; 
+		                    str += '            </div>';
+
+		                    (function(feedNo, shopNo) {
+		                        $.ajax({
+		                            url: 'shopInfo.sh', 
+		                            method: 'GET',
+		                            data: { shopNo: shopNo },
+		                            dataType: 'json',
+		                            success: function(sList) {
+		                                //console.log("feedNo:", feedNo);
+		                                //console.log("sList:", sList);
+		                                var shopStr = '';
+		                                for (var j = 0; j < sList.length; j++) {
+		                                	//console.log("shopNo:", shopNo);
+		                                    shopStr += '            <div class="shopIcon" onclick="detailShop('+shopNo+')">';
+		                                    shopStr += '                <p>모델명: ' + sList[j].modelName + '</p>'; // 모델명 출력
+		                                    shopStr += '                <img src="' + sList[j].filePath + '" alt="Shop Icon">'; // 이미지 출력
+		                                    shopStr += '            </div>';
+		                                }
+		                                $('#shopIcons' + feedNo).html(shopStr); // 생성된 HTML을 해당 shop-icon div에 추가
+		                            },
+		                            error: function() {
+		                                console.log("shopInfo 통신오류");
+		                            }
+		                        });
+		                    })(feed.feedNo, feed.shopNo);
+		               
+                        str += '        <button id="moreButton' + feed.feedNo + '" class="more-button" onclick="showFullContent(' + feed.feedNo + ')" style="display: none;">더보기</button>';
+                        str += '        <div id="fullContent' + feed.feedNo + '" class="full-content" style="display: none;">' + feedContent + '</div>';
+                        str += '        <div id="replyList' + feed.feedNo + '"></div>';
+                        if (feed.tags && feed.tags.length > 0) {
+                            str += '        <p>';
+                            for (var j = 0; j < feed.tags.length; j++) {
+                                str += '<a href="selectTag.fe?tagContent=' + encodeURIComponent(feed.tags[j]) + '">#' + feed.tags[j] + '</a> ';
+                            }
+                            str += '        </p>';
+                        }
+                        str += '        <input type="text" name="reContent" id="reContent' + feed.feedNo + '" placeholder="댓글을 입력해주세요.." onkeydown="if(event.key === \'Enter\') insertReply(' + feed.feedNo + ')">';
+                        str += '    </div>';
+                        str += '</div>';
+                        
+                        replyList(feed.feedNo);
+                    	}
                     }
                     $(".conA").append(str);
                     if (currentPage >= response.pi.maxPage) {
@@ -1013,7 +1135,9 @@
                 }
             });
         }
+		
 		</script>
+		
 
 		<!-- 댓글 리스트 -->
 		<script>
@@ -1029,8 +1153,13 @@
 		                    var reply = result.rList[0];
 		                    str += '<div class="comment">';
 		                    str += '    <p><strong class="username">' + reply.userId + ':</strong> ' + reply.reContent + '</p>';
-		                    str += '    <button class="reply-like-button" onclick="toggleReplyLike(' + reply.replyNo + ', \'' + reply.userId + '\')">';
+		                    str += '    <button class="reply-like-button" onclick="toggleReplyLike(' + reply.replyNo + ', \'' + "${loginUser.userId}" + '\')">';
+		                    str += '        <i class="reply-heart-icon far fa-heart"></i>';
+		                    str += '    </button>';
 		                    str += '</div>';
+		                    
+		                    loadReplyLikeStatus(reply.replyNo, "${loginUser.userId}");
+		                    console.log("댓글리스트 조회"+reply.replyNo);
 		            }
 		            $("#replyList" + feedNo).html(str); // 댓글 리스트를 해당 게시물 div에 추가
 		            
@@ -1057,7 +1186,6 @@
 						if(result>0){
 							replyList(feedNo); //추가된 댓글 정보까지 다시 조회
 							$("#reContent"+feedNo).val("");
-							
 							alert("댓글등록");
 						}else{
 							alert("댓글작성실패");
@@ -1252,7 +1380,9 @@
 			                heartIcon.addClass('far fa-heart');
 			            }
 			
-			            likeCountElement.text(response.likeCount);
+			            likeCountElement.text(response.RelikeCount);
+			            console.log("좋아요 토글 함수 발동 "+response.RelikeCount);
+			            console.log("좋아요 토글 삼훗 발동 RELIKECOUNT"+replyNo);
 			        },
 			        error: function() {
 			            alert('댓글 좋아요 처리에 실패했습니다.');
@@ -1286,7 +1416,8 @@
 			                heartIcon.addClass('far fa-heart');
 			            }
 			
-			            likeCountElement.text(response.likeCount);
+			            likeCountElement.text(response.RelikeCount);
+			            console.log("조회해온 댓글 좋아요 수 "+ response.RelikeCount);
 			        },
 			        error: function() {
 			            alert('댓글 좋아요 상태를 가져오는데 실패했습니다.');
@@ -1554,9 +1685,45 @@
 				});
 			}
 			
+			// 언팔로우 요청
+			function unfollow(toUser) {
+			    $.ajax({
+			        url: 'unfollow.fe',
+			        type: 'post',
+			        data: {
+			            fromUser: "${loginUser.userId}",
+			            toUser: toUser
+			        },
+			        success: function(result) {
+			            if (result > 0) {
+			                alert('언팔로우 성공');
+			                updateFollowButton(toUser, false);
+			            } else {
+			                alert('언팔로우 실패');
+			            }
+			        },
+			        error: function() {
+			            console.log('통신 실패');
+			        }
+			    });
+			}
+
+			// 팔로우 버튼 업데이트
+			function updateFollowButton(userId, isFollowing) {
+			    var button = $('.follow-btn[data-user-id="' + userId + '"]');
+			    if (isFollowing) {
+			        button.removeClass('btn-outline-primary').addClass('btn-outline-danger');
+			        button.text('언팔로우');
+			        button.attr('onclick', 'unfollow(\'' + userId + '\')');
+			    } else {
+			        button.removeClass('btn-outline-danger').addClass('btn-outline-primary');
+			        button.text('팔로우');
+			        button.attr('onclick', 'follow(\'' + userId + '\')');
+	    }
+	}
+			
 		</script>
-	
-	        <script>
+		<script>
     	
     	$('#shopInsert').click(function(){
       		location.href="/reMerge/shopInsert.sh";
@@ -1574,5 +1741,7 @@
          	}
         
         </script>
+	
+	
 </body>
 </html>
