@@ -25,7 +25,7 @@ header {
 	padding: 20px;
 }
 .storySwiper{
-	margin-top: -150px;
+	margin-top: -75px;
 	position:relative;
 	overflow:hidden;
 	padding:0 22px;
@@ -37,6 +37,7 @@ header {
 .storys .swiper-slide {
 	text-align: center;
 }
+
 .story_img {
 	width: 60px;
 	height: 60px;
@@ -53,10 +54,6 @@ header {
 	text-align: center;
 	display:block;
 }
-
-
-
-
 .profile {
 	display: flex;
 	margin: 10px 0;
@@ -71,11 +68,24 @@ header {
 	font-weight: bold;
 	margin-left: 10px;
 }
+
+.username-link {
+    text-decoration: none;
+    color: #262626;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.username-link:hover {
+    color: #0095f6;
+}
+
 .con_wrap {
 	display: flex;
 	width: 40%;
 	justify-content: center;
 	align-items: flex-start;
+	margin-right: 200px;
 }
 .conA {
 	flex: 2;
@@ -85,10 +95,13 @@ header {
 .conA .con {
 	width: 100%;
 	max-width: 600px;
-	margin-bottom: 30px;
-	border: 1px solid #DBDBDB;
-	border-radius: 3px;
+	border: none; /* 게시물 감싸는 선 제거 */
+    border-bottom: 1px solid #DBDBDB; /* 게시물 사이에 선 추가 */
+	padding-bottom: 40px; /* 게시물 하단 여백 추가 */
 	background-color: #FFFFFF;
+}
+.conA .con:last-child {
+    border-bottom: none; /* 마지막 게시물의 하단 선 제거 */
 }
 .title {
 	display: flex;
@@ -138,12 +151,11 @@ header {
 	outline: none;
 }
 .body .container {
-	position: fixed;
-	top: 100px;
+	position: absolute;
+	top: 150px;
 	right: 200px;
 	width: 400px; /* 원하는 너비로 조정 */
 	background-color: white;
-	border: 1px solid #DBDBDB;
 	border-radius: 10px;
 	padding: 20px;
 }
@@ -338,11 +350,14 @@ header {
 	font-weight: bold;
 	margin-right: 5px;
 }
-.comment-input {
-	display: flex;
-	align-items: center;
-	border-top: 1px solid #DBDBDB;
-	padding-top: 5px; /* 댓글 입력 상자 위쪽 간격 줄임 */
+.btn-register {
+    background-color: #EFEFEF;
+    border: none;
+    color: gray;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 14px;
 }
 .comment-input input {
 	flex: 1;
@@ -350,6 +365,10 @@ header {
 	padding: 5px; /* 댓글 입력 상자의 패딩을 줄임 */
 	font-size: 14px;
 	height: 40px; /* 댓글 입력 상자 높이 설정 */
+}
+
+.btn-register:hover {
+    background-color: #E0E0E0;
 }
 .comment-input input:focus {
 	outline: none;
@@ -539,12 +558,15 @@ h2 {
     font-size: 12px; /* 필요에 따라 조정 */
     margin-left: 10px; /* ID와 시간 사이의 간격 조정 */
 }
-.swiper-slide {
-    /* visibility: hidden; */
+
+.feedSlide .swiper-slide {
+	visibility: hidden;
 }
-.swiper-slide-active {
-    visibility: visible;
+
+.feedSlide .swiper-slide-active {
+	visibility: visible;
 }
+
 .swiper-container {
     position: relative;
     width: 100%;
@@ -571,6 +593,89 @@ h2 {
 	width: 450px;
 	height: 700px;
 }
+
+.more-button {
+    color: gray; /* 회색 글씨 */
+    background: none; /* 배경 제거 */
+    border: none; /* 테두리 제거 */
+    padding: 0; /* 패딩 제거 */
+    margin: 0; /* 마진 제거 */
+    cursor: pointer; /* 커서 포인터로 변경 */
+    font-size: 14px; /* 폰트 크기 */
+    text-decoration: underline; /* 밑줄 추가 */
+}
+
+.more-button:focus {
+    outline: none; /* 포커스 시 아웃라인 제거 */
+}
+
+.save-button {
+    background: none; /* 배경색 제거 */
+    border: none; /* 테두리 제거 */
+    padding: 0; /* 패딩 제거 */
+    cursor: pointer; /* 커서 포인터로 변경 */
+}
+
+.save-button:focus {
+    outline: none; /* 포커스 시 아웃라인 제거 */
+}
+
+.save-icon {
+    font-size: 30px;
+}
+
+.logos {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    align-items: center; /* 추가하여 아이콘 수직 정렬 */
+}
+
+.logos_left {
+    display: flex;
+    align-items: center; /* 추가하여 아이콘 수직 정렬 */
+}
+
+.like-button, .comment-button, .direct-button, .save-button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    margin-right: 10px; /* 아이콘 간 간격 조정 */
+}
+
+.like-button .heart-icon, .comment-button .comment-icon, .direct-button, .save-button .save-icon {
+    font-size: 30px;
+}
+
+.like-button:focus, .comment-button:focus, .save-button:focus {
+    outline: none;
+}
+
+.heart-icon, .comment-icon,.save-icon {
+    font-size: 30px;
+    vertical-align: middle; /* 아이콘 수직 정렬 */
+    color: #262626; /* 진한 색상으로 변경 */
+}
+
+.follow-btn {
+    border: 1px solid #0095f6;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.not-following {
+    background-color: #0095f6;
+    color: white;
+}
+
+.following {
+    background-color: white;
+    color: #0095f6;
+}
+
+
 </style>
 </head>
 <body>

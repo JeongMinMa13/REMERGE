@@ -60,6 +60,7 @@
 		   ,RE_CONTENT reContent
 		   ,USER_ID userId
 		   ,CREATE_DATE createDate
+		   ,RELIKE_COUNT reLikeCount
 		FROM REPLY
 		WHERE FEED_NO = #{feedNo} 
 		AND STATUS = 'Y'
@@ -186,15 +187,28 @@
 	</select>
 	
 	<insert id="insertReplyLike" parameterType="ReplyLike">
-		INSERT INTO REPLY_LIKE(USER_ID,REPLY_NO)
-		VALUES (#{userId},#{replyNo})
+		INSERT INTO REPLY_LIKE (USER_ID, REPLY_NO)
+        VALUES (#{userId}, #{replyNo})
 	</insert>
+	
+	<update id="likeCountUpdate" parameterType="_int">
+        UPDATE REPLY
+        SET RELIKE_COUNT = RELIKE_COUNT + 1
+        WHERE REPLY_NO = #{replyNo}
+    </update>
+	
 	
 	<delete id="deleteReplyLike" parameterType="ReplyLike">
 		DELETE FROM REPLY_LIKE
-		WHERE USER_ID = #{userId}
-		AND REPLY_NO = #{replyNo}
+        WHERE USER_ID = #{userId}
+        AND REPLY_NO = #{replyNo}
 	</delete>
+	
+	 <update id="likeCountDelete" parameterType="_int">
+        UPDATE REPLY
+        SET RELIKE_COUNT = RELIKE_COUNT - 1
+        WHERE REPLY_NO = #{replyNo}
+    </update>
 	
 	<select id="checkReplyLike" parameterType="ReplyLike" resultType="_int">
 		SELECT COUNT(*)
@@ -204,8 +218,8 @@
 	</select>
 	
 	<select id="countReplyLikes" parameterType="_int" resultType="_int">
-        SELECT COUNT(*)
-        FROM REPLY_LIKE
+        SELECT RELIKE_COUNT
+        FROM REPLY
         WHERE REPLY_NO = #{replyNo}
     </select>
     
@@ -224,7 +238,7 @@
     <select id="isFollowing" parameterType="map" resultType="_int">
     	SELECT COUNT(*)
     	FROM FOLLOWLIST
-    	WHERE FROM_USER = #{userId}
+    	WHERE FROM_USER = #{fromUser}
     	AND TO_USER = #{toUser}
     </select>
     
@@ -247,42 +261,44 @@
    	</select>
    	
    <select id="getRecommend" parameterType="map" resultType="User">
- <![CDATA[
-	    SELECT USER_ID userId, PROFILE_CHANGENAME profileChangename, PROFILE_PATH profilePath, JOINDATE joinDate
-	    FROM (
-	        SELECT USER_ID, PROFILE_CHANGENAME,PROFILE_PATH,JOINDATE
-	        FROM USERS
-	        WHERE USER_ID NOT IN (
-	            SELECT TO_USER 
-	            FROM FOLLOWLIST 
-	            WHERE FROM_USER = #{userId}
-	        )
-	        ORDER BY dbms_random.value
-	    )
-	    WHERE ROWNUM <= #{limit}
-    ]]>
+<![CDATA[
+    SELECT USER_ID userId, PROFILE_CHANGENAME profileChangename, PROFILE_PATH profilePath, JOINDATE joinDate
+    FROM (
+        SELECT USER_ID, PROFILE_CHANGENAME, PROFILE_PATH, JOINDATE
+        FROM USERS
+        WHERE USER_ID NOT IN (
+            SELECT TO_USER 
+            FROM FOLLOWLIST 
+            WHERE FROM_USER = #{userId}
+        )
+        AND USER_ID != #{userId}
+        ORDER BY dbms_random.value
+    )
+    WHERE ROWNUM <= #{limit}
+]]>
    </select>
    
    <insert id="followUser" parameterType="FollowList">
-   		INSERT INTO FOLLOWLIST (FROM_USER,TO_USER)
-   		VALUES (#{fromUser}, #{toUser})
+   		INSERT INTO FOLLOWLIST (TO_USER,FROM_USER)
+   		VALUES (#{toUser}, #{fromUser})
    </insert>
    
      <select id="getRecommendList" parameterType="map" resultType="User">
  <![CDATA[
-	    SELECT USER_ID userId, PROFILE_CHANGENAME profileChangename, PROFILE_PATH profilePath,JOINDATE joinDate
-	    FROM (
-	        SELECT USER_ID, PROFILE_CHANGENAME,PROFILE_PATH,JOINDATE
-	        FROM USERS
-	        WHERE USER_ID NOT IN (
-	            SELECT TO_USER 
-	            FROM FOLLOWLIST 
-	            WHERE FROM_USER = #{userId}
-	        )
-	        ORDER BY dbms_random.value
-	    )
-	    WHERE ROWNUM <= #{limit}
-    ]]>
+    SELECT USER_ID userId, PROFILE_CHANGENAME profileChangename, PROFILE_PATH profilePath, JOINDATE joinDate
+    FROM (
+        SELECT USER_ID, PROFILE_CHANGENAME, PROFILE_PATH, JOINDATE
+        FROM USERS
+        WHERE USER_ID NOT IN (
+            SELECT TO_USER 
+            FROM FOLLOWLIST 
+            WHERE FROM_USER = #{userId}
+        )
+        AND USER_ID != #{userId}
+        ORDER BY dbms_random.value
+    )
+    WHERE ROWNUM <= #{limit}
+]]>
    </select>
    
    <!-- 사진 여러장 추가 -->
@@ -298,6 +314,45 @@
    WHERE FEED_NO = #{feedNo}
    </select>
    
+  
+   <select id="explore" resultMap="feedResultSet">
+   SELECT 
+        F.FEED_NO,
+        F.FEED_CONTENT,
+        F.FEED_WRITER,
+        F.CREATE_DATE,
+        MIN(FI.CHANGE_NAME) AS CHANGE_NAME,  
+        F.FEED_LOCATION
+    FROM 
+        FEED F
+    JOIN 
+        FEED_IMG FI ON F.FEED_NO = FI.FEED_NO
+    LEFT JOIN 
+        FOLLOWLIST FL ON F.FEED_WRITER = FL.TO_USER AND FL.FROM_USER = #{userId}
+    WHERE 
+        FL.TO_USER IS NULL
+    GROUP BY 
+        F.FEED_NO,
+        F.FEED_CONTENT,
+        F.FEED_WRITER,
+        F.CREATE_DATE,
+        F.FEED_LOCATION
+    ORDER BY 
+        F.CREATE_DATE DESC
+   </select>
+ 
+ <select id="likeUsers" parameterType="_int" resultType="User">
+ 	SELECT U.USER_ID userId, U.PROFILE_CHANGENAME profileChangeName
+    FROM USERS U
+    JOIN FEED_LIKE FL ON U.USER_ID = FL.USER_ID
+    WHERE FL.FEED_NO = #{feedNo}
+ </select>
+ 
+ <delete id="unfollowUser" parameterType="FollowList">
+ 	DELETE FROM FOLLOWLIST
+    WHERE FROM_USER = #{fromUser}
+    AND TO_USER = #{toUser}
+ </delete>
 	
 	
 	

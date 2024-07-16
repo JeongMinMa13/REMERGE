@@ -23,6 +23,7 @@ public class Feed {
 	private String feedLocation;
 	private String changeName;
 	private int shopNo;
+	
 	private List<String> tags;
 	private User userProfile;
 	private List<FollowList> followList;

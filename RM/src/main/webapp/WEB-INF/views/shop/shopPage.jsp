@@ -156,7 +156,7 @@
 	                    <input type="file" class="form-control-file d-none" id="files" name="upfiles" multiple>
 	                </div>
 	                <div class="swiper-container mt-3" id="thumbnailsFeedSwiper">
-	                    <div class="swiper-wrapper" id="thumbnailsFeed">
+	                    <div class="swiper-wrapper feedSlide" id="thumbnailsFeed">
 	                        <!-- 썸네일 이미지들이 이곳에 추가됩니다. -->
 	                    </div>
 	                    <!-- Add Pagination -->
@@ -187,7 +187,7 @@
 	                <div class="modal-body d-flex">
 	                    <div class="thumbnail-container flex-fill text-center">
 	                        <div class="swiper-container mt-3" id="selectedThumbnailsSwiper">
-	                            <div class="swiper-wrapper" id="selectedThumbnails">
+	                            <div class="swiper-wrapper feedSlide" id="selectedThumbnails">
 	                                <!-- 선택된 썸네일 이미지들이 이곳에 추가됩니다. -->
 	                            </div>
 	                            <!-- Add Pagination -->
@@ -252,7 +252,7 @@
 	            <div class="modal-body d-flex p-0">
 	                <div class="modal-image flex-fill">
 	                    <div class="swiper-container postSwiperDetail">
-	                        <div class="swiper-wrapper" id="feed_detail_images">
+	                        <div class="swiper-wrapper feedSlide" id="feed_detail_images">
 	                            <!-- 이미지 슬라이드가 여기 추가됩니다. -->
 	                        </div>
 	                        <!-- 점  -->
@@ -928,7 +928,7 @@
 	                        str += '        </div>';
 	                        str += '    </div>';
 	                        str += '    <div class="swiper-container postSwiper">';
-	                        str += '        <div class="swiper-wrapper">';
+	                        str += '        <div class="swiper-wrapper feedSlide">';
 	                        if (feed.feedImg && feed.feedImg.length > 0) {
 	                            for (var j = 0; j < feed.feedImg.length; j++) {
 	                                var img = feed.feedImg[j];

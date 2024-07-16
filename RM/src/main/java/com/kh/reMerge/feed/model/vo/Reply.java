@@ -18,4 +18,5 @@ public class Reply {
 	private Date createDate;
 	private int reCount;
 	private String status;
+	private int reLikeCount;
 }
