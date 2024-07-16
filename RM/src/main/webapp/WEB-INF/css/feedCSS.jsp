@@ -25,7 +25,7 @@ header {
 	padding: 20px;
 }
 .storySwiper{
-	margin-top: -150px;
+	margin-top: -75px;
 	position:relative;
 	overflow:hidden;
 	padding:0 22px;
@@ -656,6 +656,23 @@ h2 {
     font-size: 30px;
     vertical-align: middle; /* 아이콘 수직 정렬 */
     color: #262626; /* 진한 색상으로 변경 */
+}
+
+.follow-btn {
+    border: 1px solid #0095f6;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.not-following {
+    background-color: #0095f6;
+    color: white;
+}
+
+.following {
+    background-color: white;
+    color: #0095f6;
 }
 
 

@@ -25,13 +25,16 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <div class="outer">
         <!--스토리 목록-->
-            <div class="storys">
-            	<div class="story" onclick="addStory();">
-		      		<img class="story_img" src="resources/plusicon.jpeg">
-		      		<span>스토리 추가하기</span>
-		      	</div>
-            </div>
-    <div class="body">
+		<div class="storySwiper">
+			<div class="storys swiper-wrapper">
+				<div class="story swiper-slide" onclick="addStory();">
+					<img class="story_img" src="resources/plusicon.jpeg"> <span>스토리 추가하기</span>
+				</div>
+			</div>
+			<div class="swiper-button-prev"></div>
+			<div class="swiper-button-next"></div>
+		</div>
+		<div class="body">
 		   <div class="con_wrap">
 		    <div class="conA">
 		        <!-- 게시글 목록 영역 -->
@@ -144,7 +147,7 @@
 	            <div class="modal-body d-flex p-0">
 	                <div class="modal-image flex-fill">
 	                    <div class="swiper-container postSwiperDetail">
-	                        <div class="swiper-wrapper" id="feed_detail_images">
+	                        <div class="swiper-wrapper feedSlide" id="feed_detail_images">
 	                            <!-- 이미지 슬라이드가 여기 추가됩니다. -->
 	                        </div>
 	                        <!-- 점  -->
@@ -263,26 +266,28 @@
 		</div>
 	</div>
 	
-	<!-- 좋아요 리스트 모달 -->
-	<div class="modal fade" id="likeDetail" tabindex="-1" role="dialog" aria-labelledby="likeListModalTitle" aria-hidden="true">
-	    <div class="modal-dialog modal-lg" role="document">
-	        <div class="modal-content">
-	            <div class="modal-header">
-	                <h5 class="modal-title" id="likeListModalTitle">좋아요</h5>
-	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	                    <span aria-hidden="true">&times;</span>
-	                </button>
-	            </div>
-	            <div class="modal-body">
-	                <ul id="likeList" class="list-group">
-	                    <!-- 좋아요 한 사용자 목록이 여기에 추가됩니다. -->
-	                </ul>
-	            </div>
-	        </div>
-	    </div>
+		<!-- 좋아요 리스트 모달 -->
+		<div class="modal fade" id="likeDetail" tabindex="-1" role="dialog"
+			aria-labelledby="likeListModalTitle" aria-hidden="true">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="likeListModalTitle">좋아요</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<ul id="likeList" class="list-group">
+							<!-- 좋아요 한 사용자 목록이 여기에 추가됩니다. -->
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+
 	</div>
-	
-</div>
 
 	
 	
@@ -471,7 +476,7 @@
 					for(var i=0;i<story.length;i++){
 						if(!processedUserIds.has(story[i].userId)){//저장된 집합에 이름이 있는지 확인
 							
-							html +="<div class='story' onclick='storyView("+i+");'>";
+							html +="<div class='story swiper-slide' onclick='storyView("+i+");'>";
 							html +="<input type='hidden' class='storyNoCheck' value='"+story[i].storyNo+"'>";
 							html +="<img class='story_img' src='"+story[i].changeName+"'>";
 							html +="<span>"+story[i].userId+"</span>";
@@ -494,7 +499,21 @@
 					console.log("통신 실패");
 				}
 			});
-		});	
+		});
+		
+		/*스토리 스와이프*/
+		new Swiper('.storySwiper', {
+		      slidesPerView: 8,
+		      spaceBetween: 2,
+		      navigation: {
+		        nextEl: '.swiper-button-next',
+		        prevEl: '.swiper-button-prev',
+		      },
+		      pagination: {
+		        el: '.swiper-pagination',
+		        clickable: true,
+		      },
+		    });
 		
 		<!-- 게시글 detail 스와이프 -->
 		function detailSwiper() {
@@ -663,22 +682,85 @@
 		
 		<!-- 게시물 좋아요 누른 디테일 리스트 -->
 		<script>
-		<!--
-		function likeDetailView(feedNo,feedWriter){
-			$('#likeDetail').modal('show');
-			$.ajax({
-				url : 'likeDetail.fe',
-				type: 'GET',
-				data: {
-					feedNo : feedNo
-					userId : feedWriter
-				},
-				success: function(result){
-					var likeStr = "";
-				}
-			});
+		function likeDetailView(feedNo, feedWriter) {
+		    $('#likeDetail').modal('show');
+		    
+		    $.ajax({
+		        url: 'likeDetail.fe',
+		        type: 'GET',
+		        data: {
+		            feedNo: feedNo,
+		            userId: feedWriter
+		        },
+		        success: function(result) {
+		            console.log('서버 응답:', result); // 서버 응답 확인
+		            var likeStr = "";
+		            var loginUserId = '${loginUser.userId}';
+		            result.likeUserList.forEach(function(userDetail) {
+		                var user = userDetail.user;
+		                var isFollowing = userDetail.isFollowing;
+		                console.log(user.userId, isFollowing); // 각 사용자의 팔로우 상태를 콘솔에 출력
+
+		                if (user) {
+		                    likeStr += '<li class="list-group-item d-flex justify-content-between align-items-center">';
+		                    likeStr += '<div class="d-flex align-items-center">';
+		                    if (user.profileChangeName) {
+		                        likeStr += '<img src="' + user.profileChangeName + '" class="rounded-circle" alt="프로필 사진" style="width: 40px; height: 40px; object-fit: cover;">';
+		                    } else {
+		                        likeStr += '<img src="resources/unknown.jpg" class="rounded-circle" alt="프로필 사진" style="width: 40px; height: 40px; object-fit: cover;">';
+		                    }
+		                    likeStr += '<span class="ml-3">' + (user.userId ? user.userId : 'Unknown User') + '</span>';
+		                    likeStr += '</div>';
+		                    if (user.userId !== loginUserId) {
+		                        if (isFollowing) {
+		                            likeStr += '<button class="btn follow-btn" data-user-id="' + user.userId + '" onclick="unfollow(\'' + user.userId + '\')">언팔로우</button>';
+		                        } else {
+		                            likeStr += '<button class="btn follow-btn" data-user-id="' + user.userId + '" onclick="follow(\'' + user.userId + '\')">팔로우</button>';
+		                        }
+		                    }
+		                    likeStr += '</li>';
+		                }
+		            });
+		            $('#likeList').html(likeStr);
+		        },
+		        error: function() {
+		            alert('좋아요 목록을 가져오는데 실패했습니다.');
+		        }
+		    });
 		}
-		-->
+		
+		function toggleFollow(fromUser, toUser, isFollowing) {
+		    var action = isFollowing ? 'unfollow' : 'follow';
+		    $.ajax({
+		        url: action + '.fe',
+		        type: 'POST',
+		        data: {
+		            fromUser: fromUser,
+		            toUser: toUser
+		        },
+		        success: function(result) {
+		            if (result > 0) {
+		                var btn = $('#follow-btn-' + toUser);
+		                if (isFollowing) {
+		                	console.log(isFollowing);
+		                    btn.removeClass('btn-outline-danger').addClass('btn-outline-primary');
+		                    btn.text('팔로우');
+		                    btn.attr('onclick', 'toggleFollow("' + fromUser + '", "' + toUser + '", false)');
+		                } else {
+		                    btn.removeClass('btn-outline-primary').addClass('btn-outline-danger');
+		                    btn.text('팔로잉');
+		                    btn.attr('onclick', 'toggleFollow("' + fromUser + '", "' + toUser + '", true)');
+		                }
+		            } else {
+		                alert('상태를 변경하는 데 실패했습니다.');
+		            }
+		        },
+		        error: function() {
+		            alert('상태를 변경하는 데 실패했습니다.');
+		        }
+		    });
+		}
+
 		</script>
 
 	<script>
@@ -743,7 +825,7 @@
                         str += '        </div>';
                         str += '    </div>';
                         str += '    <div class="content">';
-                        str += '        <p onclick="likeDetailView(' + feed.feedNo + ','+feed.feedWriter+')"><b>좋아요 <span class="like-count" data-feed-no="' + feed.feedNo + '">' + feed.likeCount + '</span>개</b></p>';
+                        str += '        <p onclick="likeDetailView(' + feed.feedNo + ',\'' + feed.feedWriter + '\')"><b>좋아요 <span class="like-count" data-feed-no="' + feed.feedNo + '">' + feed.likeCount + '</span>개</b></p>';
                         str += '        <p id="feedContent' + feed.feedNo + '" class="feed-content">' + feedContent + '</p>';
                         str += '        <button id="moreButton' + feed.feedNo + '" class="more-button" onclick="showFullContent(' + feed.feedNo + ')" style="display: none;">더보기</button>';
                         str += '        <div id="fullContent' + feed.feedNo + '" class="full-content" style="display: none;">' + feedContent + '</div>';
@@ -796,11 +878,9 @@
 		                    str += '    <button class="reply-like-button" onclick="toggleReplyLike(' + reply.replyNo + ', \'' + "${loginUser.userId}" + '\')">';
 		                    str += '        <i class="reply-heart-icon far fa-heart"></i>';
 		                    str += '    </button>';
-		                    str += '    <span class="reply-like-count" id="reply-like-count-' + reply.replyNo + '">' + reply.reLikeCount + '</span>';
 		                    str += '</div>';
 		                    
 		                    loadReplyLikeStatus(reply.replyNo, "${loginUser.userId}");
-		                    console.log("댓글리스트 조회"+reply.replyNo);
 		            }
 		            $("#replyList" + feedNo).html(str); // 댓글 리스트를 해당 게시물 div에 추가
 		            
@@ -1299,33 +1379,70 @@
 		            });
 		        }
 		    });
+		 
 		</script>
 		
 		<!-- 회원 추천 팔로우 -->
 		<script>
-			function follow(toUser){
-				$.ajax({
-					url: 'follow.fe',
-					type: 'get',
-					data: {
-						fromUser:"${loginUser.userId}",
-						toUser: toUser
-					},
-					success: function(result){
-						console.log(result);
-						if(result>0){
-							alert('팔로우 성공');
-						}else{
-							alert('팔로우 실패');
-						}
-						window.location.reload();//결과 확인 누르면 새로 고침
-					},
-					error: function(){
-						console.log('통신실패');
-					}
-				});
-			}
-			
+		// 팔로우 요청
+		function follow(toUser) {
+		    $.ajax({
+		        url: 'follow.fe',
+		        type: 'post',
+		        data: {
+		            fromUser: "${loginUser.userId}",
+		            toUser: toUser
+		        },
+		        success: function(result) {
+		            if (result > 0) {
+		                alert('팔로우 성공');
+		                updateFollowButton(toUser, true);
+		            } else {
+		                alert('팔로우 실패');
+		            }
+		        },
+		        error: function() {
+		            console.log('통신 실패');
+		        }
+		    });
+		}
+
+		// 언팔로우 요청
+		function unfollow(toUser) {
+		    $.ajax({
+		        url: 'unfollow.fe',
+		        type: 'post',
+		        data: {
+		            fromUser: "${loginUser.userId}",
+		            toUser: toUser
+		        },
+		        success: function(result) {
+		            if (result > 0) {
+		                alert('언팔로우 성공');
+		                updateFollowButton(toUser, false);
+		            } else {
+		                alert('언팔로우 실패');
+		            }
+		        },
+		        error: function() {
+		            console.log('통신 실패');
+		        }
+		    });
+		}
+
+		// 팔로우 버튼 업데이트
+		function updateFollowButton(userId, isFollowing) {
+		    var button = $('.follow-btn[data-user-id="' + userId + '"]');
+		    if (isFollowing) {
+		        button.removeClass('btn-outline-primary').addClass('btn-outline-danger');
+		        button.text('언팔로우');
+		        button.attr('onclick', 'unfollow(\'' + userId + '\')');
+		    } else {
+		        button.removeClass('btn-outline-danger').addClass('btn-outline-primary');
+		        button.text('팔로우');
+		        button.attr('onclick', 'follow(\'' + userId + '\')');
+    }
+}
 		</script>
 	
 	

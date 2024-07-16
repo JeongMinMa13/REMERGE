@@ -246,9 +246,15 @@ public class FeedServiceImpl implements FeedService {
 	}
 
 	@Override
-	public List<User> likeUsers(int feedNo, String userId) {
+	public List<User> likeUsers(int feedNo) {
 		
-		return feedDao.likeUsers(sqlSession,feedNo,userId);
+		return feedDao.likeUsers(sqlSession,feedNo);
+	}
+
+	@Override
+	public int unfollowUser(FollowList followList) {
+		
+		return feedDao.unfollowUser(sqlSession,followList);
 	}
 
 	

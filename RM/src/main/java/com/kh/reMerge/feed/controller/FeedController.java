@@ -474,19 +474,40 @@ public class FeedController {
 		return "feed/explore";
 	}
 	
-	//게시글 좋아요 리스트
-	@ResponseBody
-	@GetMapping("likeDetail.fe")
-	public Map<String,Object> likeDetail(@RequestParam int feedNo, @RequestParam String userId) {
-		List<User> likeUserList = feedService.likeUsers(feedNo, userId);
-	    Map<String, Object> result = new HashMap<>();
-	    result.put("likeUserList", likeUserList);
-	    
-	    System.out.println(result);
-		
-		return result;
-		
-	}
+		//게시글 좋아요 리스트
+	 	@GetMapping("likeDetail.fe")
+	    @ResponseBody
+	    public Map<String, Object> likeDetail(@RequestParam int feedNo, @RequestParam String userId) {
+	 		List<User> likeUserList = feedService.likeUsers(feedNo);
+	 	    List<Map<String, Object>> userDetails = new ArrayList<>();
+
+	 	    for (User user : likeUserList) {
+	 	        Map<String, Object> userDetail = new HashMap<>();
+	 	        userDetail.put("user", user);
+
+	 	        boolean isFollowing = feedService.isFollowing(userId, user.getUserId());
+	 	        userDetail.put("isFollowing", isFollowing);
+	 	        userDetails.add(userDetail);
+	 	    }
+	 	    Map<String, Object> result = new HashMap<>();
+	 	    result.put("likeUserList", userDetails);
+	 	    return result;
+	    }
+	 
+	
+	 	@PostMapping("follow.fe")
+	    @ResponseBody
+	    public int follow(@RequestParam String fromUser, @RequestParam String toUser) {
+	        FollowList followList = new FollowList(toUser, fromUser);
+	        return feedService.followUser(followList);
+	    }
+	 
+	 	@PostMapping("unfollow.fe")
+	    @ResponseBody
+	    public int unfollow(@RequestParam String fromUser, @RequestParam String toUser) {
+	        FollowList followList = new FollowList(toUser, fromUser);
+	        return feedService.unfollowUser(followList);
+	    }
 
 	
 	

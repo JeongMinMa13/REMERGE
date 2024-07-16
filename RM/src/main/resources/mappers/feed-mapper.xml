@@ -238,7 +238,7 @@
     <select id="isFollowing" parameterType="map" resultType="_int">
     	SELECT COUNT(*)
     	FROM FOLLOWLIST
-    	WHERE FROM_USER = #{userId}
+    	WHERE FROM_USER = #{fromUser}
     	AND TO_USER = #{toUser}
     </select>
     
@@ -261,42 +261,44 @@
    	</select>
    	
    <select id="getRecommend" parameterType="map" resultType="User">
- <![CDATA[
-	    SELECT USER_ID userId, PROFILE_CHANGENAME profileChangename, PROFILE_PATH profilePath, JOINDATE joinDate
-	    FROM (
-	        SELECT USER_ID, PROFILE_CHANGENAME,PROFILE_PATH,JOINDATE
-	        FROM USERS
-	        WHERE USER_ID NOT IN (
-	            SELECT TO_USER 
-	            FROM FOLLOWLIST 
-	            WHERE FROM_USER = #{userId}
-	        )
-	        ORDER BY dbms_random.value
-	    )
-	    WHERE ROWNUM <= #{limit}
-    ]]>
+<![CDATA[
+    SELECT USER_ID userId, PROFILE_CHANGENAME profileChangename, PROFILE_PATH profilePath, JOINDATE joinDate
+    FROM (
+        SELECT USER_ID, PROFILE_CHANGENAME, PROFILE_PATH, JOINDATE
+        FROM USERS
+        WHERE USER_ID NOT IN (
+            SELECT TO_USER 
+            FROM FOLLOWLIST 
+            WHERE FROM_USER = #{userId}
+        )
+        AND USER_ID != #{userId}
+        ORDER BY dbms_random.value
+    )
+    WHERE ROWNUM <= #{limit}
+]]>
    </select>
    
    <insert id="followUser" parameterType="FollowList">
-   		INSERT INTO FOLLOWLIST (FROM_USER,TO_USER)
-   		VALUES (#{fromUser}, #{toUser})
+   		INSERT INTO FOLLOWLIST (TO_USER,FROM_USER)
+   		VALUES (#{toUser}, #{fromUser})
    </insert>
    
      <select id="getRecommendList" parameterType="map" resultType="User">
  <![CDATA[
-	    SELECT USER_ID userId, PROFILE_CHANGENAME profileChangename, PROFILE_PATH profilePath,JOINDATE joinDate
-	    FROM (
-	        SELECT USER_ID, PROFILE_CHANGENAME,PROFILE_PATH,JOINDATE
-	        FROM USERS
-	        WHERE USER_ID NOT IN (
-	            SELECT TO_USER 
-	            FROM FOLLOWLIST 
-	            WHERE FROM_USER = #{userId}
-	        )
-	        ORDER BY dbms_random.value
-	    )
-	    WHERE ROWNUM <= #{limit}
-    ]]>
+    SELECT USER_ID userId, PROFILE_CHANGENAME profileChangename, PROFILE_PATH profilePath, JOINDATE joinDate
+    FROM (
+        SELECT USER_ID, PROFILE_CHANGENAME, PROFILE_PATH, JOINDATE
+        FROM USERS
+        WHERE USER_ID NOT IN (
+            SELECT TO_USER 
+            FROM FOLLOWLIST 
+            WHERE FROM_USER = #{userId}
+        )
+        AND USER_ID != #{userId}
+        ORDER BY dbms_random.value
+    )
+    WHERE ROWNUM <= #{limit}
+]]>
    </select>
    
    <!-- 사진 여러장 추가 -->
@@ -339,16 +341,18 @@
         F.CREATE_DATE DESC
    </select>
  
- <select id="likeUsers" parameterType="map" resultType="User">
- 	SELECT U.USER_ID, U.PROFILE_CHANGE_NAME,
-           CASE WHEN F.FROM_USER IS NULL THEN 0 ELSE 1 END AS IS_FOLLOWING
+ <select id="likeUsers" parameterType="_int" resultType="User">
+ 	SELECT U.USER_ID userId, U.PROFILE_CHANGENAME profileChangeName
     FROM USERS U
-    LEFT JOIN FOLLOWLIST F ON U.USER_ID = F.TO_USER AND F.FROM_USER = #{userId}
-    WHERE U.USER_ID IN (
-        SELECT USER_ID FROM FEED_LIKE WHERE FEED_NO = #{feedNo}
-    )
- 
+    JOIN FEED_LIKE FL ON U.USER_ID = FL.USER_ID
+    WHERE FL.FEED_NO = #{feedNo}
  </select>
+ 
+ <delete id="unfollowUser" parameterType="FollowList">
+ 	DELETE FROM FOLLOWLIST
+    WHERE FROM_USER = #{fromUser}
+    AND TO_USER = #{toUser}
+ </delete>
 	
 	
 	

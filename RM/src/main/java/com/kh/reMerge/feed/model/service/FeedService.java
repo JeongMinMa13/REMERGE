@@ -120,7 +120,10 @@ public interface FeedService {
 	ArrayList<Feed> explore(String userId);
 	
 	//좋아요 누른 사람
-	List<User> likeUsers(int feedNo, String userId);
+	List<User> likeUsers(int feedNo);
+	
+	//언팔하기
+	int unfollowUser(FollowList followList);
 	
 	
 	
